@@ -1,0 +1,3 @@
+event_homepage:
+    path:     /event
+    defaults: { _controller: EventBundle:Event:index }

@@ -1,0 +1,9 @@
+#services:
+#    common_bundle.show_user_listener:
+ #       class: CommonBundle\EventListener\MyShowUserListener
+  #      arguments: ["@security.storage"]
+   #     tags:
+    #        - { name: kernel.event_listener, event: theme.navbar_user, method: onShowUser }
+            
+#parameters:
+ #   common_bundle.show_user_listener.class: CommonBundle\EventListener\MyShowUserListener

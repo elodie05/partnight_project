@@ -1,0 +1,10 @@
+user_homepage:
+    path:     /
+    defaults: { _controller: UserBundle:Default:index }
+user_signin:
+    path:     /signin
+    defaults: { _controller: UserBundle:User:signIn }
+avanzu_admin_profile:
+    path: /profile/{userid}/
+avanzu_admin_logout:
+    path: /logout

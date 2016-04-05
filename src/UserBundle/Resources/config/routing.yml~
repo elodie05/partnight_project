@@ -1,0 +1,6 @@
+user_homepage:
+    path:     /
+    defaults: { _controller: UserBundle:Default:index }
+user_signin:
+    path:     /signin
+    defaults: { _controller: UserBundle:User:signIn }
