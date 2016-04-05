@@ -57,17 +57,218 @@ class Event
     private $endTime;
     
     /**
-     * @ORM\Column(name="date", type="datetime")
+     * @ORM\Column(name="date", type="date")
      */
     private $date;
     
     /**
-     *  ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
      * @ORM\JoinColumn
 
      */
     private $user;
     
     
-}
 
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return Event
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set location
+     *
+     * @param string $location
+     *
+     * @return Event
+     */
+    public function setLocation($location)
+    {
+        $this->location = $location;
+
+        return $this;
+    }
+
+    /**
+     * Get location
+     *
+     * @return string
+     */
+    public function getLocation()
+    {
+        return $this->location;
+    }
+
+    /**
+     * Set sleepAvailable
+     *
+     * @param integer $sleepAvailable
+     *
+     * @return Event
+     */
+    public function setSleepAvailable($sleepAvailable)
+    {
+        $this->sleepAvailable = $sleepAvailable;
+
+        return $this;
+    }
+
+    /**
+     * Get sleepAvailable
+     *
+     * @return integer
+     */
+    public function getSleepAvailable()
+    {
+        return $this->sleepAvailable;
+    }
+
+    /**
+     * Set sleepTaken
+     *
+     * @param integer $sleepTaken
+     *
+     * @return Event
+     */
+    public function setSleepTaken($sleepTaken)
+    {
+        $this->sleepTaken = $sleepTaken;
+
+        return $this;
+    }
+
+    /**
+     * Get sleepTaken
+     *
+     * @return integer
+     */
+    public function getSleepTaken()
+    {
+        return $this->sleepTaken;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     *
+     * @return Event
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set startTime
+     *
+     * @param \DateTime $startTime
+     *
+     * @return Event
+     */
+    public function setStartTime($startTime)
+    {
+        $this->startTime = $startTime;
+
+        return $this;
+    }
+
+    /**
+     * Get startTime
+     *
+     * @return \DateTime
+     */
+    public function getStartTime()
+    {
+        return $this->startTime;
+    }
+
+    /**
+     * Set endTime
+     *
+     * @param \DateTime $endTime
+     *
+     * @return Event
+     */
+    public function setEndTime($endTime)
+    {
+        $this->endTime = $endTime;
+
+        return $this;
+    }
+
+    /**
+     * Get endTime
+     *
+     * @return \DateTime
+     */
+    public function getEndTime()
+    {
+        return $this->endTime;
+    }
+
+    /**
+     * Set date
+     *
+     * @param \DateTime $date
+     *
+     * @return Event
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * Get date
+     *
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+}

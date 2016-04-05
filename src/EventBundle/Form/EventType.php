@@ -23,6 +23,7 @@ class EventType extends AbstractType
             ->add('startTime', 'time',['widget' => 'single_text'])
             ->add('endTime', 'time',['widget' => 'single_text'])
             ->add('date', 'date', ['widget' => 'single_text', 'format' => 'dd-MM-yyyy'])
+            ->add('save','submit')
         ;
     }
     
