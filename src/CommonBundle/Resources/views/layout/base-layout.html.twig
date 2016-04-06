@@ -23,6 +23,8 @@
     {# --------------------------------------------------------------------------------------------- JAVASCRIPTS_HEAD #}
     {%  block javascripts_head %}
         <script type="text/javascript" src="{{ asset('bundles/avanzuadmintheme/static/'~app.environment~'/scripts/modernizr.js') }}"></script>
+        <script src="{{ asset('bundles/avanzuadmintheme/static/'~app.environment~'/scripts/admin-lte-all.js') }}"></script>
+
         <!--[if lt IE 9]>
 
         <![endif]-->
@@ -58,7 +60,7 @@
                                 {{ render(controller('AvanzuAdminThemeBundle:Navbar:tasks')) }}
                                 {{ render(controller('AvanzuAdminThemeBundle:Navbar:user')) }}
                                 {% else %}
- 								<li><a href="{{ path("fos_user_security_login") }}" data-toggle="control-sidebar">{{ "se_connecter" }}</a></li>
+ 				<li><a href="{{ path("fos_user_security_login") }}" data-toggle="control-sidebar">{{ "se_connecter" }}</a></li>
                                 {% endif %}
                                  <li><a href="#" data-toggle="control-sidebar">{{ "contact" }}</a></li>
                             {% endblock %}
