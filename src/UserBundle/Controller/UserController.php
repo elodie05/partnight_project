@@ -16,7 +16,15 @@ class UserController extends Controller
     	 //var_dump($user);exit;
     	$form = $this->createForm(new form\UserType(),$user);
     	//$form->handleRequest($request);
-    	
+    /*if ($form->handleRequest ( $request )->isValid ()) {
+			$user = $form->getData ();
+			$user->setPlainPassword ( $user->getPassword () );
+			$userManager->updateUser ( $user );
+			
+			// Redirection sur la gestion de l'utilisateur
+			return $this->redirect ( $this->generateUrl ( 'user_setting_tab_main', array (
+					'user_id' => $user->getId () 
+			) ) );*/
         return $this->render('UserBundle:user:signin.html.twig',array(
         		'form' => $form->createView()
         ));
