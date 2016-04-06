@@ -16,6 +16,7 @@ class User extends BaseUser
 
 	public function __construct()
 	{
+		parent::__construct ();
 		$this->signInDate = new \DateTime();
 		// your own logic
 	}
