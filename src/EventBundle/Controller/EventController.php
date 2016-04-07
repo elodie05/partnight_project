@@ -6,6 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use EventBundle\Form as form;
 use EventBundle\Entity as entity;
+use EventBundle\Entity\Event;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class EventController extends Controller
 {
@@ -28,7 +30,55 @@ class EventController extends Controller
         ));
     }
     
-    public function viewAction(Request $request){
-    	
+    /**
+     * @ParamConverter("event", class="EventBundle:Event")
+     * @param Request $request
+     * @param Event $event
+     */
+    public function viewAction(Request $request, Event $event){
+    	var_dump($event);
     }
+    
+    /**
+     * @ParamConverter("event", class="EventBundle:Event")
+     * @param Request $request
+     * @param Event $event
+     */
+    public function updateAction(Request $request,Event $event)
+    {
+    	$user = $this->get('security.context')->getToken()->getUser();
+    	 
+    	$form = $this->createForm(new form\EventType(),$event);
+    	 
+    	if($form->handleRequest($request)->isValid()){
+    		$em = $this->getDoctrine()->getManager();
+    		$em->persist($event);
+    		$em->flush();
+    	}
+    
+    	return $this->render('EventBundle:event:create.html.twig',array(
+    			'form' => $form->createView()
+    	));
+    }
+    
+    /**
+     * @ParamConverter("event", class="EventBundle:Event")
+     * @param Request $request
+     * @param Event $event
+     */
+    public function removeAction(Request $request,Event $event)
+    {
+
+    		$em = $this->getDoctrine()->getManager();
+    		$em->remove($event);
+    		$em->flush();
+    	
+    
+    	/*return $this->render('EventBundle:event:create.html.twig',array(
+    			'form' => $form->createView()
+    	));*/
+    }
+    
+    
+    
 }

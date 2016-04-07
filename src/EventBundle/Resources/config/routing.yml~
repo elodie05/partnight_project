@@ -1,3 +1,14 @@
-event_homepage:
-    path:     /event
-    defaults: { _controller: EventBundle:Event:index }
+event_create:
+    path:     /event/create
+    defaults: { _controller: EventBundle:Event:create }
+event_view:
+    path:     /event/{id}
+    defaults: { _controller: EventBundle:Event:view }
+    requirements:
+        id: \d
+
+event_update:
+    path:     /event/update/{id}
+    defaults: { _controller: EventBundle:Event:update }
+    requirements:
+        id: \d
