@@ -1,7 +1,0 @@
-#services:
- #   common_bundle.menu_listener:
- #       class: %common_bundle.menu_listener.class%
- #       tags:
-            - { name: kernel.event_listener, event:theme.sidebar_setup_menu, method:onSetupMenu }
-#parameters:
-#    common_bundle.menu_listener.class: CommonBundle\EventListener\MyMenuListListener
