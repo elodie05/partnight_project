@@ -1,0 +1,32 @@
+<?php
+
+namespace EventBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Provisions
+ *
+ * @ORM\Table(name="drink_food")
+ * @ORM\Entity(repositoryClass="EventBundle\Repository\DrinkFoodRepository")
+ */
+class DrinkFood
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    
+    /**
+     * @ORM\Column(name="name", type="string")
+     */
+    private $name;
+
+    
+
+
+}

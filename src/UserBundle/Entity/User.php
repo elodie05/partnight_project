@@ -18,6 +18,7 @@ class User extends BaseUser
 	{
 		parent::__construct ();
 		$this->signInDate = new \DateTime();
+		$this->events = new \Doctrine\Common\Collections\ArrayCollection();
 		// your own logic
 	}
 	
@@ -45,6 +46,12 @@ class User extends BaseUser
      *
      */
     private $firstName;
+    
+    /**
+     * @ORM\ManyToMany(targetEntity="EventBundle\Entity\Event", mappedBy="users")
+     *
+     */
+    private $events;
 
 
     /**
@@ -128,5 +135,38 @@ class User extends BaseUser
     public function getFirstName()
     {
         return $this->firstName;
+    }
+
+    /**
+     * Add events
+     *
+     * @param \UserBundle\Entity\Event $events
+     * @return User
+     */
+    public function addEvent(\UserBundle\Entity\Event $events)
+    {
+        $this->events[] = $events;
+
+        return $this;
+    }
+
+    /**
+     * Remove events
+     *
+     * @param \UserBundle\Entity\Event $events
+     */
+    public function removeEvent(\UserBundle\Entity\Event $events)
+    {
+        $this->events->removeElement($events);
+    }
+
+    /**
+     * Get events
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getEvents()
+    {
+        return $this->events;
     }
 }

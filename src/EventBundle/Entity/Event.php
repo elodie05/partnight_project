@@ -68,6 +68,13 @@ class Event
      */
     private $user;
     
+    /**
+     * @ORM\ManyToMany(targetEntity="UserBundle\Entity\User", mappedBy="events")
+     * @ORM\JoinTable(name="event_users")
+     * 
+     */
+    private $users;
+    
     
 
     /**
@@ -293,5 +300,45 @@ class Event
     public function getUser()
     {
         return $this->user;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add users
+     *
+     * @param \UserBundle\Entity\User $users
+     * @return Event
+     */
+    public function addUser(\UserBundle\Entity\User $users)
+    {
+        $this->users[] = $users;
+
+        return $this;
+    }
+
+    /**
+     * Remove users
+     *
+     * @param \UserBundle\Entity\User $users
+     */
+    public function removeUser(\UserBundle\Entity\User $users)
+    {
+        $this->users->removeElement($users);
+    }
+
+    /**
+     * Get users
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUsers()
+    {
+        return $this->users;
     }
 }
