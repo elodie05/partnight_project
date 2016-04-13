@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use EventBundle\Form as form;
 use EventBundle\Entity as entity;
 use EventBundle\Entity\Event;
+use UserBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class EventController extends Controller
@@ -31,7 +32,30 @@ class EventController extends Controller
     }
     
     /**
-     * @ParamConverter("event", class="EventBundle:Event")
+     * @ParamConverter("user", options={"mapping": {"user_id": "id"}})
+     * @param Request $request
+     * @param User $user
+     */
+    public function listAction(Request $request, User $user){
+    	//var_dump($user);
+    	
+    	$repository = $this
+    	->getDoctrine()
+    	->getManager()
+    	->getRepository('EventBundle:Event')
+    	;
+    	//die($user->getLastName());
+    	//$events = $em->getRepository('EventBundle:Event')->findByUser($user);
+    	$events = $repository->findAll();
+
+    	foreach ($events as $event){
+    		echo $event->getDescription();
+    	}
+    	die('ok');
+    }
+    
+    /**
+     * @ParamConverter("event", options={"mapping": {"event_id": "id"}})
      * @param Request $request
      * @param Event $event
      */
@@ -40,7 +64,7 @@ class EventController extends Controller
     }
     
     /**
-     * @ParamConverter("event", class="EventBundle:Event")
+     * @ParamConverter("event", options={"mapping": {"event_id": "id"}})
      * @param Request $request
      * @param Event $event
      */
@@ -62,7 +86,7 @@ class EventController extends Controller
     }
     
     /**
-     * @ParamConverter("event", class="EventBundle:Event")
+     * @ParamConverter("event", options={"mapping": {"event_id": "id"}})
      * @param Request $request
      * @param Event $event
      */

@@ -12,3 +12,8 @@ event_update:
     defaults: { _controller: EventBundle:Event:update }
     requirements:
         id: \d
+event_remove:
+    path:     /event/remove/{id}
+    defaults: { _controller: EventBundle:Event:remove }
+    requirements:
+        id: \d

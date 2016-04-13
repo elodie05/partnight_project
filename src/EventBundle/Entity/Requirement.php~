@@ -5,12 +5,12 @@ namespace EventBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Provisions
+ * Requirement
  *
- * @ORM\Table(name="provisions")
+ * @ORM\Table(name="requirement")
  * @ORM\Entity(repositoryClass="EventBundle\Repository\ProvisionsRepository")
  */
-class Provisions
+class Requirement
 {
     /**
      * @var int
@@ -22,7 +22,7 @@ class Provisions
     private $id;
     
     /**
-     * @ORM\ManyToOne(targetEntity="EventBundle\Entity\Item")
+     * @ORM\ManyToOne(targetEntity="EventBundle\Entity\Provisions")
      * @ORM\JoinColumn
      */
     private $item;

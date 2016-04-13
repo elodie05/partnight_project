@@ -5,12 +5,12 @@ namespace EventBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Provisions
+ * Requirement
  *
- * @ORM\Table(name="provisions")
+ * @ORM\Table(name="requirement")
  * @ORM\Entity(repositoryClass="EventBundle\Repository\ProvisionsRepository")
  */
-class Provisions
+class Requirement
 {
     /**
      * @var int
@@ -22,7 +22,7 @@ class Provisions
     private $id;
     
     /**
-     * @ORM\ManyToOne(targetEntity="EventBundle\Entity\Item")
+     * @ORM\ManyToOne(targetEntity="EventBundle\Entity\Provisions")
      * @ORM\JoinColumn
      */
     private $item;
@@ -62,7 +62,7 @@ class Provisions
      * Set quantity
      *
      * @param integer $quantity
-     * @return Provisions
+     * @return Requirement
      */
     public function setQuantity($quantity)
     {
@@ -84,10 +84,10 @@ class Provisions
     /**
      * Set item
      *
-     * @param \EventBundle\Entity\Item $item
-     * @return Provisions
+     * @param \EventBundle\Entity\Provisions $item
+     * @return Requirement
      */
-    public function setItem(\EventBundle\Entity\Item $item = null)
+    public function setItem(\EventBundle\Entity\Provisions $item = null)
     {
         $this->item = $item;
 
@@ -97,7 +97,7 @@ class Provisions
     /**
      * Get item
      *
-     * @return \EventBundle\Entity\Item 
+     * @return \EventBundle\Entity\Provisions 
      */
     public function getItem()
     {
@@ -108,7 +108,7 @@ class Provisions
      * Set user
      *
      * @param \UserBundle\Entity\User $user
-     * @return Provisions
+     * @return Requirement
      */
     public function setUser(\UserBundle\Entity\User $user = null)
     {
@@ -131,7 +131,7 @@ class Provisions
      * Set event
      *
      * @param \EventBundle\Entity\Event $event
-     * @return Provisions
+     * @return Requirement
      */
     public function setEvent(\EventBundle\Entity\Event $event = null)
     {

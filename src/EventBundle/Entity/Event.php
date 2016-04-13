@@ -37,29 +37,20 @@ class Event
     private $sleepAvailable;
     
     /**
-     * @ORM\Column(name="sleepTaken", type="integer")
-     */
-    private $sleepTaken;
-    
-    /**
      * @ORM\Column(name="description", type="string")
      */
     private $description;
     
-    /**
-     * @ORM\Column(name="startTime", type="time")
-     */
-    private $startTime;
     
     /**
-     * @ORM\Column(name="endTime", type="time")
+     * @ORM\Column(name="startDate", type="datetime")
      */
-    private $endTime;
+    private $startDate;
     
     /**
-     * @ORM\Column(name="date", type="date")
+     * @ORM\Column(name="endDate", type="datetime")
      */
-    private $date;
+    private $endDate;
     
     /**
      * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
@@ -159,29 +150,6 @@ class Event
         return $this->sleepAvailable;
     }
 
-    /**
-     * Set sleepTaken
-     *
-     * @param integer $sleepTaken
-     *
-     * @return Event
-     */
-    public function setSleepTaken($sleepTaken)
-    {
-        $this->sleepTaken = $sleepTaken;
-
-        return $this;
-    }
-
-    /**
-     * Get sleepTaken
-     *
-     * @return integer
-     */
-    public function getSleepTaken()
-    {
-        return $this->sleepTaken;
-    }
 
     /**
      * Set description
@@ -207,77 +175,7 @@ class Event
         return $this->description;
     }
 
-    /**
-     * Set startTime
-     *
-     * @param \DateTime $startTime
-     *
-     * @return Event
-     */
-    public function setStartTime($startTime)
-    {
-        $this->startTime = $startTime;
 
-        return $this;
-    }
-
-    /**
-     * Get startTime
-     *
-     * @return \DateTime
-     */
-    public function getStartTime()
-    {
-        return $this->startTime;
-    }
-
-    /**
-     * Set endTime
-     *
-     * @param \DateTime $endTime
-     *
-     * @return Event
-     */
-    public function setEndTime($endTime)
-    {
-        $this->endTime = $endTime;
-
-        return $this;
-    }
-
-    /**
-     * Get endTime
-     *
-     * @return \DateTime
-     */
-    public function getEndTime()
-    {
-        return $this->endTime;
-    }
-
-    /**
-     * Set date
-     *
-     * @param \DateTime $date
-     *
-     * @return Event
-     */
-    public function setDate($date)
-    {
-        $this->date = $date;
-
-        return $this;
-    }
-
-    /**
-     * Get date
-     *
-     * @return \DateTime
-     */
-    public function getDate()
-    {
-        return $this->date;
-    }
 
     /**
      * Set user
@@ -340,5 +238,51 @@ class Event
     public function getUsers()
     {
         return $this->users;
+    }
+
+    /**
+     * Set startDate
+     *
+     * @param \DateTime $startDate
+     * @return Event
+     */
+    public function setStartDate($startDate)
+    {
+        $this->startDate = $startDate;
+
+        return $this;
+    }
+
+    /**
+     * Get startDate
+     *
+     * @return \DateTime 
+     */
+    public function getStartDate()
+    {
+        return $this->startDate;
+    }
+
+    /**
+     * Set endDate
+     *
+     * @param \DateTime $endDate
+     * @return Event
+     */
+    public function setEndDate($endDate)
+    {
+        $this->endDate = $endDate;
+
+        return $this;
+    }
+
+    /**
+     * Get endDate
+     *
+     * @return \DateTime 
+     */
+    public function getEndDate()
+    {
+        return $this->endDate;
     }
 }
