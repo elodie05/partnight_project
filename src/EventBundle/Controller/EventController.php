@@ -24,6 +24,8 @@ class EventController extends Controller
     		$em = $this->getDoctrine()->getManager();
     		$em->persist($event);
     		$em->flush();
+    		
+    		//return $this->redirect('event_view');
     	}
     
         return $this->render('EventBundle:event:create.html.twig',array(
@@ -60,7 +62,14 @@ class EventController extends Controller
      * @param Event $event
      */
     public function viewAction(Request $request, Event $event){
-    	var_dump($event);
+    	//var_dump($event);
+    //die($event->getLocation());
+    $em = $this->getDoctrine()->getEntityManager();
+    $requirements = $em->getRepository('EventBundle:Requirement')->findBy(array('event' => $event));
+    return $this->render('EventBundle:event:view.html.twig',array(
+    		'event' => $event,
+    		'requirements' => $requirements
+    ));
     }
     
     /**

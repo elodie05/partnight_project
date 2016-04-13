@@ -18,11 +18,9 @@ class EventType extends AbstractType
             ->add('name','text')
             ->add('location','text')
             ->add('sleepAvailable','integer')
-            ->add('sleepTaken','integer')
             ->add('description','text')
-            ->add('startTime', 'time',['widget' => 'single_text'])
-            ->add('endTime', 'time',['widget' => 'single_text'])
-            ->add('date', 'date', ['widget' => 'single_text', 'format' => 'dd-MM-yyyy'])
+            ->add('startdate', 'datetime')
+            ->add('endDate', 'datetime')
             ->add('save','submit')
         ;
     }

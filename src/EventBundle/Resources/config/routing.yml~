@@ -1,8 +1,15 @@
 event_create:
-    path:     /event/create
+    path:     /create
     defaults: { _controller: EventBundle:Event:create }
+
+event_list:
+    path:     /events/{user_id}
+    defaults: { _controller: EventBundle:Event:list }
+    requirements:
+        user_id: \d
+
 event_view:
-    path:     /event/{id}
+    path:     /{id}
     defaults: { _controller: EventBundle:Event:view }
     requirements:
         id: \d

@@ -9,18 +9,18 @@ event_list:
         user_id: \d
 
 event_view:
-    path:     /event/{id}
+    path:     /event/{event_id}
     defaults: { _controller: EventBundle:Event:view }
     requirements:
-        id: \d
+        event_id: \d
 
 event_update:
-    path:     /event/update/{id}
+    path:     /event/update/{event_id}
     defaults: { _controller: EventBundle:Event:update }
     requirements:
-        id: \d
+        event_id: \d
 event_remove:
-    path:     /event/remove/{id}
+    path:     /event/remove/{event_id}
     defaults: { _controller: EventBundle:Event:remove }
     requirements:
-        id: \d
+        event_id: \d
