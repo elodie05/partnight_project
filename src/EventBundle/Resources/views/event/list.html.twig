@@ -1,9 +1,60 @@
 {% extends 'AvanzuAdminThemeBundle:layout:base-layout.html.twig' %}
 
-{% block title %}{{ "mes_events"|trans }}{% endblock title %}
-{% block page_title %}{{ "mes_events"|trans }}{% endblock %}
+{% block title %}{{ "my_events"|trans }}{% endblock title %}
+{% block page_title %}{{ "my_events"|trans }}{% endblock %}
                     {% block page_subtitle %}{% endblock %}
 {% block page_content %}
 
+{% if events %}
+
+
+				<table role="grid" id="table_events" class="table table-bordered table-striped dataTable">
+                <thead>
+                <tr>
+                	<th>{{ "event_name"|trans }}</th>
+                	<th>{{ "event_start"|trans }}</th>
+                	<th>{{ "event_end"|trans }}</th>
+                	<th style="width:10%;"></th>
+                </tr>
+                </thead>
+                <tbody>
+                	{% for event in events %}
+				<tr>
+					<td>{{ event.name }}</td>
+					<td>{{ event.startDate|date('d/m/Y') }} - {{ event.startDate|date('H:m') }} </td>
+					<td>{{ event.endDate|date('d/m/Y') }} - {{ event.endDate|date('H:m') }} </td>
+					<td><a class="glyphicon glyphicon-list-alt" href="{{ path('event_view', {'event_id' : event.id })}}" ></a>
+					<a class="glyphicon glyphicon-edit" href="{{ path('event_update', {'event_id' : event.id })}}" ></a></td>
+				</tr>
+                {#}<tr class="odd" role="row">
+                  <td class="sorting_1">Gecko</td>
+                  <td>Firefox 1.0</td>
+                  <td>Win 98+ / OSX.2+</td>
+                  <td>1.7</td>
+                  <td>A</td>
+                </tr><tr class="even" role="row">
+                  <td class="sorting_1">Gecko</td>
+                  <td>Firefox 1.5</td>
+                  <td>Win 98+ / OSX.2+</td>
+                  <td>1.8</td>
+                  <td>A</td>
+                </tr>{#}
+{% endfor %}
+                
+                <tfoot>
+                </tfoot>
+              </table>	
+{% else %}
+	{{ "no_element"|trans }}
+{% endif %}
 
 {% endblock page_content %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+$(document).ready(function() {
+    $('#table_events').DataTable();
+} );
+</script>
+{% endblock javascripts %}

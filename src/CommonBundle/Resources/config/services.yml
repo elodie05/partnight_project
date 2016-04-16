@@ -2,3 +2,11 @@ services:
 #    common.example:
 #        class: CommonBundle\Example
 #        arguments: ["@service_id", "plain_value", %parameter%]
+    common_bundle.notification_listener:
+        class: CommonBundle\EventListener\MyNotificationListListener
+        #arguments: ["@security.context"]
+        tags:
+            - { name: kernel.event_listener, event: theme.navbar_snotification, method: onListNotifications }
+            
+parameters:
+    common_bundle.notification_listener.class: CommonBundle\EventListener\MyNotificationListListener

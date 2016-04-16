@@ -1,9 +1,70 @@
 {% extends 'CommonBundle:layout:base-layout.html.twig'  %}
 
-{% block title %}{{"create_event"|trans }}{% endblock title %}
+{% block title %}{%if action =="update"%}{{"update_event"|trans }}{%else%}{{"create_event"|trans }}{%endif%}{% endblock title %}
 {% block page_content %}
 
-{{ form_start(form) }}
-{{ form_end(form) }}
+<div class="box box-primary box-solid">
+	<div class="box-header with-border">
+    	<h4 class="box-title">{{ "informations"|trans }}</h4>
+       		<div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+            </div>
+              <!-- /.box-tools -->
+   </div>
+            <!-- /.box-header -->
+   <div class="box-body">
+	   {{ form_start(form) }}
+	   {{ form_end(form) }}
+   </div>
+            <!-- /.box-body -->
+</div>
+
+<div class="box box-primary box-solid">
+	<div class="box-header with-border">
+    	<h4 class="box-title">{{ "requirements"|trans }}</h4>
+       		<div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+            </div>
+              <!-- /.box-tools -->
+   </div>
+            <!-- /.box-header -->
+   <div class="box-body">
+	{% if requirements %}
+				<table role="grid" id="table_requirements" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                	<th>{{ "item"|trans }}</th>
+                	<th>{{ "quantity"|trans }}</th>
+                	<th style="width:10%;"></th>
+                </tr>
+                </thead>
+                <tbody>
+                	{% for requirement in requirements %}
+				<tr>
+					<td>{{ requirement.item.name }}</td>
+					<td>{{ requirement.quantity }} </td>
+					<td><a class="glyphicon glyphicon-remove" href="" ></a>
+					<a class="glyphicon glyphicon-edit" href="" ></a></td>
+				</tr>
+					{% endfor %}
+					</tbody>
+					</table>
+	{% else %}
+	{{ "no_element"|trans }}
+	{% endif %}
+	<button>{{ "add"|trans }}</button>
+   </div>
+            <!-- /.box-body -->
+</div>
 
 {% endblock page_content %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+ $("form input.date").daterangepicker({
+	timePicker: true,
+singleDatePicker: true, 
+});
+</script>
+{% endblock javascripts %}

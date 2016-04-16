@@ -18,9 +18,19 @@ class EventType extends AbstractType
             ->add('name','text')
             ->add('location','text')
             ->add('sleepAvailable','integer')
-            ->add('description','text')
-            ->add('startdate', 'datetime')
-            ->add('endDate', 'datetime')
+            ->add('description','textarea')
+            ->add('startdate', 'datetime', array(
+                                                'widget' => 'single_text',
+                                                'input' => 'datetime',
+                                                'format' => 'dd/MM/yyyy H:M',
+                                                'attr' => array('class' => 'date'),
+                                                ))
+            ->add('endDate', 'datetime', array(
+                                                'widget' => 'single_text',
+                                                'input' => 'datetime',
+                                                'format' => 'dd/MM/yyyy H:M',
+                                                'attr' => array('class' => 'date'),
+                                                ))
             ->add('save','submit')
         ;
     }

@@ -39,21 +39,16 @@ class EventController extends Controller
      * @param User $user
      */
     public function listAction(Request $request, User $user){
-    	//var_dump($user);
-    	
-    	$repository = $this
+
+    	$events = $this
     	->getDoctrine()
     	->getManager()
     	->getRepository('EventBundle:Event')
-    	;
-    	//die($user->getLastName());
-    	//$events = $em->getRepository('EventBundle:Event')->findByUser($user);
-    	$events = $repository->findAll();
+    	->findByUser($user);
 
-    	foreach ($events as $event){
-    		echo $event->getDescription();
-    	}
-    	die('ok');
+    	return $this->render('EventBundle:event:list.html.twig',array(
+    			'events' => $events
+    	));
     }
     
     /**
@@ -80,8 +75,9 @@ class EventController extends Controller
     public function updateAction(Request $request,Event $event)
     {
     	$user = $this->get('security.context')->getToken()->getUser();
-    	 
+    	$em = $this->getDoctrine()->getEntityManager();
     	$form = $this->createForm(new form\EventType(),$event);
+    	$requirements = $em->getRepository('EventBundle:Requirement')->findBy(array('event' => $event));
     	 
     	if($form->handleRequest($request)->isValid()){
     		$em = $this->getDoctrine()->getManager();
@@ -90,7 +86,9 @@ class EventController extends Controller
     	}
     
     	return $this->render('EventBundle:event:create.html.twig',array(
-    			'form' => $form->createView()
+    			'form' => $form->createView(),
+    			'action' => 'update',
+    			'requirements' => $requirements
     	));
     }
     
