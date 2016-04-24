@@ -2,6 +2,7 @@
 
 namespace EventBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -65,6 +66,13 @@ class Event
      * 
      */
     private $users;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="EventBundle\Entity\Requirement", mappedBy="event")
+     */
+    private $requirements;
     
     
 
@@ -205,6 +213,7 @@ class Event
     public function __construct()
     {
         $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->requirements = new ArrayCollection();
     }
 
     /**
@@ -238,6 +247,30 @@ class Event
     public function getUsers()
     {
         return $this->users;
+    }
+
+    /**
+     * @param Requirement $requirement
+     */
+    public function addRequirement(Requirement $requirement)
+    {
+        $this->requirements->add($requirement);
+    }
+
+    /**
+     * @param Requirement $requirement
+     */
+    public function removeRequirement(Requirement $requirement)
+    {
+        $this->requirements->removeElement($requirement);
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getRequirements()
+    {
+        return $this->requirements;
     }
 
     /**

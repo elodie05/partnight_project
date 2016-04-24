@@ -7,20 +7,26 @@ use Symfony\Component\HttpFoundation\Request;
 use EventBundle\Form as form;
 use EventBundle\Entity as entity;
 use EventBundle\Entity\Event;
+use EventBundle\Form\EventType;
 use UserBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class EventController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function createAction(Request $request)
     {
     	$user = $this->get('security.context')->getToken()->getUser();
-    	$event = new entity\Event();
+    	$event = new Event();
     	$event->setUser($user);
     	
-    	$form = $this->createForm(new form\EventType(),$event);
+    	$form = $this->createForm(new EventType(),$event);
     	
-    	if($form->handleRequest($request)->isValid()){
+    	if($form->handleRequest($request)->isValid())
+		{
     		$em = $this->getDoctrine()->getManager();
     		$em->persist($event);
     		$em->flush();
@@ -29,7 +35,9 @@ class EventController extends Controller
     	}
     
         return $this->render('EventBundle:event:create.html.twig',array(
-        		'form' => $form->createView()
+        		'form' => $form->createView(),
+				'action' => 'create',
+				'event' => $event
         ));
     }
     
@@ -50,21 +58,20 @@ class EventController extends Controller
     			'events' => $events
     	));
     }
-    
+
     /**
-     * @ParamConverter("event", options={"mapping": {"event_id": "id"}})
      * @param Request $request
      * @param Event $event
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function viewAction(Request $request, Event $event){
     	//var_dump($event);
-    //die($event->getLocation());
-    $em = $this->getDoctrine()->getEntityManager();
-    $requirements = $em->getRepository('EventBundle:Requirement')->findBy(array('event' => $event));
-    return $this->render('EventBundle:event:view.html.twig',array(
-    		'event' => $event,
-    		'requirements' => $requirements
-    ));
+        //die($event->getLocation());
+        $em = $this->getDoctrine()->getEntityManager();
+
+        return $this->render('EventBundle:event:view.html.twig',array(
+                'event' => $event
+        ));
     }
     
     /**
@@ -77,7 +84,6 @@ class EventController extends Controller
     	$user = $this->get('security.context')->getToken()->getUser();
     	$em = $this->getDoctrine()->getEntityManager();
     	$form = $this->createForm(new form\EventType(),$event);
-    	$requirements = $em->getRepository('EventBundle:Requirement')->findBy(array('event' => $event));
     	 
     	if($form->handleRequest($request)->isValid()){
     		$em = $this->getDoctrine()->getManager();
@@ -87,8 +93,7 @@ class EventController extends Controller
     
     	return $this->render('EventBundle:event:create.html.twig',array(
     			'form' => $form->createView(),
-    			'action' => 'update',
-    			'requirements' => $requirements
+    			'action' => 'update'
     	));
     }
     

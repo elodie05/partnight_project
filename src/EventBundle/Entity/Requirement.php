@@ -35,9 +35,8 @@ class Requirement
     
     
     /**
-     * @ORM\ManyToOne(targetEntity="EventBundle\Entity\Event")
+     * @ORM\ManyToOne(targetEntity="EventBundle\Entity\Event", inversedBy="requirements")
      * @ORM\JoinColumn
-    
      */
     private $event;
 
