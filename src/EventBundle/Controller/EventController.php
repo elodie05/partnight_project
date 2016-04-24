@@ -8,6 +8,7 @@ use EventBundle\Form as form;
 use EventBundle\Entity as entity;
 use EventBundle\Entity\Event;
 use EventBundle\Form\EventType;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use UserBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
@@ -40,19 +41,22 @@ class EventController extends Controller
 				'event' => $event
         ));
     }
-    
-    /**
-     * @ParamConverter("user", options={"mapping": {"user_id": "id"}})
-     * @param Request $request
-     * @param User $user
-     */
-    public function listAction(Request $request, User $user){
+
+
+    public function listAction(){
+        $token = $this->get('security.token_storage')->getToken();
+
+        if (null === $token) {
+            throw new AccessDeniedException();
+        }
+
+        $user = $token->getUser();
 
     	$events = $this
-    	->getDoctrine()
-    	->getManager()
-    	->getRepository('EventBundle:Event')
-    	->findByUser($user);
+            ->getDoctrine()
+            ->getManager()
+            ->getRepository('EventBundle:Event')
+            ->findByUser($user);
 
     	return $this->render('EventBundle:event:list.html.twig',array(
     			'events' => $events
@@ -60,26 +64,21 @@ class EventController extends Controller
     }
 
     /**
-     * @param Request $request
      * @param Event $event
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function viewAction(Request $request, Event $event){
-    	//var_dump($event);
-        //die($event->getLocation());
-        $em = $this->getDoctrine()->getEntityManager();
-
+    public function viewAction(Event $event){
         return $this->render('EventBundle:event:view.html.twig',array(
                 'event' => $event
         ));
     }
-    
+
     /**
-     * @ParamConverter("event", options={"mapping": {"event_id": "id"}})
      * @param Request $request
      * @param Event $event
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function updateAction(Request $request,Event $event)
+    public function updateAction(Request $request, Event $event)
     {
     	$user = $this->get('security.context')->getToken()->getUser();
     	$em = $this->getDoctrine()->getEntityManager();
@@ -93,7 +92,8 @@ class EventController extends Controller
     
     	return $this->render('EventBundle:event:create.html.twig',array(
     			'form' => $form->createView(),
-    			'action' => 'update'
+    			'action' => 'update',
+                'event' => $event
     	));
     }
     

@@ -80,7 +80,7 @@
                         {{ render(controller('AvanzuAdminThemeBundle:Sidebar:searchForm')) }}
                         <ul>
                         <li><a href="{{ path('event_create') }}">create_event</a></li>
-                        <li><a href="{{ path('event_list', {'user_id' : app.user.id}) }}">my_events</a></li>
+                        <li><a href="{{ path('event_list') }}">my_events</a></li>
                         </ul>
                     {% endif %}
                     {{ render(controller('AvanzuAdminThemeBundle:Sidebar:menu', {'request':app.request})) }}

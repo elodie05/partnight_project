@@ -3,22 +3,20 @@ event_create:
     defaults: { _controller: EventBundle:Event:create }
 
 event_list:
-    path:     /events/{user_id}
+    path:     /events
     defaults: { _controller: EventBundle:Event:list }
-    requirements:
-        user_id: \d
 
 event_view:
-    path:     /event/{event_id}
+    path:     /event/{id}
     defaults: { _controller: EventBundle:Event:view }
     requirements:
-        event_id: \d
+        id: \d+
 
 event_update:
-    path:     /event/update/{event_id}
+    path:     /event/update/{id}
     defaults: { _controller: EventBundle:Event:update }
     requirements:
-        event_id: \d
+        id: \d+
 event_remove:
     path:     /event/remove/{event_id}
     defaults: { _controller: EventBundle:Event:remove }
