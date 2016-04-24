@@ -61,7 +61,7 @@ class Event
     private $user;
     
     /**
-     * @ORM\ManyToMany(targetEntity="UserBundle\Entity\User", mappedBy="events")
+     * @ORM\ManyToMany(targetEntity="UserBundle\Entity\User", inversedBy="events")
      * @ORM\JoinTable(name="event_users")
      * 
      */
