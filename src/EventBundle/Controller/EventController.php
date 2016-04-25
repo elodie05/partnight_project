@@ -29,7 +29,8 @@ class EventController extends Controller
     	}
     
         return $this->render('EventBundle:event:create.html.twig',array(
-        		'form' => $form->createView()
+        		'form' => $form->createView(),
+        		'action' => 'create'
         ));
     }
     
