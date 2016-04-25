@@ -2,6 +2,7 @@
 
 namespace EventBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -58,13 +59,13 @@ class Event
 
      */
     private $user;
-    
+
     /**
-     * @ORM\ManyToMany(targetEntity="UserBundle\Entity\User", mappedBy="events")
-     * @ORM\JoinTable(name="event_users")
-     * 
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="EventBundle\Entity\Requirement", mappedBy="event")
      */
-    private $users;
+    private $requirements;
     
     
 
@@ -204,40 +205,31 @@ class Event
      */
     public function __construct()
     {
-        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->requirements = new ArrayCollection();
     }
 
     /**
-     * Add users
-     *
-     * @param \UserBundle\Entity\User $users
-     * @return Event
+     * @param Requirement $requirement
      */
-    public function addUser(\UserBundle\Entity\User $users)
+    public function addRequirement(Requirement $requirement)
     {
-        $this->users[] = $users;
-
-        return $this;
+        $this->requirements->add($requirement);
     }
 
     /**
-     * Remove users
-     *
-     * @param \UserBundle\Entity\User $users
+     * @param Requirement $requirement
      */
-    public function removeUser(\UserBundle\Entity\User $users)
+    public function removeRequirement(Requirement $requirement)
     {
-        $this->users->removeElement($users);
+        $this->requirements->removeElement($requirement);
     }
 
     /**
-     * Get users
-     *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return ArrayCollection
      */
-    public function getUsers()
+    public function getRequirements()
     {
-        return $this->users;
+        return $this->requirements;
     }
 
     /**
