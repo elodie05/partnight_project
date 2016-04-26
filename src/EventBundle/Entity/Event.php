@@ -42,7 +42,6 @@ class Event
      */
     private $description;
     
-    
     /**
      * @ORM\Column(name="startDate", type="datetime")
      */
@@ -54,9 +53,8 @@ class Event
     private $endDate;
     
     /**
-     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", inversedBy="events")
      * @ORM\JoinColumn
-
      */
     private $user;
 
@@ -66,8 +64,6 @@ class Event
      * @ORM\OneToMany(targetEntity="EventBundle\Entity\Requirement", mappedBy="event")
      */
     private $requirements;
-    
-    
 
     /**
      * Get id

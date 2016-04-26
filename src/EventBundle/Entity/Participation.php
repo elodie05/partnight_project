@@ -32,14 +32,11 @@ class Participation
      * @ORM\JoinColumn
      */
     private $user;
-    
 
     /**
-     * @ORM\Column(name="response", type="boolean")
+     * @ORM\Column(name="response", type="boolean", nullable=true)
      */
     private $response;
-    
-
 
     /**
      * Get id
