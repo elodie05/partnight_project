@@ -3,8 +3,8 @@ common:
     prefix:   /
 
 event:
-    resource: "@EventBundle/Resources/config/routing.yml"
-    prefix:   /
+    type: rest
+    resource: "@EventBundle/Controller/EventController.php"
 
 user:
     resource: "@UserBundle/Resources/config/routing.yml"

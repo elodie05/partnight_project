@@ -2,6 +2,7 @@
 
 namespace EventBundle\Controller;
 
+use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use EventBundle\Form as form;
@@ -12,13 +13,13 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use UserBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
-class EventController extends Controller
+class EventController extends FOSRestController
 {
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function createAction(Request $request)
+    public function postEventAction(Request $request)
     {
         $user = $this->get('security.context')->getToken()->getUser();
         $event = new Event();
@@ -42,7 +43,10 @@ class EventController extends Controller
         ));
     }
 
-    public function listAction(){
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function getEventsAction(){
         $token = $this->get('security.token_storage')->getToken();
 
         if (null === $token) {
@@ -57,16 +61,18 @@ class EventController extends Controller
             ->getRepository('EventBundle:Event')
             ->findByUser($user);
 
-        return $this->render('EventBundle:event:list.html.twig',array(
-                'events' => $events
-        ));
+        $view = $this->view($events, 200)
+            ->setTemplate('EventBundle:event:list.html.twig')
+            ->setTemplateVar('events');
+
+        return $this->handleView($view);
     }
 
     /**
      * @param Event $event
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function viewAction(Event $event){
+    public function getEventAction(Event $event){
         return $this->render('EventBundle:event:view.html.twig',array(
                 'event' => $event
         ));
@@ -77,7 +83,7 @@ class EventController extends Controller
      * @param Event $event
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function updateAction(Request $request, Event $event)
+    public function putEventAction(Request $request, Event $event)
     {
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getEntityManager();
@@ -101,7 +107,7 @@ class EventController extends Controller
      * @param Request $request
      * @param Event $event
      */
-    public function removeAction(Request $request,Event $event)
+    public function deleteEventAction(Request $request,Event $event)
     {
 
             $em = $this->getDoctrine()->getManager();

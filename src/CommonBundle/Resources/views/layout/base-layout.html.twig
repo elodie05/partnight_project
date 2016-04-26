@@ -79,8 +79,8 @@
                         {{ render(controller('AvanzuAdminThemeBundle:Sidebar:userPanel')) }}
                         {{ render(controller('AvanzuAdminThemeBundle:Sidebar:searchForm')) }}
                         <ul>
-                        <li><a href="{{ path('event_create') }}">create_event</a></li>
-                        <li><a href="{{ path('event_list') }}">my_events</a></li>
+                        <li><a href="{{ path('post_event') }}">create_event</a></li>
+                        <li><a href="{{ path('get_events') }}">my_events</a></li>
                         </ul>
                     {% endif %}
                     {{ render(controller('AvanzuAdminThemeBundle:Sidebar:menu', {'request':app.request})) }}
