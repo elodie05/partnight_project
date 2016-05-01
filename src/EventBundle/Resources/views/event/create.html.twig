@@ -3,7 +3,7 @@
 {% block title %}{%if action =="update"%}{{"update_event"|trans }}{%else%}{{"create_event"|trans }}{%endif%}{% endblock title %}
 {% block page_content %}
 
-<div class="box box-primary box-solid">
+<div class="box box-default box-solid">
 	<div class="box-header with-border">
     	<h4 class="box-title">{{ "informations"|trans }}</h4>
        		<div class="box-tools pull-right">
@@ -15,10 +15,12 @@
    <div class="box-body">
 	   {{ form_start(form) }}
 	   {{ form_end(form) }}
+	   {{ form_errors(form) }}
    </div>
             <!-- /.box-body -->
 </div>
 
+{% if action == "update" %}
 <div class="box box-primary box-solid">
 	<div class="box-header with-border">
     	<h4 class="box-title">{{ "requirements"|trans }}</h4>
@@ -29,7 +31,7 @@
    </div>
             <!-- /.box-header -->
    <div class="box-body">
-	{% if action == "update" %}
+	{% if event.requirements %}
 				<table role="grid" id="table_requirements" class="table table-bordered table-striped">
                 <thead>
                 <tr>
@@ -51,8 +53,14 @@
 					</table>
 	{% else %}
 	{{ "no_element"|trans }}
-	{% endif %}
-	<button>{{ "add"|trans }}</button>
+	{%  endif %}
+	{% if event.id %}
+	<button type="button" id="btn_add_event_requirement" class="btn btn-primary"
+            data-url="{{ path('event_addrequirement',{'event_id' : event.id}) }}" data-toggle="modal"
+            data-target="#myModal" data-backdrop="false">{{ 'add'|trans }}</button>
+   {% endif %}
+   {% endif %}
+
    </div>
             <!-- /.box-body -->
 </div>
@@ -64,7 +72,60 @@
 <script>
  $("form input.date").daterangepicker({
 	timePicker: true,
-singleDatePicker: true, 
+	singleDatePicker: true, 
 });
+
+ $(document).ready(function(){
+	    $(document).on('click', '#btn_add_event_requirement', function(){
+	        var url=$(this).attr("data-url");
+	        create_update_event_requirement(url,{});
+	        return false;
+	    });
+	    $(document).on('click', '.removeTypeUser', function(){remove_type_user($(this).attr("data-url"),{});return false;});
+	    $(document).on('click', '.updateTypeUser', function(){create_update_type_user($(this).attr("data-url"),{});return false; });
+
+	     
+	    function remove_type_user (url) {
+	        $('#btn_confirm_delete_type_user').click(function(){
+	            $.ajax({
+	                type : 'POST',
+	                url : url,
+	                dataType : 'json',
+	                data: {},
+	                success : function(data){
+	                    location.reload();
+	                }
+	            });
+	        });
+	    }
+	    
+	    function create_update_event_requirement(url,data){
+	        $.ajax({
+	            type : 'POST',
+	            url : url,
+	            dataType : 'json',
+	            data: data,
+	            success : function(data){
+	                
+	            if(data.success=='true'){
+	                location.reload();
+	            }
+	            else{
+	                $('#myModal .modal-body').empty().append(data.page);
+	                $('#myModal .modal-title').empty().append(data.title);
+	               
+	                $('form[name=requirement]').on('submit', function(e) {
+	                    e.preventDefault();
+	                    create_update_event_requirement(url,$(this).serialize());                            
+	                });
+	            }
+	            }
+	       
+	        });
+	    }
+
+	 
+	});
+	 
 </script>
 {% endblock javascripts %}

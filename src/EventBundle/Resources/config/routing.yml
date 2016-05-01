@@ -24,3 +24,9 @@ event_remove:
     defaults: { _controller: EventBundle:Event:remove }
     requirements:
         event_id: \d
+        
+event_addrequirement:
+    path:     /event/add_requirement/{event_id}
+    defaults: { _controller: EventBundle:Event:addRequirementEvent }
+    requirements:
+        event_id: \d

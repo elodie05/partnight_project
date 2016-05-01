@@ -35,7 +35,7 @@ class Participation
     
 
     /**
-     * @ORM\Column(name="response", type="boolean")
+     * @ORM\Column(name="response", type="boolean", nullable=true)
      */
     private $response;
     

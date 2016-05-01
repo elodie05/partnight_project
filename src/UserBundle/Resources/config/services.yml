@@ -7,3 +7,4 @@ services:
             
 parameters:
     common_bundle.show_user_listener.class: CommonBundle\EventListener\MyShowUserListener
+

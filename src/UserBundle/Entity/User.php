@@ -52,6 +52,8 @@ class User extends BaseUser
      *
      */
     private $events;
+    
+
 
 
     /**

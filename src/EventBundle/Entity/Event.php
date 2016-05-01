@@ -4,12 +4,15 @@ namespace EventBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
  * Event
  *
  * @ORM\Table(name="event")
  * @ORM\Entity(repositoryClass="EventBundle\Repository\EventRepository")
+ * @Assert\Callback(methods={"validateDate"})
  */
 class Event
 {
@@ -276,5 +279,22 @@ class Event
     public function getEndDate()
     {
         return $this->endDate;
+    }
+    
+    public function validateDate(ExecutionContextInterface $context)
+    {
+    	$start = $this->getStartDate();
+    	$end = $this->getEndDate();
+  		
+    	if($end < $start){
+    		$context->addViolationAt(
+    				'endDate',
+    				'End date must be > start date',
+    				array(),
+    				null
+    				);
+    	}
+    
+    	
     }
 }

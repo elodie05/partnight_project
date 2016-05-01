@@ -6,3 +6,8 @@ avanzu_admin_all_notifications:
     path: /notifications/
 avanzu_admin_show_notification:
     path: /notifications/{notifyid}/
+    
+avanzu_admin_all_messages:
+    path: /messages/
+avanzu_admin_show_message:
+    path: /messages/{messageid}/

@@ -11,10 +11,13 @@ use EventBundle\Form\EventType;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use UserBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use EventBundle\Form\RequirementType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class EventController extends Controller
 {
     /**
+     * Create event
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -42,7 +45,10 @@ class EventController extends Controller
         ));
     }
 
-
+	/**
+	 * List events
+	 * @throws AccessDeniedException
+	 */
     public function listAction(){
         $token = $this->get('security.token_storage')->getToken();
 
@@ -64,6 +70,8 @@ class EventController extends Controller
     }
 
     /**
+     * View event
+     * @ParamConverter("event", options={"mapping": {"event_id": "id"}})
      * @param Event $event
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -74,6 +82,8 @@ class EventController extends Controller
     }
 
     /**
+     * Update event
+     * @ParamConverter("event", options={"mapping": {"event_id": "id"}})
      * @param Request $request
      * @param Event $event
      * @return \Symfony\Component\HttpFoundation\Response
@@ -98,6 +108,7 @@ class EventController extends Controller
     }
     
     /**
+     * Delete event
      * @ParamConverter("event", options={"mapping": {"event_id": "id"}})
      * @param Request $request
      * @param Event $event
@@ -113,6 +124,51 @@ class EventController extends Controller
         /*return $this->render('EventBundle:event:create.html.twig',array(
                 'form' => $form->createView()
         ));*/
+    }
+    /**
+     * Add requirement for an event
+     * @ParamConverter("event", options={"mapping": {"event_id": "id"}})
+     * @param Request $request
+     * @param Event $event
+     */
+    public function addRequirementEventAction(Request $request, Event $event){
+    	$success = false;
+    	$response = $this->forward('EventBundle:Event:addRequirementEventForm', array(
+        'event'  => $event
+    	));
+    	
+    	
+    	
+    	return new JsonResponse(array(
+    			'page' => $response->getContent(),
+    			'success' => $success
+    			
+    	)
+    	);
+    		
+    }
+    
+    /**
+     * @ParamConverter("event", options={"mapping": {"event_id": "id"}})
+     * @param Event $event
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function addRequirementEventFormAction(Event $event){
+    	$em = $this->getDoctrine()->getEntityManager();
+    	$items = $em->getRepository('EventBundle:Item')->findAll();
+    	 
+    	$form = $this->createForm(new RequirementType(array('items' => $items)));
+    	
+    	if($form->isValid()){
+    		$data = $form->getData();
+    		var_dump($data);exit;
+    	}
+    	
+    	return $this->render('EventBundle:event:add_requirement.html.twig',array(
+    			'form' => $form->createView(),
+    			'success' => true
+    	));
+    	
     }
     
     

@@ -18,7 +18,9 @@ class EventType extends AbstractType
             ->add('name','text')
             ->add('location','text')
             ->add('sleepAvailable','integer')
-            ->add('description','textarea')
+            ->add('description','textarea',array(
+            		'required' => false
+            ))
             ->add('startdate', 'datetime', array(
                                                 'widget' => 'single_text',
                                                 'input' => 'datetime',
