@@ -47,7 +47,7 @@
 {% else %}
 	{{ "no_element"|trans }}
 {% endif %}
-<button>{{ "add"|trans }}</button>
+<button type="button" class="btn" data-toggle="modal" data-target="#myModal">{{ "add"|trans }}</button>
 {% endblock page_content %}
 
 {% block javascripts %}

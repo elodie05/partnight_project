@@ -48,6 +48,8 @@ class User extends BaseUser
      * @ORM\OneToMany(targetEntity="EventBundle\Entity\Event", mappedBy="user")
      */
     private $events;
+    
+
 
     /**
      * Get id

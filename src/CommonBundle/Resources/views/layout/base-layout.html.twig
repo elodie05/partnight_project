@@ -30,7 +30,7 @@
     {% endblock %}
 
 </head>
-<body class="{{ admin_skin|default('skin-blue')}}">
+<body class="{{ admin_skin|default('skin-black-light')}}">
     <div class="wrapper">
 
     {% block avanzu_admin_header %}
@@ -42,33 +42,50 @@
 		            PartNight
                 </a>
             {% endblock %}
-            <!-- Header Navbar: style can be found in header.less -->
-            <nav class="navbar navbar-static-top" role="navigation">
-                <!-- Sidebar toggle button-->
-                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
-                    <span class="sr-only">Toggle navigation</span>
-                </a>
-               
-                    <div class="navbar-custom-menu">
-                        <ul class="nav navbar-nav">
-                            {% block avanzu_navbar %}
-                             {% if app.user is not null and is_granted('IS_AUTHENTICATED_FULLY') %}
-                                {{ render(controller('AvanzuAdminThemeBundle:Navbar:messages')) }}
-                                {{ render(controller('AvanzuAdminThemeBundle:Navbar:notifications')) }}
+  <nav class="navbar navbar-static-top">
+    <div class="container-fluid">
+    <div class="navbar-header">
+      <a href="{{ path('common_homepage') }}" class="navbar-brand"><b>PartNight</b></a>
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+        <i class="fa fa-bars"></i>
+      </button>
+    </div>
+    
+     <div class="collapse navbar-collapse" id="navbar-collapse">
+      <ul class="nav navbar-nav">
+            {#}{% if app.user is not null and is_granted('IS_AUTHENTICATED_FULLY') %}
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ "events"|trans }} <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+          	<li><a href="{{ path('event_create') }}">create_event</a></li>
+            <li><a href="{{ path('event_list', {'user_id' : app.user.id}) }}">my_events</a></li>
+          </ul>
+        </li>
+        {% endif %}#}
+      </ul>
+      <form class="navbar-form navbar-left" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" id="navbar-search-input" placeholder="Search">
+        </div>
+      </form>
+      <ul class="nav navbar-nav navbar-right">
+      {% if app.user is not null and is_granted('IS_AUTHENTICATED_FULLY') %}
+       {{ render(controller('AvanzuAdminThemeBundle:Navbar:messages')) }}
+       {{ render(controller('AvanzuAdminThemeBundle:Navbar:notifications')) }}
+       
                                 {{ render(controller('AvanzuAdminThemeBundle:Navbar:tasks')) }}
                                 {{ render(controller('AvanzuAdminThemeBundle:Navbar:user')) }}
                                 {% else %}
  								<li><a href="{{ path("fos_user_security_login") }}" data-toggle="control-sidebar">{{ "se_connecter" }}</a></li>
                                 {% endif %}
-                                 <li><a href="#" data-toggle="control-sidebar">{{ "contact" }}</a></li>
-                            {% endblock %}
-                        </ul>
-                    </div>
-                    
-            
-            </nav>
-        </header>
-    {% endblock %}
+  
+        <li><a href="#" data-toggle="control-sidebar">{{ "contact" }}</a></li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>
+</header>
+{% endblock %}
 
         <!-- Left side column. contains the logo and sidebar -->
         <aside class="main-sidebar sidebar-offcanvas">
@@ -114,13 +131,31 @@
         <footer class="main-footer">
             <div class="pull-right hidden-xs">
                 <b>Version</b> 2.0
+               
             </div>
-            <strong>CANTREL Elodie 2015-2016</strong>
+            <strong>CANTREL Elodie / LESCIEUX Matthieu 2015-2016</strong>
         </footer>
     {% endblock %}
 
     </div>
 <!-- ./wrapper -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"></h4>
+      </div>
+      <div class="modal-body">
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">{{ "close"|trans }}</button>
+        <button type="button" class="btn btn-primary">{{ "save"|trans }}</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 {# ------------------------------------------------------------------------------------------------------ JAVASCRIPTS #}
 {% block javascripts %}

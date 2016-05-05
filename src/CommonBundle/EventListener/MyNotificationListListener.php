@@ -1,8 +1,6 @@
 <?php
 namespace CommonBundle\EventListener;
 
-// ...
-
 use Avanzu\AdminThemeBundle\Event\NotificationListEvent;
 use CommonBundle\Model\NotificationModel;
 

@@ -1,12 +1,27 @@
 services:
-#    common.example:
-#        class: CommonBundle\Example
-#        arguments: ["@service_id", "plain_value", %parameter%]
     common_bundle.notification_listener:
         class: CommonBundle\EventListener\MyNotificationListListener
-        #arguments: ["@security.context"]
         tags:
-            - { name: kernel.event_listener, event: theme.navbar_snotification, method: onListNotifications }
+            - { name: kernel.event_listener, event: theme.notifications, method: onListNotifications }
+            
+    common_bundle.message_list_listener:
+        class: CommonBundle\EventListener\MyMessageListListener
+        tags:
+            - { name: kernel.event_listener, event: theme.messages, method: onListMessages }
+            
+    common_bundle.menu_listener:
+        class: CommonBundle\EventListener\MyMenuItemListListener
+        tags:
+            - { name: kernel.event_listener, event: theme.sidebar_setup_menu, method: onSetupMenu }
+            
+    common_bundle.breadcrumb_listener:
+        class: CommonBundle\EventListener\MyMenuItemListListener
+        tags:
+            - { name: kernel.event_listener, event:theme.breadcrumb, method:onSetupMenu }
             
 parameters:
     common_bundle.notification_listener.class: CommonBundle\EventListener\MyNotificationListListener
+    common_bundle.show_user_listener.class: CommonBundle\EventListener\MyMessageListListener
+    common_bundle.menu_listener.class: CommonBundle\EventListener\MyMenuItemListListener
+
+        
