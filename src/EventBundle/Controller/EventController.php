@@ -167,7 +167,7 @@ class EventController extends Controller
     	$em = $this->getDoctrine()->getEntityManager();
     	$items = $em->getRepository('EventBundle:Item')->findAll();
     	 
-    	$form = $this->createForm(new RequirementType(array('items' => $items)));
+    	$form = $this->createForm(new RequirementType($em));
     	
     	if($form->handleRequest($request)->isSubmitted()){
     		$data = $form->getData();
@@ -189,10 +189,8 @@ class EventController extends Controller
     	}
     	
     	return $this->render('EventBundle:event:add_requirement.html.twig',array(
-    			'form' => $form->createView()
-    			
-    	));
-    	
+    			'form' => $form->createView()		
+    	));	
     }
     
     /**
@@ -203,16 +201,40 @@ class EventController extends Controller
      */
     public function removeRequirementEventAction(Request $request,Requirement $requirement)
     {
-    
     	$em = $this->getDoctrine()->getManager();
     	$em->remove($requirement);
     	$em->flush();
     
-    	return new JsonResponse(array(
-    			
-    			'success' => 'true'
-    			
+    	return new JsonResponse(array(	
+    			'success' => 'true'			
     	));
+    }
+    
+    /**
+     * 
+     */
+    public function autocompleteAction(Request $request)
+    {
+    	$items = array();
+    	$term = trim(strip_tags($request->get('term')));
+    
+    	$em = $this->getDoctrine()->getManager();
+    	
+    	$entities = $em->getRepository('EventBundle:Item')->createQueryBuilder('i')
+    	->where('i.name LIKE :name')
+    	->setParameter('name', '%'.$term.'%')
+    	->getQuery()
+    	->getResult();
+    
+    	foreach ($entities as $entity)
+    	{
+    		$items[] = $entity->getName();
+    	}
+    
+    	$response = new JsonResponse();
+    	$response->setData($items);
+    
+    	return $response;
     }
     
     

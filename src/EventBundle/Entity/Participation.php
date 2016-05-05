@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Event
  *
  * @ORM\Table(name="participation")
- * @ORM\Entity(repositoryClass="EventBundle\Repository\ParticipcationRepository")
+ * @ORM\Entity(repositoryClass="EventBundle\Repository\ParticipationRepository")
  */
 class Participation
 {

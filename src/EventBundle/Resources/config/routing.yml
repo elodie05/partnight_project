@@ -36,3 +36,11 @@ event_removerequirement:
     defaults: { _controller: EventBundle:Event:removeRequirementEvent }
     requirements:
         requirement_id: \d
+        
+autocomplete_item:
+    path:     /event/autocomp_requirement
+    defaults: { _controller: EventBundle:Event:autocomplete }
+    options:
+        expose: true
+    
+    
