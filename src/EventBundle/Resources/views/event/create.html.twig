@@ -1,6 +1,9 @@
 {% extends 'CommonBundle:layout:base-layout.html.twig'  %}
 
 {% block title %}{%if action =="update"%}{{"update_event"|trans }}{%else%}{{"create_event"|trans }}{%endif%}{% endblock title %}
+
+{% block page_title %}{%if action =="update"%}{{ event.name }}{%else%}{{"create_event"|trans }}{%endif%}{% endblock %}
+
 {% block page_content %}
 
 <div class="box box-default box-solid">
@@ -21,7 +24,7 @@
 </div>
 
 {% if action == "update" %}
-<div class="box box-primary box-solid">
+<div class="box box-default box-solid">
 	<div class="box-header with-border">
     	<h4 class="box-title">{{ "requirements"|trans }}</h4>
        		<div class="box-tools pull-right">
@@ -31,7 +34,7 @@
    </div>
             <!-- /.box-header -->
    <div class="box-body">
-	{% if event.requirements %}
+	{% if event.requirements is not empty %}
 				<table role="grid" id="table_requirements" class="table table-bordered table-striped">
                 <thead>
                 <tr>
@@ -45,8 +48,10 @@
 				<tr>
 					<td>{{ requirement.item.name }}</td>
 					<td>{{ requirement.quantity }} </td>
-					<td><a class="glyphicon glyphicon-remove" href="" ></a>
-					<a class="glyphicon glyphicon-edit" href="" ></a></td>
+					<td><button type="button" class="btn btn-default removeEventRequirement btn-xs"
+			            data-url="{{ path('event_removerequirement',{'requirement_id' : requirement.id}) }}" data-toggle="modal"
+			            data-target="#confirmDeleteEventRequirement" data-backdrop="false"><span class="glyphicon glyphicon-remove"></span></button>
+			        </td>
 				</tr>
 					{% endfor %}
 					</tbody>
@@ -55,7 +60,7 @@
 	{{ "no_element"|trans }}
 	{%  endif %}
 	{% if event.id %}
-	<button type="button" id="btn_add_event_requirement" class="btn btn-primary"
+	<button type="button" id="btn_add_event_requirement" class="btn btn-default"
             data-url="{{ path('event_addrequirement',{'event_id' : event.id}) }}" data-toggle="modal"
             data-target="#myModal" data-backdrop="false">{{ 'add'|trans }}</button>
    {% endif %}
@@ -65,6 +70,23 @@
             <!-- /.box-body -->
 </div>
 
+<div class="modal fade" id="confirmDeleteEventRequirement" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">{{ 'confirm_delete'|trans }}</h4>
+      </div>
+      <div class="modal-body">
+       {{ 'msg_confirm_delete'|trans }}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">{{ "close"|trans }}</button>
+        <button type="button" class="btn btn-primary" id="btn_confirm_delete_event_requirement">{{ "confirm"|trans }}</button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock page_content %}
 
 {% block javascripts %}
@@ -81,12 +103,10 @@
 	        create_update_event_requirement(url,{});
 	        return false;
 	    });
-	    $(document).on('click', '.removeTypeUser', function(){remove_type_user($(this).attr("data-url"),{});return false;});
-	    $(document).on('click', '.updateTypeUser', function(){create_update_type_user($(this).attr("data-url"),{});return false; });
-
+	    $(document).on('click', '.removeEventRequirement', function(){remove_event_requirement($(this).attr("data-url"),{});return false;});
 	     
-	    function remove_type_user (url) {
-	        $('#btn_confirm_delete_type_user').click(function(){
+	    function remove_event_requirement (url) {
+	        $('#btn_confirm_delete_event_requirement').click(function(){
 	            $.ajax({
 	                type : 'POST',
 	                url : url,

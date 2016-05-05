@@ -12,44 +12,17 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use EventBundle\Form\RequirementType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter;
+use EventBundle\Entity\Requirement;
 
 class EventController extends FOSRestController
 {
-    /**
-     * Create event
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function postEventAction(Request $request)
-    {
-        $user = $this->get('security.context')->getToken()->getUser();
-        $event = new Event();
-        $event->setUser($user);
-        
-        $form = $this->createForm(new EventType(),$event);
-        
-        if($form->handleRequest($request)->isValid())
-        {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($event);
-            $em->flush();
-            
-            //return $this->redirect('event_view');
-        }
-    
-        return $this->render('EventBundle:event:create.html.twig',array(
-                'form' => $form->createView(),
-                'action' => 'create',
-                'event' => $event
-        ));
-    }
-
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws AccessDeniedException
      */
-    public function getEventsAction(){
+    public function getEventsAction()
+    {
         $token = $this->get('security.token_storage')->getToken();
 
         if (null === $token) {
@@ -76,12 +49,43 @@ class EventController extends FOSRestController
      * @param Event $event
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getEventAction(Event $event){
+    public function getEventAction(Event $event)
+    {
         $view = $this->view($event, 200)
             ->setTemplate('EventBundle:event:view.html.twig')
             ->setTemplateVar('event');
 
         return $this->handleView($view);
+    }
+
+    /**
+     * Create event
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function postEventAction(Request $request)
+    {
+        $user = $this->get('security.context')->getToken()->getUser();
+        $event = new Event();
+        $event->setUser($user);
+
+        $form = $this->createForm(new EventType(), $event);
+
+        if ($form->handleRequest($request)->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($event);
+            $em->flush();
+
+
+            // return $this->redirectToRoute('oc_platform_home');
+
+        }
+
+        return $this->render('EventBundle:event:create.html.twig', array(
+            'form' => $form->createView(),
+            'action' => 'create',
+            'event' => $event
+        ));
     }
 
     /**
@@ -95,35 +99,35 @@ class EventController extends FOSRestController
     {
         $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getEntityManager();
-        $form = $this->createForm(new form\EventType(),$event);
-        
-        if($form->handleRequest($request)->isValid()){
+        $form = $this->createForm(new form\EventType(), $event);
+
+        if ($form->handleRequest($request)->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($event);
             $em->flush();
         }
 
-        return $this->render('EventBundle:event:create.html.twig',array(
-                'form' => $form->createView(),
-                'action' => 'update',
-                'event' => $event
+        return $this->render('EventBundle:event:create.html.twig', array(
+            'form' => $form->createView(),
+            'action' => 'update',
+            'event' => $event
         ));
     }
-    
+
     /**
      * Delete event
      *
      * @param Request $request
      * @param Event $event
      */
-    public function deleteEventAction(Request $request,Event $event)
+    public function deleteEventAction(Request $request, Event $event)
     {
 
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($event);
-            $em->flush();
-        
-    
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($event);
+        $em->flush();
+
+
         /*return $this->render('EventBundle:event:create.html.twig',array(
                 'form' => $form->createView()
         ));*/
@@ -137,41 +141,86 @@ class EventController extends FOSRestController
      *
      * @return JsonResponse
      */
-    public function addRequirementEventAction(Request $request, Event $event){
-    	$success = false;
-    	$response = $this->forward('EventBundle:Event:addRequirementEventForm', array(
-        'event'  => $event
-    	));
-    	
-    	return new JsonResponse(array(
-    			'page' => $response->getContent(),
-    			'success' => $success
-    			
-    	    )
-    	);
-    		
+    public function addRequirementEventAction(Request $request, Event $event)
+    {
+        $success = 'false';
+        $page = '';
+        $titre = $this->get('translator')->trans('add_requirement');
+
+        $response = $this->forward('EventBundle:Event:addRequirementEventForm', array(
+            'event' => $event
+        ));
+
+        if ($request->getSession()->getFlashBag()->get('add_requirement_success')) {
+            $success = 'true';
+        } else {
+            $page = $response->getContent();
+        }
+
+        return new JsonResponse(array(
+                'page' => $page,
+                'success' => $success,
+                'title' => $titre
+            )
+        );
+
     }
-    
+
     /**
      *
      * @param Event $event
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function addRequirementEventFormAction(Event $event){
-    	$em = $this->getDoctrine()->getEntityManager();
-    	$items = $em->getRepository('EventBundle:Item')->findAll();
-    	 
-    	$form = $this->createForm(new RequirementType(array('items' => $items)));
-    	
-    	if($form->isValid()){
-    		$data = $form->getData();
-    		var_dump($data);exit;
-    	}
-    	
-    	return $this->render('EventBundle:event:add_requirement.html.twig',array(
-    			'form' => $form->createView(),
-    			'success' => true
-    	));
-    	
+    public function addRequirementEventFormAction(Request $request, Event $event)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $items = $em->getRepository('EventBundle:Item')->findAll();
+
+        $form = $this->createForm(new RequirementType(array('items' => $items)));
+
+        if ($form->handleRequest($request)->isSubmitted()) {
+            $data = $form->getData();
+            $isRequirement = $em->getRepository('EventBundle:Requirement')->findOneBy(array('item' => $data->getItem(), 'event' => $event));
+
+            if ($isRequirement) {
+                $isRequirement->setQuantity($data->getQuantity());
+                $em->persist($isRequirement);
+            } else {
+                $requirement = new Requirement();
+                $requirement->setEvent($event);
+                $requirement->setItem($data->getItem());
+                $requirement->setQuantity($data->getQuantity());
+                $em->persist($requirement);
+            }
+
+            $em->flush();
+            $request->getSession()->getFlashBag()->add('add_requirement_success', 'success');
+        }
+
+        return $this->render('EventBundle:event:add_requirement.html.twig', array(
+            'form' => $form->createView()
+
+        ));
+
+    }
+
+    /**
+     * Delete requirement event
+     * @ParamConverter("requirement", options={"mapping": {"requirement_id": "id"}})
+     * @param Request $request
+     * @param Requirement $requirement
+     */
+    public function removeRequirementEventAction(Request $request, Requirement $requirement)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($requirement);
+        $em->flush();
+
+        return new JsonResponse(array(
+
+            'success' => 'true'
+
+        ));
     }
 }

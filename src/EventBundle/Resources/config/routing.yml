@@ -3,7 +3,7 @@ event_create:
     defaults: { _controller: EventBundle:Event:create }
 
 event_list:
-    path:     /events/{user_id}
+    path:     /events
     defaults: { _controller: EventBundle:Event:list }
     requirements:
         user_id: \d
@@ -30,3 +30,9 @@ event_addrequirement:
     defaults: { _controller: EventBundle:Event:addRequirementEvent }
     requirements:
         event_id: \d
+        
+event_removerequirement:
+    path:     /event/remove_requirement/{requirement_id}
+    defaults: { _controller: EventBundle:Event:removeRequirementEvent }
+    requirements:
+        requirement_id: \d
