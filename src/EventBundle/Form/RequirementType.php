@@ -6,6 +6,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use EventBundle;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class RequirementType extends AbstractType
 {
@@ -18,7 +20,8 @@ class RequirementType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        	->add('item', ChoiceType::class,array(
+        	->add('item', EntityType::class,array(
+        			'class' => 'EventBundle\Entity\Item',
         			'choices' => $this->options['items'],
         			'multiple' => false,
         			'expanded' => false
