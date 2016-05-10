@@ -57,7 +57,7 @@ class Participation
      * @param boolean $response
      * @return Participation
      */
-    public function setResponse($response)
+    public function setResponse($response = null)
     {
         $this->response = $response;
 

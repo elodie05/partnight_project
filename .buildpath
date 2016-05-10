@@ -14,12 +14,14 @@
 	<buildpathentry kind="src" path="vendor/symfony/polyfill-php54/Resources/stubs"/>
 	<buildpathentry kind="src" path="vendor/ircmaxell/password-compat/lib"/>
 	<buildpathentry kind="src" path="vendor/paragonie/random_compat/lib"/>
+	<buildpathentry kind="src" path="vendor/willdurand/jsonp-callback-validator/src"/>
 	<buildpathentry kind="src" path="vendor/symfony/polyfill-mbstring"/>
 	<buildpathentry kind="src" path="vendor/sensio/generator-bundle"/>
 	<buildpathentry kind="src" path="vendor/friendsofsymfony/user-bundle"/>
 	<buildpathentry kind="src" path="vendor/doctrine/doctrine-bundle"/>
 	<buildpathentry kind="src" path="app"/>
 	<buildpathentry kind="src" path="vendor/twig/twig/lib"/>
+	<buildpathentry kind="src" path="vendor/friendsofsymfony/jsrouting-bundle"/>
 	<buildpathentry kind="src" path="vendor/doctrine/orm/lib"/>
 	<buildpathentry kind="src" path="vendor/symfony/polyfill-util"/>
 	<buildpathentry kind="src" path="vendor/doctrine/lexer/lib"/>
@@ -44,8 +46,8 @@
 	<buildpathentry kind="src" path="vendor/doctrine/common/lib"/>
 	<buildpathentry kind="src" path="vendor/swiftmailer/swiftmailer/lib"/>
 	<buildpathentry kind="src" path="vendor/symfony/monolog-bundle"/>
-	<buildpathentry kind="src" path="vendor/doctrine/collections/lib"/>
 	<buildpathentry kind="src" path="vendor/sensio/distribution-bundle"/>
+	<buildpathentry kind="src" path="vendor/doctrine/collections/lib"/>
 	<buildpathentry excluding="Resources/stubs/" kind="src" path="vendor/symfony/polyfill-php54"/>
 	<buildpathentry kind="src" path="vendor/sensiolabs/security-checker"/>
 </buildpath>

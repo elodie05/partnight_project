@@ -5,6 +5,34 @@
                     {% block page_subtitle %}{% endblock %}
 {% block page_content %}
 
+{% if participation %}
+{% if participation.response is null %}
+<div class="box">
+  <div class="box-header with-border">
+    <h3 class="box-title">{{ 'participation'|trans }}</h3>
+    <div class="box-tools pull-right">
+    </div><!-- /.box-tools -->
+  </div><!-- /.box-header -->
+  <div class="box-body">
+    {{ 'question_participation'|trans }}
+  </div><!-- /.box-body -->
+  <div class="box-footer">
+    <button type="button" class="btn btn-default" id="btn_participation_yes" data-url ="{{ path('event_create')}}">{{ "yes"|trans }}</button>
+    <button type="button" class="btn btn-default" id="btn_participation_no" data-url ="{{ path('event_create')}}">{{ "no"|trans }}</button>
+  </div><!-- box-footer -->
+</div><!-- /.box -->
+{% else %}
+<div class="info-box">
+  <!-- Apply any bg-* class to to the icon to color it -->
+  <span class="info-box-icon bg-red"><i class="fa fa-star-o"></i></span>
+  <div class="info-box-content">
+    <span class="info-box-text">GROSSE SOIREE</span>
+    <span class="info-box-number">J'espère que t'es deter' !</span>
+  </div><!-- /.info-box-content -->
+</div><!-- /.info-box -->
+{% endif %}
+{% endif %}
+
 <div class="box box-default box-solid">
 	<div class="box-header with-border">
     	<h4 class="box-title">{{ "informations"|trans }}</h4>
