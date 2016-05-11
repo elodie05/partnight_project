@@ -1,38 +1,46 @@
-event_create:
-    path:     /event/create
-    defaults: { _controller: EventBundle:Event:create }
+event_event:
+    type: rest
+    resource: "@EventBundle/Controller/EventController.php"
 
-event_list:
-    path:     /events
-    defaults: { _controller: EventBundle:Event:list }
-    requirements:
-        user_id: \d
+event_requirement:
+    type: rest
+    resource: "@EventBundle/Controller/RequirementController.php"
 
-event_view:
-    path:     /event/{event_id}
-    defaults: { _controller: EventBundle:Event:view }
-    requirements:
-        event_id: \d
-
-event_update:
-    path:     /event/update/{event_id}
-    defaults: { _controller: EventBundle:Event:update }
-    requirements:
-        event_id: \d
-event_remove:
-    path:     /event/remove/{event_id}
-    defaults: { _controller: EventBundle:Event:remove }
-    requirements:
-        event_id: \d
-        
-event_addrequirement:
-    path:     /event/add_requirement/{event_id}
-    defaults: { _controller: EventBundle:Event:addRequirementEvent }
-    requirements:
-        event_id: \d
-        
-event_removerequirement:
-    path:     /event/remove_requirement/{requirement_id}
-    defaults: { _controller: EventBundle:Event:removeRequirementEvent }
-    requirements:
-        requirement_id: \d
+#event_create:
+#    path:     /event/create
+#    defaults: { _controller: EventBundle:Event:create }
+#
+#event_list:
+#    path:     /events
+#    defaults: { _controller: EventBundle:Event:list }
+#    requirements:
+#        user_id: \d
+#
+#event_view:
+#    path:     /event/{event_id}
+#    defaults: { _controller: EventBundle:Event:view }
+#    requirements:
+#        event_id: \d
+#
+#event_update:
+#    path:     /event/update/{event_id}
+#    defaults: { _controller: EventBundle:Event:update }
+#    requirements:
+#        event_id: \d
+#event_remove:
+#    path:     /event/remove/{event_id}
+#    defaults: { _controller: EventBundle:Event:remove }
+#    requirements:
+#        event_id: \d
+#
+#event_addrequirement:
+#    path:     /event/add_requirement/{event_id}
+#    defaults: { _controller: EventBundle:Event:addRequirementEvent }
+#    requirements:
+#        event_id: \d
+#
+#event_removerequirement:
+#    path:     /event/remove_requirement/{requirement_id}
+#    defaults: { _controller: EventBundle:Event:removeRequirementEvent }
+#    requirements:
+#        requirement_id: \d

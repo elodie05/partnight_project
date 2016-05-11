@@ -8,6 +8,7 @@ use EventBundle\Form as form;
 use EventBundle\Entity as entity;
 use EventBundle\Entity\Event;
 use EventBundle\Form\EventType;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use EventBundle\Form\RequirementType;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -76,9 +77,9 @@ class EventController extends FOSRestController
             $em->persist($event);
             $em->flush();
 
+            $view = $this->view($event, 200);
 
-            // return $this->redirectToRoute('oc_platform_home');
-
+            return $this->handleView($view);
         }
 
         return $this->render('EventBundle:event:create.html.twig', array(
@@ -97,9 +98,7 @@ class EventController extends FOSRestController
      */
     public function putEventAction(Request $request, Event $event)
     {
-        $user = $this->get('security.context')->getToken()->getUser();
-        $em = $this->getDoctrine()->getEntityManager();
-        $form = $this->createForm(new form\EventType(), $event);
+        $form = $this->createForm(new EventType(), $event);
 
         if ($form->handleRequest($request)->isValid()) {
             $em = $this->getDoctrine()->getManager();
@@ -115,22 +114,14 @@ class EventController extends FOSRestController
     }
 
     /**
-     * Delete event
-     *
-     * @param Request $request
      * @param Event $event
      */
-    public function deleteEventAction(Request $request, Event $event)
+    public function deleteEventAction(Event $event)
     {
 
         $em = $this->getDoctrine()->getManager();
         $em->remove($event);
         $em->flush();
-
-
-        /*return $this->render('EventBundle:event:create.html.twig',array(
-                'form' => $form->createView()
-        ));*/
     }
 
     /**
@@ -141,6 +132,7 @@ class EventController extends FOSRestController
      *
      * @return JsonResponse
      */
+    /*
     public function addRequirementEventAction(Request $request, Event $event)
     {
         $success = 'false';
@@ -165,12 +157,14 @@ class EventController extends FOSRestController
         );
 
     }
+    */
 
     /**
      *
      * @param Event $event
      * @return \Symfony\Component\HttpFoundation\Response
      */
+    /*
     public function addRequirementEventFormAction(Request $request, Event $event)
     {
         $em = $this->getDoctrine()->getEntityManager();
@@ -203,6 +197,7 @@ class EventController extends FOSRestController
         ));
 
     }
+    */
 
     /**
      * Delete requirement event
@@ -210,6 +205,7 @@ class EventController extends FOSRestController
      * @param Request $request
      * @param Requirement $requirement
      */
+    /*
     public function removeRequirementEventAction(Request $request, Requirement $requirement)
     {
 
@@ -223,4 +219,5 @@ class EventController extends FOSRestController
 
         ));
     }
+    */
 }

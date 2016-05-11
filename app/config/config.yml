@@ -87,3 +87,4 @@ fos_rest:
         default_engine: twig
     routing_loader:
         default_format: html
+    param_fetcher_listener: true
