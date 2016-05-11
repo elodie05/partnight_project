@@ -47,7 +47,7 @@
 {% else %}
 	{{ "no_element"|trans }}
 {% endif %}
-<button type="button" class="btn" data-toggle="modal" data-target="#myModal">{{ "add"|trans }}</button>
+<button type="button" class="btn btn-default" id="btn_create_event" data-url ="{{ path('event_create')}}">{{ "create"|trans }}</button>
 {% endblock page_content %}
 
 {% block javascripts %}
@@ -55,6 +55,11 @@
 <script>
 $(document).ready(function() {
     $('#table_events').DataTable();
+
+    $(document).on('click', '#btn_create_event', function(){
+        var url=$(this).attr("data-url");
+        document.location.href= url;
+    });
 } );
 </script>
 {% endblock javascripts %}

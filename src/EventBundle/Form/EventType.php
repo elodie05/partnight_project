@@ -33,7 +33,11 @@ class EventType extends AbstractType
                                                 'format' => 'MM/dd/yyyy',
                                                 'attr' => array('class' => 'date'),
                                                 ))
-            ->add('save','submit')
+            ->add('save','submit',array(
+            		'attr' => array(
+            				'class' => 'btn btn-default'
+            		)
+            ))
         ;
     }
     

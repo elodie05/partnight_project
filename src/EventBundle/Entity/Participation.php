@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Event
  *
  * @ORM\Table(name="participation")
- * @ORM\Entity(repositoryClass="EventBundle\Repository\ParticipcationRepository")
+ * @ORM\Entity(repositoryClass="EventBundle\Repository\ParticipationRepository")
  */
 class Participation
 {
@@ -54,7 +54,7 @@ class Participation
      * @param boolean $response
      * @return Participation
      */
-    public function setResponse($response)
+    public function setResponse($response = null)
     {
         $this->response = $response;
 

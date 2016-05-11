@@ -19,12 +19,15 @@ class NotificationModel implements NotificationInterface
     protected $message;
 
     protected $icon;
+    
+    protected $identifier;
 
-    function __construct($message = null, $type = 'info', $icon = 'fa fa-warning')
+    function __construct($message = null, $identifier,$type = 'info', $icon = 'fa fa-warning' )
     {
         $this->message = $message;
         $this->type    = $type;
         $this->icon    = $icon;
+        $this->identifier = $identifier;
     }
 
 
@@ -89,7 +92,8 @@ class NotificationModel implements NotificationInterface
 
     public function getIdentifier()
     {
-        return $this->message;
+        //return $this->message;
+        return $this->identifier;
     }
 
 }

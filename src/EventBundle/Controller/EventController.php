@@ -123,101 +123,31 @@ class EventController extends FOSRestController
         $em->remove($event);
         $em->flush();
     }
-
+    
     /**
-     * Add requirement for an event
-     *
-     * @param Request $request
-     * @param Event $event
-     *
-     * @return JsonResponse
+     * 
      */
-    /*
-    public function addRequirementEventAction(Request $request, Event $event)
+    public function autocompleteAction(Request $request)
     {
-        $success = 'false';
-        $page = '';
-        $titre = $this->get('translator')->trans('add_requirement');
-
-        $response = $this->forward('EventBundle:Event:addRequirementEventForm', array(
-            'event' => $event
-        ));
-
-        if ($request->getSession()->getFlashBag()->get('add_requirement_success')) {
-            $success = 'true';
-        } else {
-            $page = $response->getContent();
-        }
-
-        return new JsonResponse(array(
-                'page' => $page,
-                'success' => $success,
-                'title' => $titre
-            )
-        );
-
+    	$items = array();
+    	$term = trim(strip_tags($request->get('term')));
+    
+    	$em = $this->getDoctrine()->getManager();
+    	
+    	$entities = $em->getRepository('EventBundle:Item')->createQueryBuilder('i')
+    	->where('i.name LIKE :name')
+    	->setParameter('name', '%'.$term.'%')
+    	->getQuery()
+    	->getResult();
+    
+    	foreach ($entities as $entity)
+    	{
+    		$items[] = $entity->getName();
+    	}
+    
+    	$response = new JsonResponse();
+    	$response->setData($items);
+    
+    	return $response;
     }
-    */
-
-    /**
-     *
-     * @param Event $event
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    /*
-    public function addRequirementEventFormAction(Request $request, Event $event)
-    {
-        $em = $this->getDoctrine()->getEntityManager();
-        $items = $em->getRepository('EventBundle:Item')->findAll();
-
-        $form = $this->createForm(new RequirementType(array('items' => $items)));
-
-        if ($form->handleRequest($request)->isSubmitted()) {
-            $data = $form->getData();
-            $isRequirement = $em->getRepository('EventBundle:Requirement')->findOneBy(array('item' => $data->getItem(), 'event' => $event));
-
-            if ($isRequirement) {
-                $isRequirement->setQuantity($data->getQuantity());
-                $em->persist($isRequirement);
-            } else {
-                $requirement = new Requirement();
-                $requirement->setEvent($event);
-                $requirement->setItem($data->getItem());
-                $requirement->setQuantity($data->getQuantity());
-                $em->persist($requirement);
-            }
-
-            $em->flush();
-            $request->getSession()->getFlashBag()->add('add_requirement_success', 'success');
-        }
-
-        return $this->render('EventBundle:event:add_requirement.html.twig', array(
-            'form' => $form->createView()
-
-        ));
-
-    }
-    */
-
-    /**
-     * Delete requirement event
-     * @ParamConverter("requirement", options={"mapping": {"requirement_id": "id"}})
-     * @param Request $request
-     * @param Requirement $requirement
-     */
-    /*
-    public function removeRequirementEventAction(Request $request, Requirement $requirement)
-    {
-
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($requirement);
-        $em->flush();
-
-        return new JsonResponse(array(
-
-            'success' => 'true'
-
-        ));
-    }
-    */
 }
