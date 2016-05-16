@@ -145,7 +145,7 @@ class User extends BaseUser
      * @param \UserBundle\Entity\Event $events
      * @return User
      */
-    public function addEvent(\UserBundle\Entity\Event $events)
+    public function addEvent(\EventBundle\Entity\Event $events)
     {
         $this->events[] = $events;
 
@@ -157,7 +157,7 @@ class User extends BaseUser
      *
      * @param \UserBundle\Entity\Event $events
      */
-    public function removeEvent(\UserBundle\Entity\Event $events)
+    public function removeEvent(\EventBundle\Entity\Event $events)
     {
         $this->events->removeElement($events);
     }

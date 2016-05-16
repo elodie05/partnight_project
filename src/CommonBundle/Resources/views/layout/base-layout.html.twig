@@ -97,8 +97,9 @@
                     {% if app.user is not null and is_granted('IS_AUTHENTICATED_FULLY') %}
                         {{ render(controller('AvanzuAdminThemeBundle:Sidebar:userPanel')) }}
                         {{ render(controller('AvanzuAdminThemeBundle:Sidebar:searchForm')) }}
+                         {{ render(controller('AvanzuAdminThemeBundle:Sidebar:menu', {'request':app.request})) }}
                     {% endif %}
-                    {{ render(controller('AvanzuAdminThemeBundle:Sidebar:menu', {'request':app.request})) }}
+                   
                 {% endblock %}
             </section>
             <!-- /.sidebar -->
