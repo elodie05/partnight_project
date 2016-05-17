@@ -22,6 +22,7 @@ class AppKernel extends Kernel
             new CommonBundle\CommonBundle(),
         	new Avanzu\AdminThemeBundle\AvanzuAdminThemeBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
+        		
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
