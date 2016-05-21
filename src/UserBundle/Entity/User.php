@@ -2,6 +2,7 @@
 
 namespace UserBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
 
@@ -19,6 +20,7 @@ class User extends BaseUser
 		parent::__construct ();
 		$this->signInDate = new \DateTime();
 		$this->events = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->friends = new ArrayCollection();
 		// your own logic
 	}
 	
@@ -52,8 +54,13 @@ class User extends BaseUser
      *
      */
     private $events;
-    
 
+    /**
+     * @var
+     *
+     * @ORM\ManyToMany(targetEntity="User")
+     */
+    private $friends;
 
 
     /**
@@ -170,5 +177,29 @@ class User extends BaseUser
     public function getEvents()
     {
         return $this->events;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function addFriend(User $user)
+    {
+        $this->friends->add($user);
+    }
+
+    /**
+     * @param User $user
+     */
+    public function removeFriend(User $user)
+    {
+        $this->friends->removeElement($user);
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getFriends()
+    {
+        return $this->friends;
     }
 }
