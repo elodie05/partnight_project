@@ -33,25 +33,21 @@ class User extends BaseUser
     
     /**
      * @ORM\Column(name="signInDate", type="datetime")
-     * 
      */
     private $signInDate;
     
     /**
      * @ORM\Column(name="lastName", type="string")
-     *
      */
     private $lastName;
     
     /**
      * @ORM\Column(name="firstName", type="string")
-     *
      */
     private $firstName;
     
     /**
-     * @ORM\ManyToMany(targetEntity="EventBundle\Entity\Event", mappedBy="users")
-     *
+     * @ORM\OneToMany(targetEntity="EventBundle\Entity\Event", mappedBy="user")
      */
     private $events;
 
@@ -61,7 +57,6 @@ class User extends BaseUser
      * @ORM\ManyToMany(targetEntity="User")
      */
     private $friends;
-
 
     /**
      * Get id

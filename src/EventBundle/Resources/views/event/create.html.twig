@@ -16,7 +16,7 @@
    </div>
             <!-- /.box-header -->
    <div class="box-body">
-	   {{ form_start(form) }}
+	   {{ form_start(form, {'action': path('post_event')}) }}
 	   {{ form_end(form) }}
 	   {{ form_errors(form) }}
    </div>
