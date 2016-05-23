@@ -59,6 +59,18 @@ class EventController extends FOSRestController
         return $this->handleView($view);
     }
 
+    public function newEventAction(Request $request)
+    {
+        $event = new Event();
+        $form = $this->createForm(new EventType(), $event);
+
+        return $this->render('EventBundle:event:create.html.twig', array(
+            'form' => $form->createView(),
+            'action' => 'create',
+            'event' => $event
+        ));
+    }
+
     /**
      * Create event
      * @param Request $request
@@ -69,7 +81,6 @@ class EventController extends FOSRestController
         $user = $this->get('security.context')->getToken()->getUser();
         $event = new Event();
         $event->setUser($user);
-
         $form = $this->createForm(new EventType(), $event);
 
         if ($form->handleRequest($request)->isValid()) {
@@ -77,16 +88,10 @@ class EventController extends FOSRestController
             $em->persist($event);
             $em->flush();
 
-            $view = $this->view($event, 200);
+            $view = $this->routeRedirectView('get_event', array('event' => $event->getId()), 301);
 
             return $this->handleView($view);
         }
-
-        return $this->render('EventBundle:event:create.html.twig', array(
-            'form' => $form->createView(),
-            'action' => 'create',
-            'event' => $event
-        ));
     }
 
     /**

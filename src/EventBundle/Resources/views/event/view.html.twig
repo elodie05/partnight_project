@@ -5,7 +5,7 @@
                     {% block page_subtitle %}{% endblock %}
 {% block page_content %}
 
-{% if participation %}
+{% if participation is defined %}
 {% if participation.response is null %}
 <div class="box">
   <div class="box-header with-border">
@@ -17,8 +17,8 @@
     {{ 'question_participation'|trans }}
   </div><!-- /.box-body -->
   <div class="box-footer">
-    <button type="button" class="btn btn-default" id="btn_participation_yes" data-url ="{{ path('event_create')}}">{{ "yes"|trans }}</button>
-    <button type="button" class="btn btn-default" id="btn_participation_no" data-url ="{{ path('event_create')}}">{{ "no"|trans }}</button>
+    <button type="button" class="btn btn-default" id="btn_participation_yes" data-url ="{{ path('new_events')}}">{{ "yes"|trans }}</button>
+    <button type="button" class="btn btn-default" id="btn_participation_no" data-url ="{{ path('new_events')}}">{{ "no"|trans }}</button>
   </div><!-- box-footer -->
 </div><!-- /.box -->
 {% else %}
@@ -33,77 +33,92 @@
 {% endif %}
 {% endif %}
 
-<div class="box box-default box-solid">
-	<div class="box-header with-border">
-    	<h4 class="box-title">{{ "informations"|trans }}</h4>
-       		<div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+<div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#tab_1" data-toggle="tab">{{ "informations"|trans }}</a></li>
+              <li><a href="#tab_2" data-toggle="tab">{{ "where_is"|trans }}</a></li>
+              <li><a href="#tab_3" data-toggle="tab">{{ "requirements"|trans }}</a></li>
+              <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active" id="tab_1">
+                <div class="box box-default box-solid">
+				   <div class="box-body">
+					    <div class="col-xs-6 col-md-4">{{ "name"|trans }}</div>
+					   	<div class="col-xs-6 col-md-4">{{ event.name }}</div>
+					   	
+					   	<div class="col-xs-6 col-md-4">{{ "description"|trans }}</div>
+					   	<div class="col-xs-6 col-md-4">{{ event.description }}</div>
+					   	
+					   	<div class="col-xs-6 col-md-4">{{ "location"|trans }}</div>
+					   	<div class="col-xs-6 col-md-4">{{ event.location }}</div>
+					   	
+					   	<div class="col-xs-6 col-md-4">{{ "start_date"|trans }}</div>
+					   	<div class="col-xs-6 col-md-4">{{ event.startDate|date('d/m/Y') }} - {{ event.startDate|date('H:m') }} </div>
+					   	
+					   	<div class="col-xs-6 col-md-4">{{ "endDate"|trans }}</div>
+					   	<div class="col-xs-6 col-md-4">{{ event.endDate|date('d/m/Y') }} - {{ event.endDate|date('H:m') }}</div>
+				   </div>
+				            <!-- /.box-body -->
+				</div>
+              </div>
+              <!-- /.tab-pane -->
+              <div class="tab-pane" id="tab_2">
+			    <div class="box box-default box-solid">
+			   <div class="box-body">
+				ICI LA MAP ! Grosse soirée !
+			   </div>
+			            <!-- /.box-body -->
+				</div>
+              </div>
+              <!-- /.tab-pane -->
+              <div class="tab-pane" id="tab_3">
+               <div class="box box-default box-solid">
+				   <div class="box-body">
+					<table class="table table-striped">
+				                <tbody><tr>
+				                  <th style="width: 10px">#</th>
+				                  <th>{{ "item"|trans }}</th>
+				                  <th>{{ "quantity"|trans }}</th>
+				                </tr>
+				                {% for requirement in event.requirements %}
+				                <tr>
+				                	<td></td>
+					                <td>{{ requirement.item.name }}</td>
+					                <td>{{ requirement.quantity }}</td>
+				                </tr>
+				                {% endfor %}
+				              </tbody>
+				    </table>
+				   </div>
+				            <!-- /.box-body -->
+				</div>
+              </div>
+              <!-- /.tab-pane -->
             </div>
-              <!-- /.box-tools -->
-   </div>
-            <!-- /.box-header -->
-   <div class="box-body">
-	    <div class="col-xs-6 col-md-4">{{ "name"|trans }}</div>
-	   	<div class="col-xs-6 col-md-4">{{ event.name }}</div>
-	   	
-	   	<div class="col-xs-6 col-md-4">{{ "description"|trans }}</div>
-	   	<div class="col-xs-6 col-md-4">{{ event.description }}</div>
-	   	
-	   	<div class="col-xs-6 col-md-4">{{ "location"|trans }}</div>
-	   	<div class="col-xs-6 col-md-4">{{ event.location }}</div>
-	   	
-	   	<div class="col-xs-6 col-md-4">{{ "start_date"|trans }}</div>
-	   	<div class="col-xs-6 col-md-4">{{ event.startDate|date('d/m/Y') }} - {{ event.startDate|date('H:m') }} </div>
-	   	
-	   	<div class="col-xs-6 col-md-4">{{ "endDate"|trans }}</div>
-	   	<div class="col-xs-6 col-md-4">{{ event.endDate|date('d/m/Y') }} - {{ event.endDate|date('H:m') }}</div>
-   </div>
-            <!-- /.box-body -->
-</div>
+            <!-- /.tab-content -->
+          </div>
 
-<div class="box box-default box-solid">
-	<div class="box-header with-border">
-    	<h4 class="box-title">{{ "where_is"|trans }}</h4>
-       		<div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-            </div>
-              <!-- /.box-tools -->
-   </div>
-            <!-- /.box-header -->
-   <div class="box-body">
-	ICI LA MAP ! Grosse soirée !
-   </div>
-            <!-- /.box-body -->
-</div>
 
-<div class="box box-default box-solid">
-	<div class="box-header with-border">
-    	<h4 class="box-title">{{ "requirements"|trans }}</h4>
-       		<div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-            </div>
-              <!-- /.box-tools -->
-   </div>
-            <!-- /.box-header -->
-   <div class="box-body">
-	<table class="table table-striped">
-                <tbody><tr>
-                  <th style="width: 10px">#</th>
-                  <th>{{ "item"|trans }}</th>
-                  <th>{{ "quantity"|trans }}</th>
-                </tr>
-                {% for requirement in event.requirements %}
-                <tr>
-                	<td></td>
-	                <td>{{ requirement.item.name }}</td>
-	                <td>{{ requirement.quantity }}</td>
-                </tr>
-                {% endfor %}
-              </tbody>
-    </table>
-   </div>
-            <!-- /.box-body -->
-</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 {% endblock page_content %}

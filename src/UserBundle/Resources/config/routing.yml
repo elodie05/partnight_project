@@ -4,7 +4,10 @@ user_homepage:
 user_signin:
     path:     /signin
     defaults: { _controller: UserBundle:User:signIn }
-avanzu_admin_profile:
-    path: /profile/{userid}/
+user_profile:
+    path: /profile/{user_id}/
+    defaults: { _controller: UserBundle:User:profile }
+    requirements:
+        user_id: \d
 avanzu_admin_logout:
     path: /logout

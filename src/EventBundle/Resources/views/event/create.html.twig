@@ -6,17 +6,17 @@
 
 {% block page_content %}
 
-<div class="box box-default box-solid">
+<div class="box box-default collapsed-box box-solid">
 	<div class="box-header with-border">
     	<h4 class="box-title">{{ "informations"|trans }}</h4>
        		<div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
             </div>
               <!-- /.box-tools -->
    </div>
             <!-- /.box-header -->
    <div class="box-body">
-	   {{ form_start(form) }}
+	   {{ form_start(form, {'action': path('post_event')}) }}
 	   {{ form_end(form) }}
 	   {{ form_errors(form) }}
    </div>
@@ -24,11 +24,11 @@
 </div>
 
 {% if action == "update" %}
-<div class="box box-default box-solid">
+<div class="box box-default collapsed-box box-solid">
 	<div class="box-header with-border">
     	<h4 class="box-title">{{ "requirements"|trans }}</h4>
        		<div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
             </div>
               <!-- /.box-tools -->
    </div>

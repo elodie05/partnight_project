@@ -32,7 +32,7 @@ class MyMenuItemListListener
         );
 
         //$event->addChild(new MenuItemModel('my events', 'my_events', 'event_list', $earg));
-        $event->addChild(new MenuItemModel('new event', 'new_event', 'post_event', $earg));
+        $event->addChild(new MenuItemModel('new event', 'new_event', 'new_event', $earg));
         $event->addChild(new MenuItemModel('my events', 'my_events', 'get_events', $earg));
         /*$ui->addChild(new MenuItemModel('ui-elements-general', 'General', 'event_create', $earg))
             ->addChild($icons = new MenuItemModel('ui-elements-icons', 'Icons', 'event_create', $earg));*/

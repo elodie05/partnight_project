@@ -2,6 +2,7 @@
 
 namespace UserBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\User as BaseUser;
 
@@ -19,6 +20,7 @@ class User extends BaseUser
 		parent::__construct ();
 		$this->signInDate = new \DateTime();
 		$this->events = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->friends = new ArrayCollection();
 		// your own logic
 	}
 	
@@ -48,8 +50,13 @@ class User extends BaseUser
      * @ORM\OneToMany(targetEntity="EventBundle\Entity\Event", mappedBy="user")
      */
     private $events;
-    
 
+    /**
+     * @var
+     *
+     * @ORM\ManyToMany(targetEntity="User")
+     */
+    private $friends;
 
     /**
      * Get id
@@ -140,7 +147,7 @@ class User extends BaseUser
      * @param \UserBundle\Entity\Event $events
      * @return User
      */
-    public function addEvent(\UserBundle\Entity\Event $events)
+    public function addEvent(\EventBundle\Entity\Event $events)
     {
         $this->events[] = $events;
 
@@ -152,7 +159,7 @@ class User extends BaseUser
      *
      * @param \UserBundle\Entity\Event $events
      */
-    public function removeEvent(\UserBundle\Entity\Event $events)
+    public function removeEvent(\EventBundle\Entity\Event $events)
     {
         $this->events->removeElement($events);
     }
@@ -165,5 +172,29 @@ class User extends BaseUser
     public function getEvents()
     {
         return $this->events;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function addFriend(User $user)
+    {
+        $this->friends->add($user);
+    }
+
+    /**
+     * @param User $user
+     */
+    public function removeFriend(User $user)
+    {
+        $this->friends->removeElement($user);
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getFriends()
+    {
+        return $this->friends;
     }
 }

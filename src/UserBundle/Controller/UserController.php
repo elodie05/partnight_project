@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use UserBundle\Form as form;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\UserBundle\Model\User;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
 
 class UserController extends Controller
 {
@@ -30,5 +31,25 @@ class UserController extends Controller
         return $this->render('UserBundle:user:signin.html.twig',array(
         		'form' => $form->createView()
         ));
+    }
+    
+    /**
+     * 
+     * @param Request $request
+     * @throws AccessDeniedException
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function profileAction(Request $request)
+    {
+    	$token = $this->get('security.token_storage')->getToken();
+
+        if (null === $token) {
+            throw new AccessDeniedException();
+        }
+
+        $user = $token->getUser();
+    	return $this->render('UserBundle:user:profile.html.twig',array(
+    			'user' => $user
+    	));
     }
 }
