@@ -16,7 +16,11 @@ class EventType extends AbstractType
     {
         $builder
             ->add('name','text')
-            ->add('location','text')
+            ->add('street','text')
+            ->add('zipcode','text')
+            ->add('city','text')
+            ->add('lat','hidden')
+            ->add('lng','hidden')
             ->add('sleepAvailable','integer')
             ->add('description','textarea',array(
             		'required' => false

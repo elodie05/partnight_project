@@ -79,7 +79,30 @@ class EventController extends Controller
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function viewAction(Event $event){
+    	/*$geocoder = "http://maps.googleapis.com/maps/api/geocode/json?address=%s&sensor=false";
+    	$adress = $event->getLocation();
+
+    			// Requête envoyée à l'API Geocoding
+    			$url_adress = utf8_encode($adress);
+    			$url_adress = urlencode($adress);
+    			$query = sprintf($geocoder, $url_adress);
+    	
+    			$result = json_decode(file_get_contents($query));
+    			$json = $result->results[0];
+    	
+    			$lat = (string) $json->geometry->location->lat;
+    			$long = (string) $json->geometry->location->lng;
+    			
+    			echo $lat.' '.$long;
+    			
+    			exit;*/
+    	
+    		
+    	
+    	
+    	
         return $this->render('EventBundle:event:view.html.twig',array(
+        		'participation'=>'',
                 'event' => $event
         ));
     }

@@ -5,7 +5,7 @@ namespace EventBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Provisions
+ * Item
  *
  * @ORM\Table(name="item")
  * @ORM\Entity(repositoryClass="EventBundle\Repository\ItemRepository")
@@ -25,6 +25,12 @@ class Item
      * @ORM\Column(name="name", type="string")
      */
     private $name;
+   /* 
+    /**
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
+     * @ORM\JoinColum
+     */
+    //private $user;
 
     
 
@@ -61,5 +67,9 @@ class Item
     public function getName()
     {
         return $this->name;
+    }
+    
+    public function __toString(){
+    	return $this->name;
     }
 }
