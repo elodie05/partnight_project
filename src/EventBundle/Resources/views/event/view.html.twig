@@ -11,7 +11,7 @@
 
 {% block page_content %}
 
-{% if participation %}
+{% if participation is defined %}
 {% if participation.response is null %}
 <div class="box">
   <div class="box-header with-border">
@@ -23,8 +23,8 @@
     {{ 'question_participation'|trans }}
   </div><!-- /.box-body -->
   <div class="box-footer">
-    <button type="button" class="btn btn-default" id="btn_participation_yes" data-url ="{{ path('event_create')}}">{{ "yes"|trans }}</button>
-    <button type="button" class="btn btn-default" id="btn_participation_no" data-url ="{{ path('event_create')}}">{{ "no"|trans }}</button>
+    <button type="button" class="btn btn-default" id="btn_participation_yes" data-url ="{{ path('new_events')}}">{{ "yes"|trans }}</button>
+    <button type="button" class="btn btn-default" id="btn_participation_no" data-url ="{{ path('new_events')}}">{{ "no"|trans }}</button>
   </div><!-- box-footer -->
 </div><!-- /.box -->
 {% else %}
@@ -114,10 +114,12 @@
 
 <script type="text/javascript">
   function initialize() {
-	  var myLatLng = {lat: 50.2904857, lng: 2.7834976000000324};
+	  //lat: 50.2904857, lng: 2.7834976000000324
+	  var myLatLng = { lat:{{ event.lat }}, lng: {{ event.lng }} };
+
     var mapOptions = {
       center: new google.maps.LatLng({{ event.lat|json_encode|raw }}, {{ event.lng|json_encode|raw }}),
-      zoom: 10,
+      zoom: 13,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     var map = new google.maps.Map(document.getElementById("map-canvas"),

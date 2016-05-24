@@ -51,7 +51,8 @@ class EventType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'EventBundle\Entity\Event'
+            'data_class' => 'EventBundle\Entity\Event',
+            'csrf_protection' => false
         ));
     }
     
