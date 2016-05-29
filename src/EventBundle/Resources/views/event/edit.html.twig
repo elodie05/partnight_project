@@ -1,8 +1,8 @@
 {% extends 'CommonBundle:layout:base-layout.html.twig' %}
 
-{% block title %}{{ "create_event"|trans }}{% endblock title %}
+{% block title %}{{ "update_event"|trans }}{% endblock title %}
 
-{% block page_title %}{{ "create_event"|trans }}{% endblock %}
+{% block page_title %}{{ event.name }}{% endblock %}
 
 {% block page_content %}
 
@@ -18,60 +18,56 @@
         </div>
         <!-- /.box-header -->
         <div class="box-body">
-            {{ form_start(form, {'action': path('post_event')}) }}
+            {{ form_start(form, {'id': 'form_event', 'action': path('put_event', {'event': event.id})}) }}
             {{ form_end(form) }}
             {{ form_errors(form) }}
         </div>
         <!-- /.box-body -->
     </div>
 
-    {% if action == "update" %}
-        <div class="box box-default collapsed-box box-solid">
-        <div class="box-header with-border">
-            <h4 class="box-title">{{ "requirements"|trans }}</h4>
+    <div class="box box-default collapsed-box box-solid">
+    <div class="box-header with-border">
+        <h4 class="box-title">{{ "requirements"|trans }}</h4>
 
-            <div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
-                </button>
-            </div>
-            <!-- /.box-tools -->
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+            </button>
         </div>
-        <!-- /.box-header -->
-        <div class="box-body">
-        {% if event.requirements is not empty %}
-            <table role="grid" id="table_requirements" class="table table-bordered table-striped">
-                <thead>
+        <!-- /.box-tools -->
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+    {% if event.requirements is not empty %}
+        <table role="grid" id="table_requirements" class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <th>{{ "item"|trans }}</th>
+                <th>{{ "quantity"|trans }}</th>
+                <th style="width:10%;"></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for requirement in event.requirements %}
                 <tr>
-                    <th>{{ "item"|trans }}</th>
-                    <th>{{ "quantity"|trans }}</th>
-                    <th style="width:10%;"></th>
+                    <td>{{ requirement.item.name }}</td>
+                    <td>{{ requirement.quantity }} </td>
+                    <td>
+                        <button type="button" class="btn btn-default removeEventRequirement btn-xs"
+                                data-url="{{ path('delete_requirement', {'requirement' : requirement.id}) }}"
+                                data-toggle="modal"
+                                data-target="#confirmDeleteEventRequirement" data-backdrop="false"><span
+                                    class="glyphicon glyphicon-remove"></span></button>
+                    </td>
                 </tr>
-                </thead>
-                <tbody>
-                {% for requirement in event.requirements %}
-                    <tr>
-                        <td>{{ requirement.item.name }}</td>
-                        <td>{{ requirement.quantity }} </td>
-                        <td>
-                            <button type="button" class="btn btn-default removeEventRequirement btn-xs"
-                                    data-url="{{ path('delete_requirement',{'requirement' : requirement.id}) }}"
-                                    data-toggle="modal"
-                                    data-target="#confirmDeleteEventRequirement" data-backdrop="false"><span
-                                        class="glyphicon glyphicon-remove"></span></button>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            {{ "no_element"|trans }}
-        {% endif %}
-        {% if event.id %}
-            <button type="button" id="btn_add_event_requirement" class="btn btn-default"
-                    data-url="{{ path('new_requirement',{'event' : event.id}) }}" data-toggle="modal"
-                    data-target="#myModal" data-backdrop="false">{{ 'add'|trans }}</button>
-        {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        {{ "no_element"|trans }}
     {% endif %}
+    <button type="button" id="btn_add_event_requirement" class="btn btn-default"
+            data-url="{{ path('new_requirement',{'event' : event.id}) }}" data-toggle="modal"
+            data-target="#myModal" data-backdrop="false">{{ 'add'|trans }}</button>
 
     </div>
     <!-- /.box-body -->
@@ -117,6 +113,28 @@
                 remove_event_requirement($(this).attr("data-url"), {});
                 return false;
             });
+            $(document).on('click', '#eventbundle_event_save', function (e) {
+                e.preventDefault();
+                var url = $(this).parent().parent().attr('action');
+                console.log(url);
+                $.ajax({
+                    type: 'PUT',
+                    url: url,
+                    dataType: 'json',
+                    data: {
+                        name: $('input[name=name]').val(),
+                        location: $('input[name=location]').val(),
+                        sleepAvailable: $('input[name=sleepAvailable]').val(),
+                        startdate: $('input[name=startdate]').val(),
+                        endDate: $('input[endDate]').val()
+                    }
+                })
+            });
+
+            $('#eventbundle_event_save').on('submit', function(e){
+                e.preventDefault();
+                console.log("PUT détecté");
+            });
 
             function remove_event_requirement(url) {
                 $('#btn_confirm_delete_event_requirement').click(function () {
@@ -134,12 +152,15 @@
 
             function create_update_event_requirement(url, data) {
                 $.ajax({
-                    type: 'POST',
+                    type: 'GET',
                     url: url,
-                    dataType: 'json',
+//                    dataType: 'json',
                     data: data,
                     success: function (data) {
+                        $('#myModal .modal-body').empty().append(data);
+                        console.log(data);
 
+                        /*
                         if (data.success == 'true') {
                             location.reload();
                         }
@@ -152,8 +173,8 @@
                                 create_update_event_requirement(url, $(this).serialize());
                             });
                         }
+                        */
                     }
-
                 });
             }
 

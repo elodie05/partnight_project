@@ -4,6 +4,12 @@ parameters:
 #    parameter_name: value
 
 services:
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+    event.form.requirement_type:
+        class: EventBundle\Form\RequirementType
+        arguments: ["@event.form.item_transformer"]
+        tags:
+            - { name: form.type }
+
+    event.form.item_transformer:
+        class: EventBundle\Form\ItemTransformer
+        arguments: ["@doctrine.orm.entity_manager"]

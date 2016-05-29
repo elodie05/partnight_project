@@ -3,6 +3,7 @@
 namespace EventBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -13,19 +14,24 @@ use Doctrine\ORM\EntityManager;
 class RequirementType extends AbstractType
 {
     /**
+     * @var ItemTransformer
+     */
+    private $itemTransformer;
+
+    /**
+     * Constructor used to perform dependency injections
+     *
+     * @param ItemTransformer $itemTransformer
+     */
+    public function __construct(ItemTransformer $itemTransformer)
+    {
+        $this->itemTransformer = $itemTransformer;
+    }
+
+    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
-	private $option = array ();
-	
-	private $em;
-	
-	public function __construct(EntityManager $em)
-	{
-		$this->em = $em;
-		//$this->options = $options;
-	}
-	
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -37,14 +43,18 @@ class RequirementType extends AbstractType
         	))*/
         	->add('item','text')
             ->add('quantity','integer')
+            ->add('event', EntityType::class, array(
+                'class' => 'EventBundle:Event',
+                'choice_label' => 'name'
+            ))
             ->add('save','submit',array(
-            		'attr' => array(
-            				'class' => 'btn btn-default'
-            		)
+                'attr' => array(
+                    'class' => 'btn btn-default'
+                )
             ))
         ;
             
-            $builder->get('item')->addModelTransformer(new ItemTransformer($this->em));
+        $builder->get('item')->addModelTransformer($this->itemTransformer);
     }
     
     /**

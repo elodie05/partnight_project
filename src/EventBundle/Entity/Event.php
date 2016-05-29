@@ -4,8 +4,10 @@ namespace EventBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * Event
@@ -13,6 +15,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  * @ORM\Table(name="event")
  * @ORM\Entity(repositoryClass="EventBundle\Repository\EventRepository")
  * @Assert\Callback(methods={"validateDate"})
+ * @Vich\Uploadable
  */
 class Event
 {
@@ -44,6 +47,25 @@ class Event
      * @ORM\Column(name="description", type="string")
      */
     private $description;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="image_name", type="string", nullable=true)
+     */
+    private $imageName;
+
+    /**
+     * @Vich\UploadableField(mapping="event_image", fileNameProperty="imageName")
+     */
+    private $imageFile;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="image_updated_at", type="datetime", nullable=true)
+     */
+    private $imageUpdatedAt;
     
     /**
      * @ORM\Column(name="startDate", type="datetime")
@@ -175,7 +197,41 @@ class Event
         return $this->description;
     }
 
+    /**
+     * @param $imageName
+     */
+    public function setImageName($imageName)
+    {
+        $this->imageName = $imageName;
+    }
 
+    /**
+     * @return string
+     */
+    public function getImageName()
+    {
+        return $this->imageName;
+    }
+
+    /**
+     * @param File|null $imageFile
+     */
+    public function setImageFile(File $imageFile = null)
+    {
+        $this->imageFile = $imageFile;
+
+        if ($imageFile) {
+            $this->imageUpdatedAt = new \DateTime('now');
+        }
+    }
+
+    /**
+     * @return File
+     */
+    public function getImageFile()
+    {
+        return $this->imageFile;
+    }
 
     /**
      * Set user

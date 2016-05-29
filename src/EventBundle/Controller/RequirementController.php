@@ -3,11 +3,14 @@
 namespace EventBundle\Controller;
 
 
+use EventBundle\Entity\Event;
 use EventBundle\Entity\Requirement;
+use EventBundle\Form\RequirementType;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class RequirementController extends FOSRestController
 {
@@ -45,15 +48,47 @@ class RequirementController extends FOSRestController
         return $this->handleView($view);
     }
 
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function newRequirementAction(Event $event)
+    {
+        $requirement = new Requirement();
+        $form = $this->createForm($this->get('event.form.requirement_type'), $requirement);
+
+        return $this->render('EventBundle:requirement:new.html.twig', array(
+            'form' => $form->createView(),
+        ));
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function postRequirementAction(Request $request) {
+        $requirement = new Requirement();
+        $form = $this->createForm($this->get('event.form.requirement_type'), $requirement);
 
+        if ($form->handleRequest($request)->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($requirement);
+            $em->flush();
+
+            $view = $this->routeRedirectView('get_event', array('event' => $requirement->getEvent()->getId()), 301);
+
+            return $this->handleView($view);
+        }
     }
 
-    public function putRequirementAction() {
+    /**
+     * @param Requirement $requirement
+     * @return Response
+     */
+    public function deleteRequirementAction(Requirement $requirement) {
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($requirement);
+        $em->flush();
 
-    }
-
-    public function deleteRequirementAction() {
-
+        return new Response(null, 204);
     }
 }

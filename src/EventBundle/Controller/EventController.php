@@ -59,7 +59,10 @@ class EventController extends FOSRestController
         return $this->handleView($view);
     }
 
-    public function newEventAction(Request $request)
+    /**
+     * @return Response
+     */
+    public function newEventAction()
     {
         $event = new Event();
         $form = $this->createForm(new EventType(), $event);
@@ -92,6 +95,19 @@ class EventController extends FOSRestController
 
             return $this->handleView($view);
         }
+    }
+
+    /**
+     * @return Response
+     */
+    public function editEventAction(Event $event)
+    {
+        $form = $this->createForm(new EventType(), $event);
+
+        return $this->render('EventBundle:event:edit.html.twig', array(
+            'form' => $form->createView(),
+            'event' => $event
+        ));
     }
 
     /**

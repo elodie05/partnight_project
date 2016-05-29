@@ -24,7 +24,7 @@
 					<td>{{ event.startDate|date('d/m/Y') }} - {{ event.startDate|date('H:m') }} </td>
 					<td>{{ event.endDate|date('d/m/Y') }} - {{ event.endDate|date('H:m') }} </td>
 					<td><a class="glyphicon glyphicon-list-alt" href="{{ path('get_event', {'event' : event.id })}}" ></a>
-					<a class="glyphicon glyphicon-edit" href="{{ path('put_event', {'event' : event.id })}}" ></a></td>
+					<a class="glyphicon glyphicon-edit" href="{{ path('edit_event', {'event' : event.id })}}" ></a></td>
 				</tr>
                 {#}<tr class="odd" role="row">
                   <td class="sorting_1">Gecko</td>

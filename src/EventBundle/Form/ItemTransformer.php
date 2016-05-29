@@ -9,11 +9,12 @@ use EventBundle\Entity\Item;
 
 class ItemTransformer implements DataTransformerInterface {
 	private $em;
+
 	public function __construct(EntityManager $em) {
 		$this->em = $em;
 	}
 
-	/*
+	/**
 	 * 
 	 * @see \Symfony\Component\Form\DataTransformerInterface::transform()
 	 */
