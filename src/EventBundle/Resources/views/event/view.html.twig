@@ -3,6 +3,12 @@
 {% block title %}{{ "event"|trans }}{% endblock title %}
 {% block page_title %}{{ "event"|trans }} > {{event.name}}{% endblock %}
                     {% block page_subtitle %}{% endblock %}
+                    
+{% block stylesheets %}
+{{ parent() }}
+<style>#map-canvas { width: 400px; height: 300px; margin: 0 auto;  }</style>
+{% endblock stylesheets %}
+
 {% block page_content %}
 
 {% if participation is defined %}
@@ -27,7 +33,7 @@
   <span class="info-box-icon bg-red"><i class="fa fa-star-o"></i></span>
   <div class="info-box-content">
     <span class="info-box-text">GROSSE SOIREE</span>
-    <span class="info-box-number">J'espère que t'es deter' !</span>
+    <span class="info-box-number">J'espère que t'es deter' !!!</span>
   </div><!-- /.info-box-content -->
 </div><!-- /.info-box -->
 {% endif %}
@@ -66,7 +72,8 @@
               <div class="tab-pane" id="tab_2">
 			    <div class="box box-default box-solid">
 			   <div class="box-body">
-				ICI LA MAP ! Grosse soirée !
+				{{ event.location }}
+				<div id="map-canvas"></div>
 			   </div>
 			            <!-- /.box-body -->
 				</div>
@@ -98,27 +105,47 @@
             </div>
             <!-- /.tab-content -->
           </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+          {#{{ event.lat|json_encode|raw }}, {{ event.lng|json_encode|raw }}}#}
 
 {% endblock page_content %}
+
+{% block javascripts %}
+{{ parent() }}
+
+<script type="text/javascript">
+  function initialize() {
+	  //lat: 50.2904857, lng: 2.7834976000000324
+	  var myLatLng = { lat:{{ event.lat }}, lng: {{ event.lng }} };
+
+    var mapOptions = {
+      center: new google.maps.LatLng({{ event.lat|json_encode|raw }}, {{ event.lng|json_encode|raw }}),
+      zoom: 13,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    var map = new google.maps.Map(document.getElementById("map-canvas"),
+        mapOptions);
+
+    var marker = new google.maps.Marker({
+	    position: myLatLng,
+	    map: map,
+	    title: 'Hello World!'
+	  });
+  }
+  google.maps.event.addDomListener(window, 'load', initialize);
+
+  /*function initMap() {
+	  var myLatLng = {lat: 50.2904857, lng: 2.7834976000000324};
+
+	  var map = new google.maps.Map(document.getElementById('map-canvas'), {
+	    zoom: 4,
+	    center: myLatLng
+	  });
+
+	  var marker = new google.maps.Marker({
+	    position: myLatLng,
+	    map: map,
+	    title: 'Hello World!'
+	  });
+	}*/
+</script>
+{% endblock javascripts %}
