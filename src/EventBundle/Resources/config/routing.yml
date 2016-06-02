@@ -31,6 +31,12 @@ event_addrequirement:
     requirements:
         event_id: \d
         
+event_addparticipations:
+    path:     /event/add_participations/{event_id}
+    defaults: { _controller: EventBundle:Participation:addParticipationsEvent }
+    requirements:
+        event_id: \d
+        
 event_removerequirement:
     path:     /event/remove_requirement/{requirement_id}
     defaults: { _controller: EventBundle:Event:removeRequirementEvent }

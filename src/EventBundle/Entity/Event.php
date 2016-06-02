@@ -31,9 +31,29 @@ class Event
     private $name;
     
     /**
-     * @ORM\Column(name="location", type="string")
+     * @ORM\Column(name="street", type="string")
      */
-    private $location;
+    private $street;
+    
+    /**
+     * @ORM\Column(name="zipcode", type="string")
+     */
+    private $zipcode;
+    
+    /**
+     * @ORM\Column(name="city", type="string")
+     */
+    private $city;
+    
+    /**
+     * @ORM\Column(name="lat", type="string")
+     */
+    private $lat;
+    
+    /**
+     * @ORM\Column(name="lng", type="string")
+     */
+    private $lng;
 
     /**
      * @ORM\Column(name="sleep_available", type="integer")
@@ -44,7 +64,6 @@ class Event
      * @ORM\Column(name="description", type="string")
      */
     private $description;
-    
     
     /**
      * @ORM\Column(name="startDate", type="datetime")
@@ -57,9 +76,8 @@ class Event
     private $endDate;
     
     /**
-     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", inversedBy="events")
      * @ORM\JoinColumn
-
      */
     private $user;
 
@@ -69,8 +87,6 @@ class Event
      * @ORM\OneToMany(targetEntity="EventBundle\Entity\Requirement", mappedBy="event")
      */
     private $requirements;
-    
-    
 
     /**
      * Get id
@@ -107,27 +123,13 @@ class Event
     }
 
     /**
-     * Set location
-     *
-     * @param string $location
-     *
-     * @return Event
-     */
-    public function setLocation($location)
-    {
-        $this->location = $location;
-
-        return $this;
-    }
-
-    /**
      * Get location
      *
      * @return string
      */
     public function getLocation()
     {
-        return $this->location;
+        return $this->street.' '.$this->zipcode.' '.$this->city;
     }
 
     /**
@@ -296,5 +298,120 @@ class Event
     	}
     
     	
+    }
+
+    /**
+     * Set street
+     *
+     * @param string $street
+     * @return Event
+     */
+    public function setStreet($street)
+    {
+        $this->street = $street;
+
+        return $this;
+    }
+
+    /**
+     * Get street
+     *
+     * @return string 
+     */
+    public function getStreet()
+    {
+        return $this->street;
+    }
+
+    /**
+     * Set zipcode
+     *
+     * @param string $zipcode
+     * @return Event
+     */
+    public function setZipcode($zipcode)
+    {
+        $this->zipcode = $zipcode;
+
+        return $this;
+    }
+
+    /**
+     * Get zipcode
+     *
+     * @return string 
+     */
+    public function getZipcode()
+    {
+        return $this->zipcode;
+    }
+
+    /**
+     * Set city
+     *
+     * @param string $city
+     * @return Event
+     */
+    public function setCity($city)
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    /**
+     * Get city
+     *
+     * @return string 
+     */
+    public function getCity()
+    {
+        return $this->city;
+    }
+
+    /**
+     * Set lat
+     *
+     * @param string $lat
+     * @return Event
+     */
+    public function setLat($lat)
+    {
+        $this->lat = $lat;
+
+        return $this;
+    }
+
+    /**
+     * Get lat
+     *
+     * @return string 
+     */
+    public function getLat()
+    {
+        return $this->lat;
+    }
+
+    /**
+     * Set lng
+     *
+     * @param string $lng
+     * @return Event
+     */
+    public function setLng($lng)
+    {
+        $this->lng = $lng;
+
+        return $this;
+    }
+
+    /**
+     * Get lng
+     *
+     * @return string 
+     */
+    public function getLng()
+    {
+        return $this->lng;
     }
 }

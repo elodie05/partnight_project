@@ -22,8 +22,13 @@
                   <b>Friends</b> <a class="pull-right">13,287</a>
                 </li>
               </ul>
-
-              <a href="#" class="btn btn-primary btn-block"><b>Follow</b></a>
+				{% if friend == 'no' %}
+              <button data-url="{{ path('add_friend',{'user_id':user.id}) }}" class="btn btn-primary" id="add_friend">
+              {{ 'add_friend'|trans }}</button>
+               {% else %}
+               <button data-url="{{ path('remove_friend',{'user_id':user.id}) }}" class="btn btn-primary" id="remove_friend">
+               {{ 'remove_friend'|trans }}</button>
+               {% endif %}
             </div>
             </div>
 
@@ -47,3 +52,34 @@ Tu autem, Fanni, quod mihi tantum tribui dicis quantum ego nec adgnosco nec post
 
 {% endblock page_content %}
 
+{% block javascripts %}
+{{ parent() }}
+<script>
+$('#add_friend').click(function(){
+	var url = $(this).attr('data-url');
+    $.ajax({
+        type : 'POST',
+        url : url,
+        dataType : 'json',
+        data: {},
+        success : function(data){
+            location.reload();
+        }
+    });
+});
+
+$('#remove_friend').click(function(){
+	var url = $(this).attr('data-url');
+    $.ajax({
+        type : 'POST',
+        url : url,
+        dataType : 'json',
+        data: {},
+        success : function(data){
+            location.reload();
+        }
+    });
+});
+
+</script>
+{% endblock javascripts %}
