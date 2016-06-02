@@ -3,6 +3,7 @@
 namespace EventBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -25,6 +26,7 @@ class EventType extends AbstractType
             ->add('description','textarea',array(
             		'required' => false
             ))
+            ->add('imageFile', FileType::class)
             ->add('startdate', 'datetime', array(
                                                 'widget' => 'single_text',
                                                 'input' => 'datetime',

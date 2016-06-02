@@ -49,12 +49,12 @@ class Event
     private $city;
     
     /**
-     * @ORM\Column(name="lat", type="string")
+     * @ORM\Column(name="lat", type="string", nullable=true)
      */
     private $lat;
     
     /**
-     * @ORM\Column(name="lng", type="string")
+     * @ORM\Column(name="lng", type="string", nullable=true)
      */
     private $lng;
 
