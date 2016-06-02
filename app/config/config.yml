@@ -95,3 +95,5 @@ vich_uploader:
         event_image:
             uri_prefix:         /images/events
             upload_destination: %kernel.root_dir%/../web/images/events
+
+nelmio_api_doc: ~

@@ -8,6 +8,7 @@ use EventBundle\Form as form;
 use EventBundle\Entity as entity;
 use EventBundle\Entity\Event;
 use EventBundle\Form\EventType;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use EventBundle\Form\RequirementType;
@@ -18,9 +19,13 @@ use EventBundle\Entity\Requirement;
 class EventController extends FOSRestController
 {
     /**
+     * Get events
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws AccessDeniedException
+     *
+     * @ApiDoc(description="Get events")
      */
     public function getEventsAction()
     {
@@ -46,9 +51,11 @@ class EventController extends FOSRestController
     }
 
     /**
-     * View event
+     * Get event
      * @param Event $event
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @ApiDoc(description="Get event")
      */
     public function getEventAction(Event $event)
     {
@@ -75,9 +82,11 @@ class EventController extends FOSRestController
     }
 
     /**
-     * Create event
+     * Post event
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @ApiDoc(description="Post event")
      */
     public function postEventAction(Request $request)
     {
@@ -116,6 +125,8 @@ class EventController extends FOSRestController
      * @param Request $request
      * @param Event $event
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @ApiDoc(description="Put event")
      */
     public function putEventAction(Request $request, Event $event)
     {
@@ -136,6 +147,8 @@ class EventController extends FOSRestController
 
     /**
      * @param Event $event
+     *
+     * @ApiDoc(description="Delete event")
      */
     public function deleteEventAction(Event $event)
     {

@@ -2,19 +2,23 @@
 
 namespace EventBundle\Controller;
 
-
 use EventBundle\Entity\Item;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 class ItemController extends FOSRestController
 {
     /**
+     * Get items
+     *
      * @QueryParam(name="name", requirements="\w+", nullable=true)
      *
      * @param ParamFetcher $paramFetcher
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @ApiDoc(description="Get items")
      */
     public function getItemsAction(ParamFetcher $paramFetcher)
     {
@@ -35,8 +39,12 @@ class ItemController extends FOSRestController
     }
 
     /**
+     * Get item
+     *
      * @param Item $item
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @ApiDoc(description="Get item")
      */
     public function getItemAction(Item $item)
     {

@@ -22,7 +22,8 @@
         "friendsofsymfony/rest-bundle": "^1.7",
         "friendsofsymfony/jsrouting-bundle": "^1.6",
         "jms/serializer-bundle": "^1.1",
-        "vich/uploader-bundle": "^1.0"
+        "vich/uploader-bundle": "^1.0",
+        "nelmio/api-doc-bundle": "^2.12"
     },
     "require-dev": {
         "sensio/generator-bundle": "~3.0",

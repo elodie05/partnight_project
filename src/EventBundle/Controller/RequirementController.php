@@ -9,17 +9,21 @@ use EventBundle\Form\RequirementType;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class RequirementController extends FOSRestController
 {
-
     /**
+     * Get requirements
+     *
      * @QueryParam(name="event", requirements="\d+")
      *
      * @param ParamFetcher $paramFetcher
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @ApiDoc(description="Get requirements")
      */
     public function getRequirementsAction(ParamFetcher $paramFetcher)
     {
@@ -39,8 +43,12 @@ class RequirementController extends FOSRestController
     }
 
     /**
+     * Get requirement
+     *
      * @param Requirement $requirement
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @ApiDoc(description="Get requirement")
      */
     public function getRequirementAction(Requirement $requirement) {
         $view = $this->view($requirement, 200);
@@ -64,6 +72,8 @@ class RequirementController extends FOSRestController
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @ApiDoc(description="Post requirement")
      */
     public function postRequirementAction(Request $request) {
         $requirement = new Requirement();
@@ -83,6 +93,8 @@ class RequirementController extends FOSRestController
     /**
      * @param Requirement $requirement
      * @return Response
+     *
+     * @ApiDoc(description="Delete requirement")
      */
     public function deleteRequirementAction(Requirement $requirement) {
         $em = $this->getDoctrine()->getManager();
