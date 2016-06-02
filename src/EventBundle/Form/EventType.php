@@ -16,11 +16,7 @@ class EventType extends AbstractType
     {
         $builder
             ->add('name','text')
-            ->add('street','text')
-            ->add('zipcode','text')
-            ->add('city','text')
-            ->add('lat','hidden')
-            ->add('lng','hidden')
+            ->add('location','text')
             ->add('sleepAvailable','integer')
             ->add('description','textarea',array(
             		'required' => false
@@ -51,8 +47,7 @@ class EventType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'EventBundle\Entity\Event',
-            'csrf_protection' => false
+            'data_class' => 'EventBundle\Entity\Event'
         ));
     }
     

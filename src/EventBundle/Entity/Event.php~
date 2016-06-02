@@ -4,15 +4,12 @@ namespace EventBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
  * Event
  *
  * @ORM\Table(name="event")
  * @ORM\Entity(repositoryClass="EventBundle\Repository\EventRepository")
- * @Assert\Callback(methods={"validateDate"})
  */
 class Event
 {
@@ -31,29 +28,9 @@ class Event
     private $name;
     
     /**
-     * @ORM\Column(name="street", type="string")
+     * @ORM\Column(name="location", type="string")
      */
-    private $street;
-    
-    /**
-     * @ORM\Column(name="zipcode", type="string")
-     */
-    private $zipcode;
-    
-    /**
-     * @ORM\Column(name="city", type="string")
-     */
-    private $city;
-    
-    /**
-     * @ORM\Column(name="lat", type="string")
-     */
-    private $lat;
-    
-    /**
-     * @ORM\Column(name="lng", type="string")
-     */
-    private $lng;
+    private $location;
 
     /**
      * @ORM\Column(name="sleep_available", type="integer")
@@ -127,13 +104,27 @@ class Event
     }
 
     /**
+     * Set location
+     *
+     * @param string $location
+     *
+     * @return Event
+     */
+    public function setLocation($location)
+    {
+        $this->location = $location;
+
+        return $this;
+    }
+
+    /**
      * Get location
      *
      * @return string
      */
     public function getLocation()
     {
-        return $this->street.' '.$this->zipcode.' '.$this->city;
+        return $this->location;
     }
 
     /**
@@ -285,91 +276,5 @@ class Event
     public function getEndDate()
     {
         return $this->endDate;
-    }
-    
-    public function validateDate(ExecutionContextInterface $context)
-    {
-    	$start = $this->getStartDate();
-    	$end = $this->getEndDate();
-  		
-    	if($end < $start){
-    		$context->addViolationAt(
-    				'endDate',
-    				'End date must be > start date',
-    				array(),
-    				null
-    				);
-    	}
-    
-    	
-    }
-
-    /**
-     * Set street
-     *
-     * @param string $street
-     * @return Event
-     */
-    public function setStreet($street)
-    {
-        $this->street = $street;
-
-        return $this;
-    }
-
-    /**
-     * Get street
-     *
-     * @return string 
-     */
-    public function getStreet()
-    {
-        return $this->street;
-    }
-
-    /**
-     * Set zipcode
-     *
-     * @param string $zipcode
-     * @return Event
-     */
-    public function setZipcode($zipcode)
-    {
-        $this->zipcode = $zipcode;
-
-        return $this;
-    }
-
-    /**
-     * Get zipcode
-     *
-     * @return string 
-     */
-    public function getZipcode()
-    {
-        return $this->zipcode;
-    }
-
-    /**
-     * Set city
-     *
-     * @param string $city
-     * @return Event
-     */
-    public function setCity($city)
-    {
-        $this->city = $city;
-
-        return $this;
-    }
-
-    /**
-     * Get city
-     *
-     * @return string 
-     */
-    public function getCity()
-    {
-        return $this->city;
     }
 }

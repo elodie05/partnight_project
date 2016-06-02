@@ -23,8 +23,8 @@
     {{ 'question_participation'|trans }}
   </div><!-- /.box-body -->
   <div class="box-footer">
-    <button type="button" class="btn btn-default" id="btn_participation_yes" data-url ="{{ path('new_events')}}">{{ "yes"|trans }}</button>
-    <button type="button" class="btn btn-default" id="btn_participation_no" data-url ="{{ path('new_events')}}">{{ "no"|trans }}</button>
+    <button type="button" class="btn btn-default" id="btn_participation" data-url ="{{ path('participation_response',{'participation_id' : participation.id})}}" data-response="true">{{ "yes"|trans }}</button>
+    <button type="button" class="btn btn-default" id="btn_participation" data-url ="{{ path('participation_response',{'participation_id' : participation.id})}}" data-response="false">{{ "no"|trans }}</button>
   </div><!-- box-footer -->
 </div><!-- /.box -->
 {% else %}
@@ -33,7 +33,7 @@
   <span class="info-box-icon bg-red"><i class="fa fa-star-o"></i></span>
   <div class="info-box-content">
     <span class="info-box-text">GROSSE SOIREE</span>
-    <span class="info-box-number">J'espère que t'es deter' !!!</span>
+    <span class="info-box-number">J'espère que t'es deter' !</span>
   </div><!-- /.info-box-content -->
 </div><!-- /.info-box -->
 {% endif %}
@@ -44,6 +44,7 @@
               <li class="active"><a href="#tab_1" data-toggle="tab">{{ "informations"|trans }}</a></li>
               <li><a href="#tab_2" data-toggle="tab">{{ "where_is"|trans }}</a></li>
               <li><a href="#tab_3" data-toggle="tab">{{ "requirements"|trans }}</a></li>
+              <li><a href="#tab_4" data-toggle="tab">{{ "participations"|trans }}</a></li>
               <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
             </ul>
             <div class="tab-content">
@@ -102,10 +103,29 @@
 				</div>
               </div>
               <!-- /.tab-pane -->
+              
+             <div class="tab-pane" id="tab_4">
+               <div class="box box-default box-solid">
+				   <div class="box-body">
+					<ul class="users-list clearfix">
+				{% if participations is defined %}
+				{% for participation in participations %}
+					<li>
+						<img src="dist/img/user1-128x128.jpg" alt="User Image">
+						<a class="users-list-name" href="{{ path('user_profile', {'user_id' : participation.user.id}) }}">{{ participation.user.firstName }} {{ participation.user.lastName }}</a>
+						
+					</li>        
+				{% endfor %}
+				{% endif %}
+			    	</ul>
+				   </div>
+				            <!-- /.box-body -->
+				</div>
+              </div>
+              <!-- /.tab-pane -->
             </div>
             <!-- /.tab-content -->
           </div>
-          {#{{ event.lat|json_encode|raw }}, {{ event.lng|json_encode|raw }}}#}
 
 {% endblock page_content %}
 
@@ -131,21 +151,40 @@
 	    title: 'Hello World!'
 	  });
   }
-  google.maps.event.addDomListener(window, 'load', initialize);
+ // google.maps.event.addDomListener(window, 'load', initialize);
 
-  /*function initMap() {
-	  var myLatLng = {lat: 50.2904857, lng: 2.7834976000000324};
+  $(document).on('click', '#btn_participation', function(){
+	  //alert('ok');
+      var url=$(this).attr("data-url");
+      var response = $(this).attr("data-response");
+      add_response(url,response);
+      return false;
+  });
 
-	  var map = new google.maps.Map(document.getElementById('map-canvas'), {
-	    zoom: 4,
-	    center: myLatLng
-	  });
+  function add_response(url,response){
+      $.ajax({
+          type : 'POST',
+          url : url,
+          dataType : 'json',
+          data: 'response='+response,
+          success : function(data){
+              
+          if(data.success=='true'){
+              location.reload();
+          }
+         /* else{
+              $('#myModal .modal-body').empty().append(data.page);
+              $('#myModal .modal-title').empty().append(data.title);
+             
+              $('form[name=requirement]').on('submit', function(e) {
+                  e.preventDefault();
+                  create_update_event_requirement(url,$(this).serialize());                            
+              });
+          }*/
+          }
+     
+      });
+  }
 
-	  var marker = new google.maps.Marker({
-	    position: myLatLng,
-	    map: map,
-	    title: 'Hello World!'
-	  });
-	}*/
 </script>
 {% endblock javascripts %}

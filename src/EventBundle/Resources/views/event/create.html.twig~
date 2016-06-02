@@ -128,9 +128,9 @@
 	<p>{{ "no_element"|trans }}</p>
 	{%  endif %}
 	{% if event.id %}
-	<button type="button" id="btn_add_event_participations" class="btn btn-default"
-            data-url="{{ path('event_addparticipations',{'event_id' : event.id}) }}" data-toggle="modal"
-            data-target="#myModal" data-backdrop="false">{{ 'add'|trans }}</button>
+	{#<button type="button" id="btn_add_event_participations" class="btn btn-default"
+            data-url="{{ path('event_addparticipation',{'event_id' : event.id}) }}" data-toggle="modal"
+            data-target="#myModal" data-backdrop="false">{{ 'add'|trans }}</button>#}
    {% endif %}
 
 

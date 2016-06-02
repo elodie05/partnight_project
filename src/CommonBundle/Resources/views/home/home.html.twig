@@ -20,7 +20,8 @@
                   {% for user in last_users %}
                     <li>
                       <img src="dist/img/user1-128x128.jpg" alt="User Image">
-                      <a class="users-list-name" href="#">{{ user.firstName }} {{ user.lastName }}</a>
+                     <p> <a href="{{ path('user_profile', {'user_id' : user.id}) }}" >{{ user.firstName }} {{ user.lastName }}</a></p>
+
                       <span class="users-list-date">{{ user.signInDate|date('M Y') }}</span>
                     </li>
 			      {% endfor %}

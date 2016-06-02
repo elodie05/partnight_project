@@ -1,26 +1,46 @@
 event_create:
-    path:     /create
+    path:     /event/create
     defaults: { _controller: EventBundle:Event:create }
 
 event_list:
-    path:     /events/{user_id}
+    path:     /events
     defaults: { _controller: EventBundle:Event:list }
     requirements:
         user_id: \d
 
 event_view:
-    path:     /{id}
+    path:     /event/{event_id}
     defaults: { _controller: EventBundle:Event:view }
     requirements:
-        id: \d
+        event_id: \d
 
 event_update:
-    path:     /event/update/{id}
+    path:     /event/update/{event_id}
     defaults: { _controller: EventBundle:Event:update }
     requirements:
-        id: \d
+        event_id: \d
 event_remove:
-    path:     /event/remove/{id}
+    path:     /event/remove/{event_id}
     defaults: { _controller: EventBundle:Event:remove }
     requirements:
-        id: \d
+        event_id: \d
+        
+event_addrequirement:
+    path:     /event/add_requirement/{event_id}
+    defaults: { _controller: EventBundle:Event:addRequirementEvent }
+    requirements:
+        event_id: \d
+        
+event_removerequirement:
+    path:     /event/remove_requirement/{requirement_id}
+    defaults: { _controller: EventBundle:Event:removeRequirementEvent }
+    requirements:
+        requirement_id: \d
+        
+autocomplete_item:
+    path:     /event/autocomp_requirement
+    defaults: { _controller: EventBundle:Event:autocomplete }
+    options:
+        expose: true
+    
+    

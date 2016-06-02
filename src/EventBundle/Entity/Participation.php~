@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Event
  *
  * @ORM\Table(name="participation")
- * @ORM\Entity(repositoryClass="EventBundle\Repository\ParticipationRepository")
+ * @ORM\Entity(repositoryClass="EventBundle\Repository\ParticipcationRepository")
  */
 class Participation
 {
@@ -35,88 +35,9 @@ class Participation
     
 
     /**
-     * @ORM\Column(name="response", type="boolean", nullable=true)
+     * @ORM\Column(name="response", type="boolean")
      */
     private $response;
     
 
-
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set response
-     *
-     * @param boolean $response
-     * @return Participation
-     */
-    public function setResponse($response = null)
-    {
-        $this->response = $response;
-
-        return $this;
-    }
-
-    /**
-     * Get response
-     *
-     * @return boolean 
-     */
-    public function getResponse()
-    {
-        return $this->response;
-    }
-
-    /**
-     * Set event
-     *
-     * @param \EventBundle\Entity\Event $event
-     * @return Participation
-     */
-    public function setEvent(\EventBundle\Entity\Event $event = null)
-    {
-        $this->event = $event;
-
-        return $this;
-    }
-
-    /**
-     * Get event
-     *
-     * @return \EventBundle\Entity\Event 
-     */
-    public function getEvent()
-    {
-        return $this->event;
-    }
-
-    /**
-     * Set user
-     *
-     * @param \UserBundle\Entity\User $user
-     * @return Participation
-     */
-    public function setUser(\UserBundle\Entity\User $user = null)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return \UserBundle\Entity\User 
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
 }
