@@ -88,12 +88,18 @@
 				                  <th style="width: 10px">#</th>
 				                  <th>{{ "item"|trans }}</th>
 				                  <th>{{ "quantity"|trans }}</th>
+				                  <th>{{ "provisions"|trans }}</th>
 				                </tr>
 				                {% for requirement in event.requirements %}
 				                <tr>
 				                	<td></td>
 					                <td>{{ requirement.item.name }}</td>
 					                <td>{{ requirement.quantity }}</td>
+					                <td><button type="button" class="btn btn-default btn_add_provision"
+					                data-url ="{{ path('add_provision',{'event_id' : event.id, 'requirement_id' :requirement.id})}}"
+					                data-toggle="modal" data-target="#myModal" data-backdrop="false"
+					                >{{ "provision"|trans }}</button>
+					                </td>
 				                </tr>
 				                {% endfor %}
 				              </tbody>
@@ -127,31 +133,38 @@
             <!-- /.tab-content -->
           </div>
 
+<div class="info-box bg-grey">
+  <span class="info-box-icon"><i class="fa fa-comments-o"></i></span>
+  <div class="info-box-content">
+    <span class="info-box-text">{{ "sleep_available"|trans }}</span>
+    <span class="info-box-number">{{ event.sleepAvailable }}</span>
+       <button type="button" class="btn btn-default" id="btn_book_sleep" data-url ="{{ path('book_sleep',{'event_id' : event.id})}}"
+       {% if booking == 'no' %} data-sleep="add" {% else %} data-sleep="remove"{% endif %}>
+       {%if booking == "no"%}{{ "add_sleep"|trans }}{% else %}{{ "remove_sleep"|trans }}{% endif %}</button>
+  </div><!-- /.info-box-content -->
+</div><!-- /.info-box -->
 {% endblock page_content %}
 
 {% block javascripts %}
 {{ parent() }}
 
 <script type="text/javascript">
-  function initialize() {
-	  //lat: 50.2904857, lng: 2.7834976000000324
-	  var myLatLng = { lat:{{ event.lat }}, lng: {{ event.lng }} };
 
-    var mapOptions = {
-      center: new google.maps.LatLng({{ event.lat|json_encode|raw }}, {{ event.lng|json_encode|raw }}),
-      zoom: 13,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-    var map = new google.maps.Map(document.getElementById("map-canvas"),
-        mapOptions);
-
-    var marker = new google.maps.Marker({
-	    position: myLatLng,
-	    map: map,
-	    title: 'Hello World!'
-	  });
-  }
  // google.maps.event.addDomListener(window, 'load', initialize);
+ 
+ 
+ function initialize() {
+  map = new google.maps.Map(document.getElementById("map-canvas"), {
+        zoom: 18,
+        center: new google.maps.LatLng({{ event.lat }}, {{ event.lng }}),
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      });  
+	  
+	var marker = new google.maps.Marker({
+    position: new google.maps.LatLng({{ event.lat }}, {{ event.lng }}),
+    map: map
+	}); 
+	 }
 
   $(document).on('click', '#btn_participation', function(){
 	  //alert('ok');
@@ -172,19 +185,65 @@
           if(data.success=='true'){
               location.reload();
           }
-         /* else{
-              $('#myModal .modal-body').empty().append(data.page);
-              $('#myModal .modal-title').empty().append(data.title);
-             
-              $('form[name=requirement]').on('submit', function(e) {
-                  e.preventDefault();
-                  create_update_event_requirement(url,$(this).serialize());                            
-              });
-          }*/
+
           }
      
       });
   }
 
+  $(document).on('click', '#btn_book_sleep', function(){
+	  //alert('ok');
+      var url=$(this).attr("data-url");
+      var sleep = $(this).attr("data-sleep");
+      book_sleep(url,sleep);
+      return false;
+  });
+
+  function book_sleep(url,sleep){
+      $.ajax({
+          type : 'POST',
+          url : url,
+          dataType : 'json',
+          data: 'sleep='+sleep,
+          success : function(data){
+              
+          if(data.success=='true'){
+              location.reload();
+          }
+          }
+     
+      });
+  }
+  
+  $(document).on('click', '.btn_add_provision', function(){
+      var url=$(this).attr("data-url");
+      add_provision(url,{});
+      return false;
+  });
+
+  function add_provision(url,data){
+      $.ajax({
+          type : 'POST',
+          url : url,
+          dataType : 'json',
+          data: data,
+          success : function(data){
+              
+          if(data.success=='true'){
+              location.reload();
+          }
+          else{
+              $('#myModal .modal-body').empty().append(data.page);
+              $('#myModal .modal-title').empty().append(data.title);
+             
+              $('form[name=provisions]').on('submit', function(e) {
+                  e.preventDefault();
+                  add_provision(url,$(this).serialize());                            
+              });
+          }
+          }
+     
+      });
+  }
 </script>
 {% endblock javascripts %}

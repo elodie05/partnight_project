@@ -79,11 +79,20 @@ class EventController extends Controller
      */
     public function viewAction(Event $event){
     	$em = $this->getDoctrine()->getEntityManager();
+    	$user = $this->get('security.context')->getToken()->getUser();
+    	
     	$participations = $em->getRepository('EventBundle:Participation')->findBy(array('event'=>$event));
+    	$booking = $em->getRepository('EventBundle:Booking')->findBy(array('user' => $user,'event'=>$event));
+    	if($booking != null){
+    		$sleepBooking = 'yes';
+    	}else{
+    		$sleepBooking = 'no';
+    	}
     	 
         return $this->render('EventBundle:event:view.html.twig',array(
                 'event' => $event,
-        		'participations' => $participations
+        		'participations' => $participations,
+        		'booking' => $sleepBooking
         ));
     }
 

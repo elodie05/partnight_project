@@ -22,14 +22,19 @@ class ParticipationController extends Controller
     	$em = $this->getDoctrine()->getEntityManager();
     	$participation = $em->getRepository('EventBundle:Participation')->find($notifyid);
     	$event = $participation->getEvent();
+    	$user = $this->get('security.context')->getToken()->getUser();
+    	 
     	
     	$participations = $em->getRepository('EventBundle:Participation')->findBy(array('event'=>$event));
+    	$booking = $em->getRepository('EventBundle:Booking')->findBy(array('user' => $user,'event'=>$event));
+    	 
 
     	
         return $this->render('EventBundle:event:view.html.twig',array(
         		'event' => $event,
         		'participation' => $participation,
-        		'participations' => $participations
+        		'participations' => $participations,
+        		'booking' => $booking
         ));
     }
     

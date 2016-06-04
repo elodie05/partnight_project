@@ -37,6 +37,13 @@ event_addparticipations:
     requirements:
         event_id: \d
         
+book_sleep:
+    path:     /event/book_sleep/{event_id}
+    defaults: { _controller: EventBundle:Booking:bookingSleep }
+    requirements:
+        event_id: \d
+        
+        
 event_removerequirement:
     path:     /event/remove_requirement/{requirement_id}
     defaults: { _controller: EventBundle:Event:removeRequirementEvent }
@@ -49,4 +56,10 @@ autocomplete_item:
     options:
         expose: true
     
+add_provision:
+    path:     /event/add_provision/{event_id}/{requirement_id}
+    defaults: { _controller: EventBundle:Provisions:addProvision }
+    requirements:
+        requirement_id: \d
+        event_id: \d
     

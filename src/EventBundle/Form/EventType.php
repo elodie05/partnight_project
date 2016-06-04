@@ -16,7 +16,9 @@ class EventType extends AbstractType
     {
         $builder
             ->add('name','text')
-            ->add('location','text')
+            ->add('street','text')
+            ->add('zipcode','text')
+            ->add('city','text')
             ->add('sleepAvailable','integer')
             ->add('description','textarea',array(
             		'required' => false
@@ -25,7 +27,7 @@ class EventType extends AbstractType
                                                 'widget' => 'single_text',
                                                 'input' => 'datetime',
                                                 'format' => 'MM/dd/yyyy',
-                                                'attr' => array('class' => 'date'),
+                                                'attr' => array('class' => 'date' /*'timepicker'*/),
                                                 ))
             ->add('endDate', 'datetime', array(
                                                 'widget' => 'single_text',
