@@ -117,18 +117,29 @@
                 e.preventDefault();
                 var url = $(this).parent().parent().attr('action');
                 console.log(url);
+
+                var formElement = document.querySelector("form");
+
+                var data = {
+                    name: $('input#eventbundle_event_name').val(),
+                    street: $('input#eventbundle_event_street').val(),
+                    zipcode: $('input#eventbundle_event_zipcode').val(),
+                    city: $('input#eventbundle_event_city').val(),
+                    description: $('textarea#eventbundle_event_description').val(),
+                    sleepAvailable: $('input#eventbundle_event_sleepAvailable').val(),
+                    startdate: $('input#eventbundle_event_startdate').val(),
+                    endDate: $('input#eventbundle_event_endDate').val()
+                };
+
+                console.log(data);
+
                 $.ajax({
                     type: 'PUT',
                     url: url,
+                    contentType: "application/json",
                     dataType: 'json',
-                    data: {
-                        name: $('input[name=name]').val(),
-                        location: $('input[name=location]').val(),
-                        sleepAvailable: $('input[name=sleepAvailable]').val(),
-                        startdate: $('input[name=startdate]').val(),
-                        endDate: $('input[endDate]').val()
-                    }
-                })
+                    data: JSON.stringify(data)
+                });
             });
 
             $('#eventbundle_event_save').on('submit', function(e){

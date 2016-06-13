@@ -25,16 +25,6 @@ class Item
      * @ORM\Column(name="name", type="string")
      */
     private $name;
-   /* 
-    /**
-     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
-     * @ORM\JoinColum
-     */
-    //private $user;
-
-    
-
-
 
     /**
      * Get id
@@ -50,7 +40,7 @@ class Item
      * Set name
      *
      * @param string $name
-     * @return DrinkFood
+     * @return Item
      */
     public function setName($name)
     {

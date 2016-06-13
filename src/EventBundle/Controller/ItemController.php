@@ -3,9 +3,12 @@
 namespace EventBundle\Controller;
 
 use EventBundle\Entity\Item;
+use EventBundle\Form\ItemType;
+use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Symfony\Component\HttpFoundation\Request;
 
 class ItemController extends FOSRestController
 {
@@ -51,5 +54,28 @@ class ItemController extends FOSRestController
         $view = $this->view($item, 200);
 
         return $this->handleView($view);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function postItemAction(Request $request)
+    {
+        $item = new Item();
+
+        $form = $this->createForm(new ItemType(), $item);
+        $contentType = $request->headers->get('content_type');
+        $data = json_decode($request->getContent());
+
+        if ($contentType == 'application/json' && $form->submit((array) $data)->isValid() || $form->handleRequest($request)) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($item);
+            $em->flush();
+
+            $view = $this->routeRedirectView('new_event');
+
+            return $this->handleView($view);
+        }
     }
 }

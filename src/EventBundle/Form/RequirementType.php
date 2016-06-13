@@ -35,12 +35,6 @@ class RequirementType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        	/*->add('item', EntityType::class,array(
-        			'class' => 'EventBundle\Entity\Item',
-        			'choices' => $this->options['items'],
-        			'multiple' => false,
-        			'expanded' => false
-        	))*/
         	->add('item','text')
             ->add('quantity','integer')
             ->add('event', EntityType::class, array(

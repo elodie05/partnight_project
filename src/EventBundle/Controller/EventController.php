@@ -64,6 +64,13 @@ class EventController extends FOSRestController
         		'participation'=>'',
                 'event' => $event));
     }
+
+    /**
+     * @param Event $event
+     * @return Response
+     *
+     * TODO: Correction
+     */
     public function getEventAction(Event $event)
     {
     	$em = $this->getDoctrine()->getManager();
@@ -107,7 +114,6 @@ class EventController extends FOSRestController
             'form' => $form->createView(),
             'action' => 'create',
             'event' => $event
-
         ));
     }
 
@@ -123,9 +129,12 @@ class EventController extends FOSRestController
         $user = $this->get('security.context')->getToken()->getUser();
         $event = new Event();
         $event->setUser($user);
-        $form = $this->createForm(new EventType(), $event);
 
-        if ($form->handleRequest($request)->isValid()) {
+        $form = $this->createForm(new EventType(), $event);
+        $contentType = $request->headers->get('content_type');
+        $data = json_decode($request->getContent());
+
+        if ($contentType == 'application/json' && $form->submit((array) $data)->isValid() || $form->handleRequest($request)) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($event);
             $em->flush();
@@ -161,8 +170,10 @@ class EventController extends FOSRestController
     public function putEventAction(Request $request, Event $event)
     {
         $form = $this->createForm(new EventType(), $event);
+        $contentType = $request->headers->get('content_type');
+        $data = json_decode($request->getContent());
 
-        if ($form->handleRequest($request)->isValid()) {
+        if ($contentType == 'application/json' && $form->submit((array) $data)->isValid() || $form->handleRequest($request)) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($event);
             $em->flush();

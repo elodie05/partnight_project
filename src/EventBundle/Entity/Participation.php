@@ -22,7 +22,7 @@ class Participation
     private $id;
     
     /**
-     * @ORM\ManyToOne(targetEntity="EventBundle\Entity\Event")
+     * @ORM\ManyToOne(targetEntity="EventBundle\Entity\Event", inversedBy="participations")
      * @ORM\JoinColumn
      */
     private $event;
@@ -39,6 +39,11 @@ class Participation
     private $response;
 
     /**
+     * @ORM\Column(name="sleep", type="boolean", nullable=false)
+     */
+    private $sleep;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -46,29 +51,6 @@ class Participation
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set response
-     *
-     * @param boolean $response
-     * @return Participation
-     */
-    public function setResponse($response = null)
-    {
-        $this->response = $response;
-
-        return $this;
-    }
-
-    /**
-     * Get response
-     *
-     * @return boolean 
-     */
-    public function getResponse()
-    {
-        return $this->response;
     }
 
     /**
@@ -115,5 +97,44 @@ class Participation
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set response
+     *
+     * @param boolean $response
+     * @return Participation
+     */
+    public function setResponse($response = null)
+    {
+        $this->response = $response;
+
+        return $this;
+    }
+
+    /**
+     * Get response
+     *
+     * @return boolean
+     */
+    public function getResponse()
+    {
+        return $this->response;
+    }
+
+    /**
+     * @param $sleep
+     */
+    public function setSleep($sleep)
+    {
+        $this->sleep = $sleep;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSleep()
+    {
+        return $this->sleep;
     }
 }

@@ -26,7 +26,6 @@ class EventType extends AbstractType
             ->add('description','textarea',array(
             		'required' => false
             ))
-            ->add('imageFile', FileType::class)
             ->add('startdate', 'datetime', array(
                                                 'widget' => 'single_text',
                                                 'input' => 'datetime',

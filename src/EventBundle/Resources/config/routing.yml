@@ -6,6 +6,14 @@ event_requirement:
     type: rest
     resource: "@EventBundle/Controller/RequirementController.php"
 
+event_item:
+    type: rest
+    resource: "@EventBundle/Controller/ItemController.php"
+
+event_participation:
+    type: rest
+    resource: "@EventBundle/Controller/ParticipationController.php"
+
 autocomplete_item:
     path:     /event/autocomp_requirement
     defaults: { _controller: EventBundle:Event:autocomplete }

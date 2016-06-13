@@ -67,25 +67,6 @@ class Event
      * @ORM\Column(name="description", type="string")
      */
     private $description;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="image_name", type="string", nullable=true)
-     */
-    private $imageName;
-
-    /**
-     * @Vich\UploadableField(mapping="event_image", fileNameProperty="imageName")
-     */
-    private $imageFile;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="image_updated_at", type="datetime", nullable=true)
-     */
-    private $imageUpdatedAt;
     
     /**
      * @ORM\Column(name="startDate", type="datetime")
@@ -109,6 +90,22 @@ class Event
      * @ORM\OneToMany(targetEntity="EventBundle\Entity\Requirement", mappedBy="event")
      */
     private $requirements;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Participation", mappedBy="event")
+     */
+    private $participations;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->requirements = new ArrayCollection();
+        $this->participations = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -178,7 +175,6 @@ class Event
         return $this->sleepAvailable;
     }
 
-
     /**
      * Set description
      *
@@ -204,42 +200,6 @@ class Event
     }
 
     /**
-     * @param $imageName
-     */
-    public function setImageName($imageName)
-    {
-        $this->imageName = $imageName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getImageName()
-    {
-        return $this->imageName;
-    }
-
-    /**
-     * @param File|null $imageFile
-     */
-    public function setImageFile(File $imageFile = null)
-    {
-        $this->imageFile = $imageFile;
-
-        if ($imageFile) {
-            $this->imageUpdatedAt = new \DateTime('now');
-        }
-    }
-
-    /**
-     * @return File
-     */
-    public function getImageFile()
-    {
-        return $this->imageFile;
-    }
-
-    /**
      * Set user
      *
      * @param \UserBundle\Entity\User $user
@@ -260,13 +220,6 @@ class Event
     public function getUser()
     {
         return $this->user;
-    }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->requirements = new ArrayCollection();
     }
 
     /**
@@ -469,5 +422,13 @@ class Event
     public function getLng()
     {
         return $this->lng;
+    }
+
+    /**
+     * @param Participation $participation
+     */
+    public function addParticipation(Participation $participation)
+    {
+        $this->participations->add($participation);
     }
 }
