@@ -2,20 +2,17 @@
 
 namespace UserBundle\Security;
 
-use Doctrine\ORM\EntityManager;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
+use Doctrine\ORM\EntityManager;
 
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {
-    /**
-     * @var EntityManager
-     */
     private $em;
 
     public function __construct(EntityManager $em)
@@ -24,10 +21,8 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * Called on every request. Return whatever credentials you want, or null to stop authentication.
-     *
-     * @param Request $request
-     * @return array|void
+     * Called on every request. Return whatever credentials you want,
+     * or null to stop authentication.
      */
     public function getCredentials(Request $request)
     {
@@ -42,26 +37,16 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         );
     }
 
-    /**
-     * @param mixed $credentials
-     * @param UserProviderInterface $userProvider
-     * @return null|object
-     */
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
         $apiKey = $credentials['token'];
 
         // if null, authentication will fail
         // if a User object, checkCredentials() is called
-        return $this->em->getRepository('AppBundle:User')
+        return $this->em->getRepository('UserBundle:User')
             ->findOneBy(array('apiKey' => $apiKey));
     }
 
-    /**
-     * @param mixed $credentials
-     * @param UserInterface $user
-     * @return bool
-     */
     public function checkCredentials($credentials, UserInterface $user)
     {
         // check credentials - e.g. make sure the password is valid
@@ -71,23 +56,12 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         return true;
     }
 
-    /**
-     * @param Request $request
-     * @param TokenInterface $token
-     * @param string $providerKey
-     * @return null
-     */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
         // on success, let the request continue
         return null;
     }
 
-    /**
-     * @param Request $request
-     * @param AuthenticationException $exception
-     * @return JsonResponse
-     */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
         $data = array(
@@ -102,10 +76,6 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     /**
      * Called when authentication is needed, but it's not sent
-     *
-     * @param Request $request
-     * @param AuthenticationException|null $authException
-     * @return JsonResponse
      */
     public function start(Request $request, AuthenticationException $authException = null)
     {
@@ -117,9 +87,6 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         return new JsonResponse($data, 401);
     }
 
-    /**
-     * @return bool
-     */
     public function supportsRememberMe()
     {
         return false;

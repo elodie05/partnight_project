@@ -165,26 +165,10 @@
                 $.ajax({
                     type: 'GET',
                     url: url,
-//                    dataType: 'json',
                     data: data,
                     success: function (data) {
                         $('#myModal .modal-body').empty().append(data);
                         console.log(data);
-
-                        /*
-                        if (data.success == 'true') {
-                            location.reload();
-                        }
-                        else {
-                            $('#myModal .modal-body').empty().append(data.page);
-                            $('#myModal .modal-title').empty().append(data.title);
-
-                            $('form[name=requirement]').on('submit', function (e) {
-                                e.preventDefault();
-                                create_update_event_requirement(url, $(this).serialize());
-                            });
-                        }
-                        */
                     }
                 });
             }

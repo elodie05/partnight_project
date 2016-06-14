@@ -28,3 +28,7 @@ services:
     user.security.token_authenticator:
         class: UserBundle\Security\TokenAuthenticator
         arguments: ['@doctrine.orm.entity_manager']
+
+    user.token_authenticator:
+        class: UserBundle\Security\TokenAuthenticator
+        arguments: ['@doctrine.orm.entity_manager']
