@@ -2,8 +2,15 @@
 
 namespace EventBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use UserBundle\Entity\User;
 
+/**
+ * Comment
+ *
+ * @ORM\Table(name="comment")
+ * @ORM\Entity(repositoryClass="EventBundle\Repository\CommentRepository")
+ */
 class Comment
 {
     /**
@@ -21,6 +28,13 @@ class Comment
      * @ORM\Column(name="text", type="string")
      */
     private $text;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="posted_at", type="datetime")
+     */
+    private $postedAt;
 
     /**
      * @var Event
@@ -58,6 +72,22 @@ class Comment
     public function getText()
     {
         return $this->text;
+    }
+
+    /**
+     * @param \DateTime $postedAt
+     */
+    public function setPostedAt(\DateTime $postedAt)
+    {
+        $this->postedAt = $postedAt;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getPostedAt()
+    {
+        return $this->postedAt;
     }
 
     /**
