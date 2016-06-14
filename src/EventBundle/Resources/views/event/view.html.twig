@@ -6,13 +6,22 @@
                     
 {% block stylesheets %}
 {{ parent() }}
-<style>#map-canvas { width: 400px; height: 300px; margin: 0 auto;  }</style>
+<style>#map-canvas { width: 400px; height: 300px; margin: 0 auto;  }
+.green{color:green;
+}
+.red{
+color:red;
+}
+.orange{
+color:orange;
+}
+</style>
 {% endblock stylesheets %}
 
 {% block page_content %}
 
 {% if participation is defined %}
-{% if participation.response is null %}
+{% if participation.response is null or participation.response == 0 %}
 <div class="box">
   <div class="box-header with-border">
     <h3 class="box-title">{{ 'participation'|trans }}</h3>
@@ -34,6 +43,8 @@
   <div class="info-box-content">
     <span class="info-box-text">GROSSE SOIREE</span>
     <span class="info-box-number">J'espère que t'es deter' !</span>
+        <button type="button" class="btn btn-default" id="btn_participation" data-url ="{{ path('participation_response',{'participation_id' : participation.id})}}" data-response="false">{{ "no"|trans }}</button>
+    
   </div><!-- /.info-box-content -->
 </div><!-- /.info-box -->
 {% endif %}
@@ -45,6 +56,7 @@
               <li><a href="#tab_2" data-toggle="tab">{{ "where_is"|trans }}</a></li>
               <li><a href="#tab_3" data-toggle="tab">{{ "requirements"|trans }}</a></li>
               <li><a href="#tab_4" data-toggle="tab">{{ "participations"|trans }}</a></li>
+              <li><a href="#tab_5" data-toggle="tab">{{ "comments"|trans }}</a></li>
               <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
             </ul>
             <div class="tab-content">
@@ -119,6 +131,13 @@
 					<li>
 						<img src="dist/img/user1-128x128.jpg" alt="User Image">
 						<a class="users-list-name" href="{{ path('user_profile', {'user_id' : participation.user.id}) }}">{{ participation.user.firstName }} {{ participation.user.lastName }}</a>
+						{% if participation.response == 'yes' %}
+						<span class="green">Yes</span>
+						{% elseif participation == 'no'%}
+						<span class="red">No</span>
+						{% else %}
+						<span class="orange">Pas rep</span>
+						{% endif %}
 						
 					</li>        
 				{% endfor %}
@@ -129,20 +148,35 @@
 				</div>
               </div>
               <!-- /.tab-pane -->
+              
+              
+              
+              
+              
+              <div class="tab-pane" id="tab_5">
+               <div class="box box-default box-solid">
+				   <div class="box-body">
+					{{ form(formComment,{ 'id': 'my_custom_id'}) }}
+				   </div>
+				            <!-- /.box-body -->
+				</div>
+              </div>
+              
             </div>
             <!-- /.tab-content -->
           </div>
-
+{% if participation is defined %}
 <div class="info-box bg-grey">
   <span class="info-box-icon"><i class="fa fa-comments-o"></i></span>
   <div class="info-box-content">
     <span class="info-box-text">{{ "sleep_available"|trans }}</span>
-    <span class="info-box-number">{{ event.sleepAvailable }}</span>
-       <button type="button" class="btn btn-default" id="btn_book_sleep" data-url ="{{ path('book_sleep',{'event_id' : event.id})}}"
-       {% if booking == 'no' %} data-sleep="add" {% else %} data-sleep="remove"{% endif %}>
-       {%if booking == "no"%}{{ "add_sleep"|trans }}{% else %}{{ "remove_sleep"|trans }}{% endif %}</button>
+    <span class="info-box-number">{{ sleepAvailable }}</span>
+       <button type="button" class="btn btn-default" id="btn_book_sleep" data-url ="{{ path('book_sleep',{'participation_id' : participation.id})}}"
+       {% if booking == 'no' and sleepAvailable > 0 and sleepAvailable < event.sleepAvailable %} data-sleep="add" {% else %} data-sleep="remove"{% endif %}>
+       {%if booking == 'no'%}{{ "add_sleep"|trans }}{% else %}{{ "remove_sleep"|trans }}{% endif %}</button>
   </div><!-- /.info-box-content -->
 </div><!-- /.info-box -->
+{% endif %}
 {% endblock page_content %}
 
 {% block javascripts %}
@@ -150,21 +184,32 @@
 
 <script type="text/javascript">
 
- // google.maps.event.addDomListener(window, 'load', initialize);
- 
- 
- function initialize() {
-  map = new google.maps.Map(document.getElementById("map-canvas"), {
-        zoom: 18,
-        center: new google.maps.LatLng({{ event.lat }}, {{ event.lng }}),
+
+$(document).ready(function () {
+    var myLatlng = new google.maps.LatLng({{ event.lat }}, {{ event.lng }});
+
+    var myOptions = {
+        zoom: 13,
+        center: myLatlng,
         mapTypeId: google.maps.MapTypeId.ROADMAP
-      });  
-	  
-	var marker = new google.maps.Marker({
-    position: new google.maps.LatLng({{ event.lat }}, {{ event.lng }}),
-    map: map
-	}); 
-	 }
+    }
+    var map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
+    var marker = new google.maps.Marker({
+        position: myLatlng,
+        map: map,
+        icon: 'http://www.google.com/intl/en_us/mapfiles/ms/icons/blue-dot.png',
+        title: "Original Location"
+    });
+
+});
+
+ 
+
+
+
+
+
+ 
 
   $(document).on('click', '#btn_participation', function(){
 	  //alert('ok');
@@ -192,7 +237,7 @@
   }
 
   $(document).on('click', '#btn_book_sleep', function(){
-	  //alert('ok');
+	 // alert('ok');
       var url=$(this).attr("data-url");
       var sleep = $(this).attr("data-sleep");
       book_sleep(url,sleep);

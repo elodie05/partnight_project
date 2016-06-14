@@ -7,10 +7,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Event
  *
- * @ORM\Table(name="participation")
- * @ORM\Entity(repositoryClass="EventBundle\Repository\ParticipationRepository")
+ * @ORM\Table(name="comment")
+ * @ORM\Entity(repositoryClass="EventBundle\Repository\CommentRepository")
  */
-class Participation
+class Comment
 {
     /**
      * @var int
@@ -34,14 +34,16 @@ class Participation
     private $user;
 
     /**
-     * @ORM\Column(name="response", type="boolean", nullable=true)
+     * @ORM\Column(name="text", type="string", nullable=true)
      */
-    private $response;
+    private $text;
     
     /**
-     * @ORM\Column(name="sleep", type="boolean", nullable=true)
+     * @ORM\Column(name="postedAt", type="datetime", nullable=true)
      */
-    private $sleep;
+    private $postedAt;
+    
+
 
     /**
      * Get id
@@ -54,56 +56,33 @@ class Participation
     }
 
     /**
-     * Set response
+     * Set text
      *
-     * @param boolean $response
-     * @return Participation
+     * @param string $comment
+     * @return text
      */
-    public function setResponse($response = null)
+    public function setText($text)
     {
-        $this->response = $response;
+        $this->text = $text;
 
         return $this;
     }
 
     /**
-     * Get response
+     * Get text
      *
-     * @return strig
+     * @return string 
      */
-    public function getResponse()
+    public function getText()
     {
-        return $this->response;
-    }
-    
-    /**
-     * Set sleep
-     *
-     * @param boolean $sleep
-     * @return Participation
-     */
-    public function setSleep($sleep = null)
-    {
-    	$this->sleep = $sleep;
-    
-    	return $this;
-    }
-    
-    /**
-     * Get sleep
-     *
-     * @return boolean
-     */
-    public function getSleep()
-    {
-    	return $this->sleep;
+        return $this->text;
     }
 
     /**
      * Set event
      *
      * @param \EventBundle\Entity\Event $event
-     * @return Participation
+     * @return Comment
      */
     public function setEvent(\EventBundle\Entity\Event $event = null)
     {
@@ -126,7 +105,7 @@ class Participation
      * Set user
      *
      * @param \UserBundle\Entity\User $user
-     * @return Participation
+     * @return Comment
      */
     public function setUser(\UserBundle\Entity\User $user = null)
     {
@@ -144,4 +123,5 @@ class Participation
     {
         return $this->user;
     }
+
 }

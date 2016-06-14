@@ -13,13 +13,13 @@
 
               <ul class="list-group list-group-unbordered">
                 <li class="list-group-item">
-                  <b>Followers</b> <a class="pull-right">1,322</a>
+                  <b>create</b> <a class="pull-right">A CALCULER</a>
                 </li>
                 <li class="list-group-item">
-                  <b>Following</b> <a class="pull-right">543</a>
+                  <b>participation</b> <a class="pull-right">A CALCULER</a>
                 </li>
                 <li class="list-group-item">
-                  <b>Friends</b> <a class="pull-right">13,287</a>
+                  <b>Friends</b> <a class="pull-right">{{ user.friends|length }}</a>
                 </li>
               </ul>
 				{% if friend == 'no' %}
@@ -34,7 +34,9 @@
 
 <div class="col-md-9">
          
-
+{% for friend in user.friends %}
+<p>{{ friend.username }}</p>
+{% endfor %}
 Illud tamen clausos vehementer angebat quod captis navigiis, quae frumenta vehebant per flumen, Isauri quidem alimentorum copiis adfluebant, ipsi vero solitarum rerum cibos iam consumendo inediae propinquantis aerumnas exitialis horrebant.
 
 Et est admodum mirum videre plebem innumeram mentibus ardore quodam infuso cum dimicationum curulium eventu pendentem. haec similiaque memorabile nihil vel serium agi Romae permittunt. ergo redeundum ad textum.

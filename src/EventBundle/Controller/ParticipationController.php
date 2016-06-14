@@ -9,6 +9,7 @@ use EventBundle\Entity\Participation;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use EventBundle\Entity\Event;
+use EventBundle\Form\CommentType;
 
 class ParticipationController extends Controller
 {
@@ -26,7 +27,17 @@ class ParticipationController extends Controller
     	 
     	
     	$participations = $em->getRepository('EventBundle:Participation')->findBy(array('event'=>$event));
-    	$booking = $em->getRepository('EventBundle:Booking')->findBy(array('user' => $user,'event'=>$event));
+    	$nbSleepBooking = count($em->getRepository('EventBundle:Participation')->findBy(array('sleep' => true,'event'=>$event)));
+    	 
+    	$sleepAvailable = $event->getSleepAvailable() - $nbSleepBooking;
+    	 
+    	$formComment = $this->createForm(new CommentType());
+    
+    	if($participation->getSleep() == 1){
+    		$sleepBooking = 'yes';
+    	}else{
+    		$sleepBooking = 'no';
+    	}
     	 
 
     	
@@ -34,7 +45,9 @@ class ParticipationController extends Controller
         		'event' => $event,
         		'participation' => $participation,
         		'participations' => $participations,
-        		'booking' => $booking
+        		'booking' => $sleepBooking,
+        		'sleepAvailable' => $sleepAvailable,
+        		'formComment' => $formComment->createView()
         ));
     }
     
@@ -48,14 +61,14 @@ class ParticipationController extends Controller
     	$em = $this->getDoctrine()->getEntityManager();
     	 
     	$response = $request->request->get('response');
-    	$participation->setResponse($response);
+    	if($response == 'true'){
+    		$boolean = 1;
+    	}else{
+    		$boolean = 0;
+    	}
+    	$participation->setResponse($boolean);
     	$em->persist($participation);
     	$em->flush();
-    	
-    	//var_dump($event);exit;
-    	    	/*$em = $this->getDoctrine()->getManager();
-    	$em->remove($requirement);
-    	$em->flush();*/
     
     	return new JsonResponse(array(	
     			'success' => 'true'			
@@ -119,8 +132,6 @@ class ParticipationController extends Controller
     		$users = $friends;
     	}
     	 
-    	 
-    	
     	$form = $this->createForm(new ParticipationType(array('users' => $users)));
     
     	if($form->handleRequest($request)->isSubmitted()){
@@ -139,6 +150,34 @@ class ParticipationController extends Controller
     
     	return $this->render('EventBundle:participation:add_participations.html.twig',array(
     			'form' => $form->createView()
+    	));
+    }
+    
+    /**
+     * @ParamConverter("participation", options={"mapping": {"participation_id": "id"}})
+     * @param Request $request
+     * @param Participation $participation
+     */
+    public function BookingSleepAction(Request $request,Participation $participation)
+    {
+    	
+    	$em = $this->getDoctrine()->getEntityManager();
+    	$user = $this->get('security.context')->getToken()->getUser();
+    	 
+    	$sleep = $request->request->get('sleep');
+    	if($sleep == 'add'){
+    		$participation->setSleep(1);
+    		$em->persist($participation);
+    	}else{
+    		$participation->setSleep(0);
+    		$em->persist($participation);
+    	}
+   
+    	$em->flush();
+    
+    
+    	return new JsonResponse(array(
+    			'success' => 'true'
     	));
     }
     

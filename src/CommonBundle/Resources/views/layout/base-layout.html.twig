@@ -25,15 +25,16 @@
         <script type="text/javascript" src="{{ asset('bundles/avanzuadmintheme/static/'~app.environment~'/scripts/modernizr.js') }}"></script>
         <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
 		<script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
-		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCD4mFyjxmc0oE9HBToI-WDCrpQegCqp8"></script> 
+		{#}<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCD4mFyjxmc0oE9HBToI-WDCrpQegCqp8&sensor=true"></script> {#}
+		<script src="http://maps.google.com/maps/api/js?sensor=true"></script> 
         <!--[if lt IE 9]>
 
         <![endif]-->
 
     {% endblock %}
-
+{#}onload="initialize()"{#} 
 </head>
-<body  onload="initialize()" class="{{ admin_skin|default('skin-black-light')}}">
+<body  class="{{ admin_skin|default('skin-black-light')}}">
     <div class="wrapper">
 
     {% block avanzu_admin_header %}

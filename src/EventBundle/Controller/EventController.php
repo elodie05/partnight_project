@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use EventBundle\Entity\Requirement;
 use EventBundle\Form\ParticipationType;
 use EventBundle\Entity\Participation;
+use EventBundle\Entity\Comment;
+use EventBundle\Form\CommentType;
 
 class EventController extends Controller
 {
@@ -82,17 +84,32 @@ class EventController extends Controller
     	$user = $this->get('security.context')->getToken()->getUser();
     	
     	$participations = $em->getRepository('EventBundle:Participation')->findBy(array('event'=>$event));
-    	$booking = $em->getRepository('EventBundle:Booking')->findBy(array('user' => $user,'event'=>$event));
-    	if($booking != null){
-    		$sleepBooking = 'yes';
+    	$participation = $em->getRepository('EventBundle:Participation')->findBy(array('user' => $user,'event'=>$event));
+    	$nbSleepBooking = count($em->getRepository('EventBundle:Participation')->findBy(array('sleep' => true,'event'=>$event)));
+    	$comments = $em->getRepository('EventBundle:Comment')->findBy(array('event'=>$event));
+    	
+    	$formComment = $this->createForm(new CommentType());
+    	
+    	$sleepAvailable = $event->getSleepAvailable() - $nbSleepBooking;
+    	
+    	if(!empty($participation)){
+    		if($participation->getSleep() == 1){
+    			$sleepBooking = 'yes';
+    		}else{
+    			$sleepBooking = 'no';
+    		}
     	}else{
-    		$sleepBooking = 'no';
+    		$sleepBooking ='';
     	}
+    	
     	 
         return $this->render('EventBundle:event:view.html.twig',array(
                 'event' => $event,
         		'participations' => $participations,
-        		'booking' => $sleepBooking
+        		'booking' => $sleepBooking,
+        		'sleepAvailable' => $sleepAvailable,
+        		'comments' => $comments,
+        		'formComment' => $formComment->createView()
         ));
     }
 

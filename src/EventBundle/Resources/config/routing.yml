@@ -38,10 +38,10 @@ event_addparticipations:
         event_id: \d
         
 book_sleep:
-    path:     /event/book_sleep/{event_id}
-    defaults: { _controller: EventBundle:Booking:bookingSleep }
+    path:     /event/book_sleep/{participation_id}
+    defaults: { _controller: EventBundle:Participation:bookingSleep }
     requirements:
-        event_id: \d
+        participation_id: \d
         
         
 event_removerequirement:
@@ -62,4 +62,11 @@ add_provision:
     requirements:
         requirement_id: \d
         event_id: \d
+        
+participation_response:
+    path:     /event/response/{participation_id}
+    defaults: { _controller: EventBundle:Participation:response }
+    requirements:
+        participation_id: \d
+
     
