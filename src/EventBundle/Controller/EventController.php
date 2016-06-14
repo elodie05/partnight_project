@@ -146,6 +146,7 @@ class EventController extends FOSRestController
     }
 
     /**
+     * @param Event $event
      * @return Response
      */
     public function editEventAction(Event $event)
@@ -197,32 +198,5 @@ class EventController extends FOSRestController
         $em = $this->getDoctrine()->getManager();
         $em->remove($event);
         $em->flush();
-    }
-    
-    /**
-     * 
-     */
-    public function autocompleteAction(Request $request)
-    {
-    	$items = array();
-    	$term = trim(strip_tags($request->get('term')));
-    
-    	$em = $this->getDoctrine()->getManager();
-    	
-    	$entities = $em->getRepository('EventBundle:Item')->createQueryBuilder('i')
-    	->where('i.name LIKE :name')
-    	->setParameter('name', '%'.$term.'%')
-    	->getQuery()
-    	->getResult();
-    
-    	foreach ($entities as $entity)
-    	{
-    		$items[] = $entity->getName();
-    	}
-    
-    	$response = new JsonResponse();
-    	$response->setData($items);
-    
-    	return $response;
     }
 }

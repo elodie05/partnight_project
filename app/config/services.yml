@@ -13,3 +13,14 @@ services:
     event.form.item_transformer:
         class: EventBundle\Form\ItemTransformer
         arguments: ["@doctrine.orm.entity_manager"]
+
+    event.file_uploader:
+        class: AppBundle\Utils\FileUploader
+        arguments: ['%documents_directory%']
+
+    event.document_upload_listener:
+        class: AppBundle\Listener\DocumentUploadListener
+        arguments: ['@event.file_uploader']
+        tags:
+            - { name: doctrine.event_listener, event: prePersist }
+            - { name: doctrine.event_listener, event: preUpdate }

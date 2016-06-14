@@ -18,8 +18,6 @@ event_provision:
     type: rest
     resource: "@EventBundle/Controller/ProvisionController.php"
 
-autocomplete_item:
-    path:     /event/autocomp_requirement
-    defaults: { _controller: EventBundle:Event:autocomplete }
-    options:
-        expose: true
+event_document:
+    type: rest
+    resource: "@EventBundle/Controller/DocumentController.php"

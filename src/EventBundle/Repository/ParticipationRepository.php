@@ -21,7 +21,7 @@ class ParticipationRepository extends EntityRepository
     {
         $queryBuilder = $this->createQueryBuilder('p');
         $queryBuilder->innerJoin('p.event', 'e');
-        $queryBuilder->andWhere('e.id = eventId');
+        $queryBuilder->andWhere('e.id = :eventId');
         $queryBuilder->setParameter('eventId', $event->getId());
 
         return $queryBuilder->getQuery()->getResult();
@@ -35,7 +35,7 @@ class ParticipationRepository extends EntityRepository
     {
         $queryBuilder = $this->createQueryBuilder('p');
         $queryBuilder->innerJoin('p.user', 'u');
-        $queryBuilder->andWhere('u.id = userId');
+        $queryBuilder->andWhere('u.id = :userId');
         $queryBuilder->setParameter('userId', $user->getId());
 
         return $queryBuilder->getQuery()->getResult();

@@ -56,12 +56,13 @@ class Participation
     /**
      * Set event
      *
-     * @param \EventBundle\Entity\Event $event
+     * @param Event $event
      * @return Participation
      */
-    public function setEvent(\EventBundle\Entity\Event $event = null)
+    public function setEvent(Event $event = null)
     {
         $this->event = $event;
+        $event->addParticipation($this);
 
         return $this;
     }
@@ -79,10 +80,10 @@ class Participation
     /**
      * Set user
      *
-     * @param \UserBundle\Entity\User $user
+     * @param User $user
      * @return Participation
      */
-    public function setUser(\UserBundle\Entity\User $user = null)
+    public function setUser(User $user = null)
     {
         $this->user = $user;
 

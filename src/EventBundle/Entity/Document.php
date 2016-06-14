@@ -29,6 +29,11 @@ class Document
      */
     private $file;
 
+    /**
+     * @var Event
+     * @ORM\ManyToOne(targetEntity="Event", inversedBy="documents")
+     */
+    private $event;
 
     /**
      * @return int
@@ -52,5 +57,22 @@ class Document
     public function getFile()
     {
         return $this->file;
+    }
+
+    /**
+     * @param Event $event
+     */
+    public function setEvent(Event $event)
+    {
+        $this->event = $event;
+        $this->event->addDocument($this);
+    }
+
+    /**
+     * @return Event
+     */
+    public function getEvent()
+    {
+        return $this->event;
     }
 }

@@ -4,7 +4,6 @@ namespace EventBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
@@ -15,7 +14,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @ORM\Table(name="event")
  * @ORM\Entity(repositoryClass="EventBundle\Repository\EventRepository")
  * @Assert\Callback(methods={"validateDate"})
- * @Vich\Uploadable
  */
 class Event
 {
@@ -99,12 +97,28 @@ class Event
     private $participations;
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Document", mappedBy="event")
+     */
+    private $documents;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="event")
+     */
+    private $comments;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->requirements = new ArrayCollection();
         $this->participations = new ArrayCollection();
+        $this->documents = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     /**
@@ -430,5 +444,68 @@ class Event
     public function addParticipation(Participation $participation)
     {
         $this->participations->add($participation);
+    }
+
+    /**
+     * @param Participation $participation
+     */
+    public function removeParticipation(Participation $participation) {
+        $this->participations->removeElement($participation);
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getParticipations()
+    {
+        return $this->participations;
+    }
+
+    /**
+     * @param Document $document
+     */
+    public function addDocument(Document $document)
+    {
+        $this->documents->add($document);
+    }
+
+    /**
+     * @param Document $document
+     */
+    public function removeDocument(Document $document)
+    {
+        $this->documents->removeElement($document);
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getDocuments()
+    {
+        return $this->documents;
+    }
+
+    /**
+     * @param Comment $comment
+     */
+    public function addComment(Comment $comment)
+    {
+        $this->comments->add($comment);
+    }
+
+    /**
+     * @param Comment $comment
+     */
+    public function removeComment(Comment $comment)
+    {
+        $this->comments->removeElement($comment);
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getComments()
+    {
+        return $this->comments;
     }
 }

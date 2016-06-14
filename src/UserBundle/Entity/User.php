@@ -4,6 +4,8 @@ namespace UserBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use EventBundle\Entity\Comment;
+use EventBundle\Entity\Event;
 use FOS\UserBundle\Model\User as BaseUser;
 
 /**
@@ -14,16 +16,6 @@ use FOS\UserBundle\Model\User as BaseUser;
  */
 class User extends BaseUser
 {
-
-	public function __construct()
-	{
-		parent::__construct ();
-		$this->signInDate = new \DateTime();
-		$this->events = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->friends = new ArrayCollection();
-		// your own logic
-	}
-	
     /**
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -47,16 +39,34 @@ class User extends BaseUser
     private $firstName;
     
     /**
+     * @var ArrayCollection
+     *
      * @ORM\OneToMany(targetEntity="EventBundle\Entity\Event", mappedBy="user")
      */
     private $events;
 
     /**
-     * @var
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="EventBundle\Entity\Comment", mappedBy="user")
+     */
+    private $comments;
+
+    /**
+     * @var ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="User")
      */
     private $friends;
+
+    public function __construct()
+    {
+        parent::__construct ();
+        $this->signInDate = new \DateTime();
+        $this->events = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->friends = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -67,7 +77,6 @@ class User extends BaseUser
     {
         return $this->id;
     }
-
 
     /**
      * Set signInDate
@@ -144,10 +153,10 @@ class User extends BaseUser
     /**
      * Add events
      *
-     * @param \UserBundle\Entity\Event $events
+     * @param Event $events
      * @return User
      */
-    public function addEvent(\EventBundle\Entity\Event $events)
+    public function addEvent(Event $events)
     {
         $this->events[] = $events;
 
@@ -157,9 +166,9 @@ class User extends BaseUser
     /**
      * Remove events
      *
-     * @param \UserBundle\Entity\Event $events
+     * @param Event $events
      */
-    public function removeEvent(\EventBundle\Entity\Event $events)
+    public function removeEvent(Event $events)
     {
         $this->events->removeElement($events);
     }
@@ -172,6 +181,22 @@ class User extends BaseUser
     public function getEvents()
     {
         return $this->events;
+    }
+
+    /**
+     * @param Comment $comment
+     */
+    public function addComment(Comment $comment)
+    {
+        $this->comments->add($comment);
+    }
+
+    /**
+     * @param Comment $comment
+     */
+    public function removeComment(Comment $comment)
+    {
+        $this->comments->removeElement($comment);
     }
 
     /**

@@ -2,10 +2,11 @@
 
 namespace EventBundle\Repository;
 
+
 use Doctrine\ORM\EntityRepository;
 use EventBundle\Entity\Event;
 
-class ProvisionsRepository extends EntityRepository
+class DocumentRepository extends EntityRepository
 {
     /**
      * @param Event $event
@@ -13,8 +14,8 @@ class ProvisionsRepository extends EntityRepository
      */
     public function findByEvent(Event $event)
     {
-        $queryBuilder = $this->createQueryBuilder('p');
-        $queryBuilder->innerJoin('p.event', 'e');
+        $queryBuilder = $this->createQueryBuilder('d');
+        $queryBuilder->innerJoin('d.event', 'e');
         $queryBuilder->andWhere('e.id = :eventId');
         $queryBuilder->setParameter('eventId', $event->getId());
 
