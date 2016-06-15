@@ -21,7 +21,7 @@ color:orange;
 {% block page_content %}
 
 
-{% if participation is defined %}
+{% if participation is defined and participation is not null %}
 {% if participation.response is null or participation.response == 0 %}
 <div class="box">
   <div class="box-header with-border">
@@ -225,9 +225,7 @@ $(document).ready(function () {
 var t = true;
 		 }else{ var t = false}
 	  
-	  var objpart = {'event' : {{ participation.event.id }},
-	  'sleep' : {% if participation.sleep is not null %}{{ participation.sleep }}{% else %} null {% endif %},
-			  'response' : t}
+	
       $.ajax({
           type : 'PUT',
           url : url,

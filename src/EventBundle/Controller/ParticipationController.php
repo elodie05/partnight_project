@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\Response;
+
 
 class ParticipationController extends FOSRestController
 {
@@ -88,25 +88,7 @@ class ParticipationController extends FOSRestController
         return $this->handleView($view);
     }
 
-    /**
-     * @QueryParam(name="event", requirements="\d+", nullable=true)
-     * @param ParamFetcher $paramFetcher
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function newParticipationAction(ParamFetcher $paramFetcher)
-    {
-        $eventId = $paramFetcher->get('event');
-        $event = $this->getDoctrine()->getRepository('EventBundle:Event')->findOneBy(array('id' => $eventId));
 
-        $participation = new Participation();
-        $participation->setEvent($event);
-
-        $form = $this->createForm(new ParticipationType(), $participation);
-
-        return $this->render('EventBundle:participation:new.html.twig', array(
-            'form' => $form->createView()
-        ));
-    }
 
     /**
      * @param Request $request
@@ -178,21 +160,29 @@ class ParticipationController extends FOSRestController
         return new Response("Test", 200);
     }
     
+    
     /**
+     * @QueryParam(name="event", requirements="\d+", nullable=true)
+     * @param ParamFetcher $paramFetcher
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function newParticipationAction(Event $event)
+    public function newParticipationAction(ParamFetcher $paramFetcher)
     {
+    	$eventId = $paramFetcher->get('event');
+    	$event = $this->getDoctrine()->getRepository('EventBundle:Event')->findOneBy(array('id' => $eventId));
+    
     	$em = $this->getDoctrine()->getManager();
     	$user = $this->get('security.context')->getToken()->getUser();
-    	
+    	 
     	$usersToInvite = $em->getRepository('UserBundle:User')->findFriendNotInvited($user, $event);
-    	/*$participation = new Participation();
-    	$form = $this->createForm(new ParticipationType(), $participation);*/
+    	
+    	$participation = new Participation();
+    	$participation->setEvent($event);
+    
+    	$form = $this->createForm(new ParticipationType(), $participation);
     
     	return $this->render('EventBundle:participation:new.html.twig', array(
-    			'usersToInvite' => $usersToInvite,
-    			'event' => $event
+    			'form' => $form->createView(),'usersToInvite' => $usersToInvite
     	));
     }
 }
