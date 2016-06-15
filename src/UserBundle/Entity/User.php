@@ -38,6 +38,11 @@ class User extends BaseUser
      * @ORM\Column(name="firstName", type="string")
      */
     private $firstName;
+
+    /**
+     * @ORM\Column(type="string", unique=true)
+     */
+    private $apiKey;
     
     /**
      * @var ArrayCollection
@@ -157,6 +162,22 @@ class User extends BaseUser
     public function getFirstName()
     {
         return $this->firstName;
+    }
+
+    /**
+     * @param string $apiKey
+     */
+    public function setApiKey($apiKey)
+    {
+        $this->apiKey = $apiKey;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiKey()
+    {
+        return $this->apiKey;
     }
 
     /**

@@ -4,6 +4,7 @@ namespace EventBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use UserBundle\Entity\User;
+
 /**
  * Event
  *
@@ -39,7 +40,7 @@ class Participation
     private $response;
 
     /**
-     * @ORM\Column(name="sleep", type="boolean", nullable=false)
+     * @ORM\Column(name="sleep", type="boolean", nullable=true)
      */
     private $sleep;
 
@@ -59,10 +60,10 @@ class Participation
      * @param Event $event
      * @return Participation
      */
-    public function setEvent(Event $event = null)
+    public function setEvent(Event $event)
     {
         $this->event = $event;
-        $event->addParticipation($this);
+        $this->event->addParticipation($this);
 
         return $this;
     }

@@ -28,6 +28,13 @@ class Comment
     private $text;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="posted_at", type="datetime")
+     */
+    private $postedAt;
+
+    /**
      * @var Event
      *
      * @ORM\ManyToOne(targetEntity="Event", inversedBy="comments")
@@ -63,6 +70,22 @@ class Comment
     public function getText()
     {
         return $this->text;
+    }
+
+    /**
+     * @param \DateTime $postedAt
+     */
+    public function setPostedAt(\DateTime $postedAt)
+    {
+        $this->postedAt = $postedAt;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getPostedAt()
+    {
+        return $this->postedAt;
     }
 
     /**

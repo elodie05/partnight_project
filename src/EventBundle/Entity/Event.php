@@ -6,7 +6,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * Event
@@ -436,6 +435,14 @@ class Event
     public function getLng()
     {
         return $this->lng;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getName();
     }
 
     /**

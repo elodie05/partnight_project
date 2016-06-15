@@ -18,9 +18,18 @@ services:
         class: EventBundle\Utils\FileUploader
         arguments: ['%documents_directory%']
 
-    event.document_upload_listener:
+
+    event.listener.document_upload_listener:
         class: EventBundle\Listener\DocumentUploadListener
         arguments: ['@event.file_uploader']
         tags:
             - { name: doctrine.event_listener, event: prePersist }
             - { name: doctrine.event_listener, event: preUpdate }
+
+    user.security.token_authenticator:
+        class: UserBundle\Security\TokenAuthenticator
+        arguments: ['@doctrine.orm.entity_manager']
+
+    user.token_authenticator:
+        class: UserBundle\Security\TokenAuthenticator
+        arguments: ['@doctrine.orm.entity_manager']

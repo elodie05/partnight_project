@@ -2,14 +2,15 @@
 
 namespace EventBundle\Controller;
 
-use EventBundle\Entity\Document;
-use EventBundle\Form\DocumentType;
+use EventBundle\Entity\Comment;
+use EventBundle\Form\CommentType;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-class DocumentController extends FOSRestController
+class CommentController extends FOSRestController
 {
     /**
      * @QueryParam(name="event", requirements="\d+", nullable=false)
@@ -17,18 +18,17 @@ class DocumentController extends FOSRestController
      * @param ParamFetcher $paramFetcher
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getDocumentsAction(ParamFetcher $paramFetcher)
+    public function getCommentsAction(ParamFetcher $paramFetcher)
     {
         $eventId = $paramFetcher->get('event');
-        $eventRepository = $this->getDoctrine()->getRepository('DocumentRepository');
+        $eventRepository = $this->getDoctrine()->getRepository('EventBundle:Event');
         $event = $eventRepository->find($eventId);
 
-        $documentRepository = $this->getDoctrine()->getRepository('EventBundle:Document');
-        $documents = $documentRepository->findByEvent($event);
+        $commentRepository = $this->getDoctrine()->getRepository('EventBundle:Comment');
+        $comments = $commentRepository->findByEvent($event);
 
-        $view = $this->view($documents, 200)
-            ->setTemplate('EventBundle:document:list.html.twig')
-            ->setTemplateVar('events');
+        $view = $this->view($comments, 200)
+            ->setTemplate('EventBundle:comment:list.html.twig');
 
         return $this->handleView($view);
     }
@@ -39,17 +39,17 @@ class DocumentController extends FOSRestController
      * @param ParamFetcher $paramFetcher
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function newDocumentAction(ParamFetcher $paramFetcher)
+    public function newCommentAction(ParamFetcher $paramFetcher)
     {
         $eventId = $paramFetcher->get('event');
         $eventRepository = $this->getDoctrine()->getRepository('EventBundle:Event');
         $event = $eventRepository->find($eventId);
 
-        $document = new Document();
-        $document->setEvent($event);
-        $form = $this->createForm(new DocumentType(), $document);
+        $comment = new Comment();
+        $comment->setEvent($event);
+        $form = $this->createForm(new CommentType(), $comment);
 
-        return $this->render('EventBundle:event:create.html.twig', array(
+        return $this->render('EventBundle:comment:new.html.twig', array(
             'form' => $form->createView()
         ));
     }
@@ -58,18 +58,17 @@ class DocumentController extends FOSRestController
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postDocumentAction(Request $request)
+    public function postCommentAction(Request $request)
     {
-        $document = new Document();
-        $form = $this->createForm(new DocumentType(), $document);
-        $form->handleRequest($request);
+        $comment = new Comment();
+        $form = $this->createForm(new CommentType(), $comment);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->handleRequest($request)->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($document);
+            $em->persist($comment);
             $em->flush();
 
-            $view = $this->routeRedirectView('get_event', array('event' => $document->getEvent()->getId()), 301);
+            $view = $this->routeRedirectView('get_event', array('event' => $comment->getEvent()->getId()), 301);
 
             return $this->handleView($view);
         }

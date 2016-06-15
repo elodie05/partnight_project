@@ -45,6 +45,7 @@ class EventController extends FOSRestController
             ->getRepository('EventBundle:Event')
             ->findByUser($user);
 
+
         $view = $this->view($events, 200)
             ->setTemplate('EventBundle:event:list.html.twig')
             ->setTemplateVar('events');

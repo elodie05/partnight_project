@@ -61,13 +61,10 @@ class ProvisionController extends FOSRestController
     }
 
     /**
-     * @QueryParam(name="event", requirements="\d+", nullable=false)
-     *
      * @param Request $request
-     * @param ParamFetcher $paramFetcher
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postProvisionAction(Request $request, ParamFetcher $paramFetcher)
+    public function postProvisionAction(Request $request)
     {
         $token = $this->get('security.token_storage')->getToken();
 
@@ -76,6 +73,7 @@ class ProvisionController extends FOSRestController
         }
 
         $user = $token->getUser();
+
         $provision = new Provision();
         $provision->setUser($user);
 
