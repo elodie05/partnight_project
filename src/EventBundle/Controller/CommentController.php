@@ -62,8 +62,12 @@ class CommentController extends FOSRestController
     {
         $comment = new Comment();
         $form = $this->createForm(new CommentType(), $comment);
+        $contentType = $request->headers->get('content_type');
+        $data = json_decode($request->getContent());
 
-        if ($form->handleRequest($request)->isValid()) {
+        $form->submit((array) $data);
+
+        if ($contentType == 'application/json' && $form->isValid() || $form->handleRequest($request)->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($comment);
             $em->flush();

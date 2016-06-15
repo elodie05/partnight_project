@@ -68,6 +68,8 @@ class ItemController extends FOSRestController
         $contentType = $request->headers->get('content_type');
         $data = json_decode($request->getContent());
 
+        $form->submit((array) $data);
+
         if ($contentType == 'application/json' && $form->submit((array) $data)->isValid() || $form->handleRequest($request)) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($item);
