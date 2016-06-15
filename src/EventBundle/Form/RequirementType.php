@@ -35,7 +35,7 @@ class RequirementType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        	->add('item','text')
+        	->add('item')
             ->add('quantity','integer')
             ->add('event', EntityType::class, array(
                 'class' => 'EventBundle:Event',
@@ -57,7 +57,8 @@ class RequirementType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'EventBundle\Entity\Requirement'
+            'data_class' => 'EventBundle\Entity\Requirement',
+            'csrf_protection' => false
         ));
     }
     

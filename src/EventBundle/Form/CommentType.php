@@ -17,7 +17,6 @@ class CommentType extends AbstractType
         $builder
             ->add('text')
             ->add('event')
-            ->add('user')
         ;
     }
     
@@ -27,7 +26,8 @@ class CommentType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'EventBundle\Entity\Comment'
+            'data_class' => 'EventBundle\Entity\Comment',
+            'csrf_protection' => false
         ));
     }
 }

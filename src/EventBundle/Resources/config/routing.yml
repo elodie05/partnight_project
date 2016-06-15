@@ -21,3 +21,7 @@ event_provision:
 event_document:
     type: rest
     resource: "@EventBundle/Controller/DocumentController.php"
+
+event_comment:
+    type: rest
+    resource: "@EventBundle/Controller/CommentController.php"

@@ -10,6 +10,7 @@ use EventBundle\Entity\Event;
 use EventBundle\Form\EventType;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use EventBundle\Form\RequirementType;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -141,11 +142,12 @@ class EventController extends FOSRestController
             $em = $this->getDoctrine()->getManager();
             $em->persist($event);
             $em->flush();
-
-            $view = $this->routeRedirectView('get_event', array('event' => $event->getId()), 301);
+            $view = $this->view($event, 200)->setTemplate('EventBundle:event:post.html.twig');
 
             return $this->handleView($view);
         }
+
+        throw new BadRequestHttpException();
     }
 
     /**
@@ -183,13 +185,12 @@ class EventController extends FOSRestController
             $em = $this->getDoctrine()->getManager();
             $em->persist($event);
             $em->flush();
+            $view = $this->view($event, 200)->setTemplate('EventBundle:event:put.html.twig');
+
+            return $this->handleView($view);
         }
 
-        return $this->render('EventBundle:event:create.html.twig', array(
-            'form' => $form->createView(),
-            'action' => 'update',
-            'event' => $event
-        ));
+        throw new BadRequestHttpException();
     }
 
     /**

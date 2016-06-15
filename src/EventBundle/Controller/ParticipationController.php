@@ -2,17 +2,14 @@
 
 namespace EventBundle\Controller;
 
-use EventBundle\Entity\Event;
 use EventBundle\Entity\Participation;
 use EventBundle\Form\ParticipationType;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ParticipationController extends FOSRestController
@@ -135,13 +132,12 @@ class ParticipationController extends FOSRestController
             $em = $this->getDoctrine()->getManager();
             $em->persist($participation);
             $em->flush();
-            $view = $this->view($participation, 200)->setTemplate('EventBundle:participation:get.html.twig');
+            $view = $this->view($participation, 200)->setTemplate('EventBundle:participation:post.html.twig');
 
             return $this->handleView($view);
-
         }
 
-        throw new NotFoundHttpException();
+        throw new BadRequestHttpException();
     }
 
     /**
@@ -167,10 +163,11 @@ class ParticipationController extends FOSRestController
             $em = $this->getDoctrine()->getManager();
             $em->persist($participation);
             $em->flush();
-
-            $view = $this->routeRedirectView('get_event', array('event' => $participation->getEvent()->getId()), 301);
+            $view = $this->view($participation, 200)->setTemplate('EventBundle:participation:put.html.twig');
 
             return $this->handleView($view);
         }
+
+        throw new BadRequestHttpException();
     }
 }

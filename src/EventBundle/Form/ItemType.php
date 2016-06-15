@@ -25,7 +25,8 @@ class ItemType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'EventBundle\Entity\Item'
+            'data_class' => 'EventBundle\Entity\Item',
+            'csrf_protection' => false
         ));
     }
 }

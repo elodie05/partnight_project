@@ -17,6 +17,7 @@ class ProvisionType extends AbstractType
         $builder
             ->add('quantity')
             ->add('item')
+            ->add('event')
         ;
     }
     
@@ -26,7 +27,8 @@ class ProvisionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'EventBundle\Entity\Provision'
+            'data_class' => 'EventBundle\Entity\Provision',
+            'csrf_protection' => false
         ));
     }
 }

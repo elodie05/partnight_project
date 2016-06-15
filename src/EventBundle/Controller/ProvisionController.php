@@ -71,8 +71,7 @@ class ProvisionController extends FOSRestController
             $em = $this->getDoctrine()->getManager();
             $em->persist($provision);
             $em->flush();
-
-            $view = $this->routeRedirectView('get_event', array('event' => $provision->getEvent()->getId()), 301);
+            $view = $this->view($provision, 200)->setTemplate('EventBundle:provision:post.html.twig');
 
             return $this->handleView($view);
         }

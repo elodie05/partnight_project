@@ -10,6 +10,7 @@ use UserBundle\Entity\User;
  *
  * @ORM\Table(name="comment")
  * @ORM\Entity(repositoryClass="EventBundle\Repository\CommentRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Comment
 {
@@ -75,14 +76,6 @@ class Comment
     }
 
     /**
-     * @param \DateTime $postedAt
-     */
-    public function setPostedAt(\DateTime $postedAt)
-    {
-        $this->postedAt = $postedAt;
-    }
-
-    /**
      * @return \DateTime
      */
     public function getPostedAt()
@@ -122,5 +115,13 @@ class Comment
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedAtValue()
+    {
+        $this->postedAt = new \DateTime();
     }
 }

@@ -26,7 +26,8 @@ class DocumentType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'EventBundle\Entity\Document'
+            'data_class' => 'EventBundle\Entity\Document',
+            'csrf_protection' => false
         ));
     }
 }
