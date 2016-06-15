@@ -45,13 +45,10 @@ class ProvisionController extends FOSRestController
     }
 
     /**
-     * @QueryParam(name="event", requirements="\d+", nullable=false)
-     *
      * @param Request $request
-     * @param ParamFetcher $paramFetcher
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postProvisionAction(Request $request, ParamFetcher $paramFetcher)
+    public function postProvisionAction(Request $request)
     {
         $token = $this->get('security.token_storage')->getToken();
 
@@ -61,15 +58,10 @@ class ProvisionController extends FOSRestController
 
         $user = $token->getUser();
 
-        $eventId = $paramFetcher->get('event');
-        $eventRepository = $this->getDoctrine()->getRepository('EventBundle:Event');
-        $event = $eventRepository->find($eventId);
-
         $provision = new Provision();
-        $provision->setEvent($event);
         $provision->setUser($user);
 
-        $form = $this->createForm(new ProvisionType(), $event);
+        $form = $this->createForm(new ProvisionType(), $provision);
         $contentType = $request->headers->get('content_type');
         $data = json_decode($request->getContent());
 
@@ -78,7 +70,7 @@ class ProvisionController extends FOSRestController
             $em->persist($provision);
             $em->flush();
 
-            $view = $this->routeRedirectView('get_event', array('event' => $event->getId()), 301);
+            $view = $this->routeRedirectView('get_event', array('event' => $provision->getEvent()->getId()), 301);
 
             return $this->handleView($view);
         }

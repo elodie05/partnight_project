@@ -86,19 +86,11 @@ class ParticipationController extends FOSRestController
     }
 
     /**
-     * @QueryParam(name="event", requirements="\d+", nullable=false)
-     *
      * @param Request $request
-     * @param ParamFetcher $paramFetcher
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postParticipationAction(Request $request, ParamFetcher $paramFetcher)
+    public function postParticipationAction(Request $request)
     {
-        $eventId = $paramFetcher->get('event');
-
-        $eventRepository = $this->getDoctrine()->getRepository('EventBundle:Event');
-        $event = $eventRepository->find($eventId);
-
         $token = $this->get('security.token_storage')->getToken();
 
         if (null === $token) {
@@ -109,7 +101,6 @@ class ParticipationController extends FOSRestController
 
         $participation = new Participation();
         $participation->setUser($user);
-        $participation->setEvent($event);
 
         $form = $this->createForm(new ParticipationType(), $participation);
         $contentType = $request->headers->get('content_type');
@@ -120,7 +111,7 @@ class ParticipationController extends FOSRestController
             $em->persist($participation);
             $em->flush();
 
-            $view = $this->routeRedirectView('get_event', array('event' => $event->getId()), 301);
+            $view = $this->routeRedirectView('get_event', array('event' => $participation->getEvent()->getId()), 301);
 
             return $this->handleView($view);
         }
