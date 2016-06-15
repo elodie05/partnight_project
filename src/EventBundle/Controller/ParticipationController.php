@@ -11,6 +11,7 @@ use FOS\RestBundle\Request\ParamFetcher;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\Response;
 
 class ParticipationController extends FOSRestController
 {
@@ -127,20 +128,22 @@ class ParticipationController extends FOSRestController
     }
 
     /**
-     * @QueryParam(name="event", requirements="\d+", nullable=false)
-     *
      * @param Request $request
      * @param Participation $participation
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function putParticipationAction(Request $request, Participation $participation)
     {
+    	return new Response(json_encode($participation));
+    	
         $token = $this->get('security.token_storage')->getToken();
 
         if (null === $token) {
             throw new AccessDeniedException();
         }
-
+        $user = $token->getUser();
+        
+        $participation->setUser($user);
         $form = $this->createForm(new ParticipationType(), $participation);
         $contentType = $request->headers->get('content_type');
         $data = json_decode($request->getContent());
@@ -150,9 +153,31 @@ class ParticipationController extends FOSRestController
             $em->persist($participation);
             $em->flush();
 
-            $view = $this->routeRedirectView('get_event', array('event' => $participation->getEvent()->getId()), 301);
+            //$view = $this->routeRedirectView('get_event', array('event' => $participation->getEvent()->getId()), 301);
 
-            return $this->handleView($view);
+            //return $this->handleView($view);
+            
+            
         }
+        
+        return new Response("Test", 200);
+    }
+    
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function newParticipationAction(Event $event)
+    {
+    	$em = $this->getDoctrine()->getManager();
+    	$user = $this->get('security.context')->getToken()->getUser();
+    	
+    	$usersToInvite = $em->getRepository('UserBundle:User')->findFriendNotInvited($user, $event);
+    	/*$participation = new Participation();
+    	$form = $this->createForm(new ParticipationType(), $participation);*/
+    
+    	return $this->render('EventBundle:participation:new.html.twig', array(
+    			'usersToInvite' => $usersToInvite,
+    			'event' => $event
+    	));
     }
 }

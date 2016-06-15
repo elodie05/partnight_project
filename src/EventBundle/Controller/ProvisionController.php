@@ -14,6 +14,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class ProvisionController extends FOSRestController
 {
     /**
+     * @QueryParam(name="event", requirements="\d+", nullable=true)
      * @param ParamFetcher $paramFetcher
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -32,11 +33,26 @@ class ProvisionController extends FOSRestController
     }
 
     /**
+     * @QueryParam(name="event", requirements="\d+", nullable=true)
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function newProvisionAction()
+    public function newProvisionAction(ParamFetcher $paramFetcher)
     {
+    	$eventId = $paramFetcher->get('event');
+    	$eventRepository = $this->getDoctrine()->getRepository('EventBundle:Event');
+    	$event = $eventRepository->find($eventId);
+    	
+    	$token = $this->get('security.token_storage')->getToken();
+    	
+    	if (null === $token) {
+    		throw new AccessDeniedException();
+    	}
+    	
+    	$user = $token->getUser();
+    	
         $provision = new Provision();
+        $provision->setEvent($event);
+        $provision->setUser($user);
         $form = $this->createForm(new ProvisionType(), $provision);
 
         return $this->render('EventBundle:provision:new.html.twig', array(
@@ -60,25 +76,20 @@ class ProvisionController extends FOSRestController
         }
 
         $user = $token->getUser();
-
-        $eventId = $paramFetcher->get('event');
-        $eventRepository = $this->getDoctrine()->getRepository('EventBundle:Event');
-        $event = $eventRepository->find($eventId);
-
         $provision = new Provision();
-        $provision->setEvent($event);
         $provision->setUser($user);
 
-        $form = $this->createForm(new ProvisionType(), $event);
+        $form = $this->createForm(new ProvisionType(), $provision);
         $contentType = $request->headers->get('content_type');
         $data = json_decode($request->getContent());
 
         if ($contentType == 'application/json' && $form->submit((array) $data)->isValid() || $form->handleRequest($request)) {
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($provision);
             $em->flush();
 
-            $view = $this->routeRedirectView('get_event', array('event' => $event->getId()), 301);
+            $view = $this->routeRedirectView('get_event', array('event' => $provision->getEvent()->getId()), 301);
 
             return $this->handleView($view);
         }

@@ -15,11 +15,11 @@ services:
         arguments: ["@doctrine.orm.entity_manager"]
 
     event.file_uploader:
-        class: AppBundle\Utils\FileUploader
+        class: EventBundle\Utils\FileUploader
         arguments: ['%documents_directory%']
 
     event.document_upload_listener:
-        class: AppBundle\Listener\DocumentUploadListener
+        class: EventBundle\Listener\DocumentUploadListener
         arguments: ['@event.file_uploader']
         tags:
             - { name: doctrine.event_listener, event: prePersist }

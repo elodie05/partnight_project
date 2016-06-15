@@ -9,5 +9,18 @@ user_profile:
     defaults: { _controller: UserBundle:User:profile }
     requirements:
         user_id: \d
+        
+add_friend:
+    path: /addfriend/{user_id}/
+    defaults: { _controller: UserBundle:User:addFriend }
+    requirements:
+        user_id: \d
+        
+remove_friend:
+    path: /removefriend/{user_id}/
+    defaults: { _controller: UserBundle:User:removeFriend }
+    requirements:
+        user_id: \d
+        
 avanzu_admin_logout:
     path: /logout

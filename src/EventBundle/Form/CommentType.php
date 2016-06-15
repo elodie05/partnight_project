@@ -5,9 +5,8 @@ namespace EventBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
-class ProvisionType extends AbstractType
+class CommentType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -16,17 +15,11 @@ class ProvisionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('quantity')
-            ->add('item')
-            ->add('event', EntityType::class, array(
-                'class' => 'EventBundle:Event',
-                'choice_label' => 'name'
-            ))
-            ->add('save','submit',array(
-            		'attr' => array(
-            				'class' => 'btn btn-default'
-            		)
-            ))
+            ->add('text')
+           /* ->add('date', 'datetime')
+            ->add('event')
+            ->add('user')*/
+        	->add('save','submit')
         ;
     }
     
@@ -36,7 +29,7 @@ class ProvisionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'EventBundle\Entity\Provision'
+            'data_class' => 'EventBundle\Entity\Comment'
         ));
     }
 }

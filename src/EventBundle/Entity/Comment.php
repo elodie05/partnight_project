@@ -2,8 +2,13 @@
 
 namespace EventBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use UserBundle\Entity\User;
 
+/**
+ * @ORM\Table(name="comment")
+ * @ORM\Entity
+ */
 class Comment
 {
     /**

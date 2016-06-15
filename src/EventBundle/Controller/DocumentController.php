@@ -4,6 +4,7 @@ namespace EventBundle\Controller;
 
 use EventBundle\Entity\Document;
 use EventBundle\Form\DocumentType;
+use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
 use Symfony\Component\HttpFoundation\Request;

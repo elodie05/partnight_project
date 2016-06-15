@@ -30,10 +30,11 @@ class MyNotificationListListener {
     protected function getNotifications() {
     	$user = $this->context->getToken()->getUser();
     	$notif = array();
-    	$participations = $this->em->getRepository('EventBundle:Participation')->findBy(array('user'=>$user));
+    	$participations = $this->em->getRepository('EventBundle:Participation')->findBy(array('user'=>$user,'response'=>null));
     	
     	foreach ($participations as $participation){
-    		$notif[] = new NotificationModel('Nouvelle invitation',$participation->getId());
+    		$notif[] = new NotificationModel('Nouvelle invitation de '.$participation->getEvent()->getUser(),
+    				$participation->getEvent()->getId());
     	}
     	
     	return $notif;

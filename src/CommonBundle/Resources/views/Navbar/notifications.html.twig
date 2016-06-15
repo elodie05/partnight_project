@@ -11,7 +11,7 @@
             <ul class="menu">
                 {% for notice in notifications %}
                     <li>
-                        <a href="{{ path('avanzu_admin_show_notification', {'notifyid':notice.identifier}) }}">
+                        <a href="{{ path('get_event', {'event':notice.identifier}) }}">
                             <i class="{{ notice.icon }} {{ notice.type }}"></i> {{notice.message}}
                         </a>
                     </li>
