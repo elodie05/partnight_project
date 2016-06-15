@@ -12,6 +12,7 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ParticipationController extends FOSRestController
@@ -125,7 +126,7 @@ class ParticipationController extends FOSRestController
         $participation->setUser($user);
 
         $form = $this->createForm(new ParticipationType(), $participation);
-        $contentType = $request->headers->get('content_type');
+        $contentType = $request->headers->get('Content-Type');
         $data = json_decode($request->getContent());
 
         $form->submit((array) $data);
@@ -134,9 +135,13 @@ class ParticipationController extends FOSRestController
             $em = $this->getDoctrine()->getManager();
             $em->persist($participation);
             $em->flush();
+            $view = $this->view($participation, 200)->setTemplate('EventBundle:participation:get.html.twig');
 
-            return new JsonResponse($participation);
+            return $this->handleView($view);
+
         }
+
+        throw new NotFoundHttpException();
     }
 
     /**
@@ -153,7 +158,7 @@ class ParticipationController extends FOSRestController
         }
 
         $form = $this->createForm(new ParticipationType(), $participation);
-        $contentType = $request->headers->get('content_type');
+        $contentType = $request->headers->get('Content-Type');
         $data = json_decode($request->getContent());
 
         $form->submit((array) $data);

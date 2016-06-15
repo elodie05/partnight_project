@@ -132,7 +132,7 @@ class EventController extends FOSRestController
         $event->setUser($user);
 
         $form = $this->createForm(new EventType(), $event);
-        $contentType = $request->headers->get('content_type');
+        $contentType = $request->headers->get('Content-Type');
         $data = json_decode($request->getContent());
 
         $form->submit((array) $data);
@@ -174,7 +174,7 @@ class EventController extends FOSRestController
     public function putEventAction(Request $request, Event $event)
     {
         $form = $this->createForm(new EventType(), $event);
-        $contentType = $request->headers->get('content_type');
+        $contentType = $request->headers->get('Content-Type');
         $data = json_decode($request->getContent());
 
         $form->submit((array) $data);

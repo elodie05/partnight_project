@@ -62,7 +62,7 @@ class ProvisionController extends FOSRestController
         $provision->setUser($user);
 
         $form = $this->createForm(new ProvisionType(), $provision);
-        $contentType = $request->headers->get('content_type');
+        $contentType = $request->headers->get('Content-Type');
         $data = json_decode($request->getContent());
 
         $form->submit((array) $data);

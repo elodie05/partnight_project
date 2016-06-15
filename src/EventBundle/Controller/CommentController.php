@@ -62,7 +62,7 @@ class CommentController extends FOSRestController
     {
         $comment = new Comment();
         $form = $this->createForm(new CommentType(), $comment);
-        $contentType = $request->headers->get('content_type');
+        $contentType = $request->headers->get('Content-Type');
         $data = json_decode($request->getContent());
 
         $form->submit((array) $data);

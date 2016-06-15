@@ -78,7 +78,7 @@ class RequirementController extends FOSRestController
     public function postRequirementAction(Request $request) {
         $requirement = new Requirement();
         $form = $this->createForm($this->get('event.form.requirement_type'), $requirement);
-        $contentType = $request->headers->get('content_type');
+        $contentType = $request->headers->get('Content-Type');
         $data = json_decode($request->getContent());
 
         $form->submit((array) $data);
