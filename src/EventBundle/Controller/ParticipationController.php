@@ -9,7 +9,9 @@ use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ParticipationController extends FOSRestController
@@ -86,6 +88,26 @@ class ParticipationController extends FOSRestController
     }
 
     /**
+     * @QueryParam(name="event", requirements="\d+", nullable=true)
+     * @param ParamFetcher $paramFetcher
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function newParticipationAction(ParamFetcher $paramFetcher)
+    {
+        $eventId = $paramFetcher->get('event');
+        $event = $this->getDoctrine()->getRepository('EventBundle:Event')->findOneBy(array('id' => $eventId));
+
+        $participation = new Participation();
+        $participation->setEvent($event);
+
+        $form = $this->createForm(new ParticipationType(), $participation);
+
+        return $this->render('EventBundle:participation:new.html.twig', array(
+            'form' => $form->createView()
+        ));
+    }
+
+    /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -106,20 +128,18 @@ class ParticipationController extends FOSRestController
         $contentType = $request->headers->get('content_type');
         $data = json_decode($request->getContent());
 
-        if ($contentType == 'application/json' && $form->submit((array) $data)->isValid() || $form->handleRequest($request)) {
+        $form->submit((array) $data);
+
+        if ($contentType == 'application/json' && $form->isValid() || $form->handleRequest($request)) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($participation);
             $em->flush();
 
-            $view = $this->routeRedirectView('get_event', array('event' => $participation->getEvent()->getId()), 301);
-
-            return $this->handleView($view);
+            return new JsonResponse($participation);
         }
     }
 
     /**
-     * @QueryParam(name="event", requirements="\d+", nullable=false)
-     *
      * @param Request $request
      * @param Participation $participation
      * @return \Symfony\Component\HttpFoundation\Response
@@ -136,7 +156,9 @@ class ParticipationController extends FOSRestController
         $contentType = $request->headers->get('content_type');
         $data = json_decode($request->getContent());
 
-        if ($contentType == 'application/json' && $form->submit((array) $data)->isValid() || $form->handleRequest($request)) {
+        $form->submit((array) $data);
+
+        if ($contentType == 'application/json' && $form->isValid() || $form->handleRequest($request)) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($participation);
             $em->flush();

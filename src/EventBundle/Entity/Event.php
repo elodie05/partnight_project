@@ -438,6 +438,14 @@ class Event
     }
 
     /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getName();
+    }
+
+    /**
      * @param Participation $participation
      */
     public function addParticipation(Participation $participation)

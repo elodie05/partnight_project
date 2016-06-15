@@ -1,0 +1,5 @@
+{% extends 'CommonBundle:layout:base-layout.html.twig' %}
+
+{% block page_content %}
+{{ form(form, {method: 'POST', action: path('post_participation')}) }}
+{% endblock page_content %}
