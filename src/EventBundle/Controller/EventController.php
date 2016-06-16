@@ -10,6 +10,7 @@ use EventBundle\Entity\Event;
 use EventBundle\Form\EventType;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use EventBundle\Form\RequirementType;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -130,10 +131,8 @@ class EventController extends FOSRestController
         $event = new Event();
         $form = $this->createForm(new EventType(), $event);
         
-        $geocoder = "http://maps.googleapis.com/maps/api/geocode/json?address=%s&sensor=false";
+      /*  $geocoder = "http://maps.googleapis.com/maps/api/geocode/json?address=%s&sensor=false";
         $adress = $event->getLocation();
-         
-        // Requête envoyée à l'API Geocoding
         $url_adress = utf8_encode($adress);
         $url_adress = urlencode($adress);
         $query = sprintf($geocoder, $url_adress);
@@ -146,8 +145,10 @@ class EventController extends FOSRestController
          
         $event->setLat($lat);
         $event->setLng($long);
-        $em->persist($event);
-        $em->flush();
+        
+        A METTRE A LA CREATION
+        
+        */
 
         return $this->render('EventBundle:event:create.html.twig', array(
             'form' => $form->createView(),
@@ -170,18 +171,26 @@ class EventController extends FOSRestController
         $event->setUser($user);
 
         $form = $this->createForm(new EventType(), $event);
-        $contentType = $request->headers->get('content_type');
+        $contentType = $request->headers->get('Content-Type');
         $data = json_decode($request->getContent());
 
-        if ($contentType == 'application/json' && $form->submit((array) $data)->isValid() || $form->handleRequest($request)) {
+        $form->submit((array) $data);
+
+        if ($contentType == 'application/json' && $form->isValid() || $form->handleRequest($request)) {
             $em = $this->getDoctrine()->getManager();
+           
+            
             $em->persist($event);
             $em->flush();
-
-            $view = $this->routeRedirectView('get_event', array('event' => $event->getId()), 301);
+            $view = $this->view($event, 200)->setTemplate('EventBundle:event:post.html.twig');
 
             return $this->handleView($view);
+
         }
+        
+
+
+        throw new BadRequestHttpException();
     }
 
     /**
@@ -220,20 +229,22 @@ class EventController extends FOSRestController
     public function putEventAction(Request $request, Event $event)
     {
         $form = $this->createForm(new EventType(), $event);
-        $contentType = $request->headers->get('content_type');
+        $contentType = $request->headers->get('Content-Type');
         $data = json_decode($request->getContent());
 
-        if ($contentType == 'application/json' && $form->submit((array) $data)->isValid() || $form->handleRequest($request)) {
-            $em = $this->getDoctrine()->getManager();
+        $form->submit((array) $data);
+
+        if ($contentType == 'application/json' && $form->isValid() || $form->handleRequest($request)) {
+			$em = $this->getDoctrine()->getManager();
             $em->persist($event);
             $em->flush();
+            $view = $this->view($event, 200)->setTemplate('EventBundle:event:edit.html.twig');
+            return $this->handleView($view);
+  
+            //TODO FAIRE REDIRECTION EN JS 
         }
 
-        return $this->render('EventBundle:event:create.html.twig', array(
-            'form' => $form->createView(),
-            'action' => 'update',
-            'event' => $event
-        ));
+        throw new BadRequestHttpException();
     }
 
     /**

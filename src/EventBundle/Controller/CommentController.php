@@ -8,6 +8,7 @@ use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class CommentController extends FOSRestController
@@ -62,15 +63,20 @@ class CommentController extends FOSRestController
     {
         $comment = new Comment();
         $form = $this->createForm(new CommentType(), $comment);
+        $contentType = $request->headers->get('Content-Type');
+        $data = json_decode($request->getContent());
 
-        if ($form->handleRequest($request)->isValid()) {
+        $form->submit((array) $data);
+
+        if ($contentType == 'application/json' && $form->isValid() || $form->handleRequest($request)->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($comment);
             $em->flush();
-
-            $view = $this->routeRedirectView('get_event', array('event' => $comment->getEvent()->getId()), 301);
+            $view = $this->view($comment, 200)->setTemplate('EventBundle:comment:post.html.twig');
 
             return $this->handleView($view);
         }
+
+        throw new BadRequestHttpException();
     }
 }

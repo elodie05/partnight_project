@@ -9,6 +9,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ItemController extends FOSRestController
 {
@@ -65,17 +66,21 @@ class ItemController extends FOSRestController
         $item = new Item();
 
         $form = $this->createForm(new ItemType(), $item);
-        $contentType = $request->headers->get('content_type');
+        $contentType = $request->headers->get('Content-Type');
         $data = json_decode($request->getContent());
 
-        if ($contentType == 'application/json' && $form->submit((array) $data)->isValid() || $form->handleRequest($request)) {
+        $form->submit((array) $data);
+
+        if ($contentType == 'application/json' && $form->isValid() || $form->handleRequest($request)) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($item);
             $em->flush();
 
-            $view = $this->routeRedirectView('new_event');
+            $view = $this->view($item, 200)->setTemplate('EventBundle:item:post.html.twig');
 
             return $this->handleView($view);
         }
+
+        throw new BadRequestHttpException();
     }
 }

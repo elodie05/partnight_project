@@ -78,16 +78,17 @@ class ProvisionController extends FOSRestController
         $provision->setUser($user);
 
         $form = $this->createForm(new ProvisionType(), $provision);
-        $contentType = $request->headers->get('content_type');
+        $contentType = $request->headers->get('Content-Type');
         $data = json_decode($request->getContent());
 
-        if ($contentType == 'application/json' && $form->submit((array) $data)->isValid() || $form->handleRequest($request)) {
 
+        $form->submit((array) $data);
+
+        if ($contentType == 'application/json' && $form->isValid() || $form->handleRequest($request)) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($provision);
             $em->flush();
-
-            $view = $this->routeRedirectView('get_event', array('event' => $provision->getEvent()->getId()), 301);
+            $view = $this->view($provision, 200)->setTemplate('EventBundle:provision:post.html.twig');
 
             return $this->handleView($view);
         }

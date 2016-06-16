@@ -31,7 +31,7 @@
    </div>
             <!-- /.box-header -->
    <div class="box-body">
-	   {{ form_start(form) }}
+	   {{ form_start(form,{'action' :path('put_event',{'event':event.id})}) }}
 	   {{ form_end(form) }}
 	   {{ form_errors(form) }}
    </div>
@@ -204,7 +204,11 @@
                     url: url,
                     contentType: "application/json",
                     dataType: 'json',
-                    data: JSON.stringify(data)
+                    data: JSON.stringify(data),
+                    success : function(data){
+						//location.reload();
+						//TODO REDIRECTION
+                     }
                 });
             });
 

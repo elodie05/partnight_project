@@ -2,16 +2,14 @@
 
 namespace EventBundle\Controller;
 
-use EventBundle\Entity\Event;
 use EventBundle\Entity\Participation;
 use EventBundle\Form\ParticipationType;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 
@@ -108,7 +106,7 @@ class ParticipationController extends FOSRestController
         $participation->setUser($user);
 
         $form = $this->createForm(new ParticipationType(), $participation);
-        $contentType = $request->headers->get('content_type');
+        $contentType = $request->headers->get('Content-Type');
         $data = json_decode($request->getContent());
 
         $form->submit((array) $data);
@@ -117,9 +115,12 @@ class ParticipationController extends FOSRestController
             $em = $this->getDoctrine()->getManager();
             $em->persist($participation);
             $em->flush();
+            $view = $this->view($participation, 200)->setTemplate('EventBundle:participation:post.html.twig');
 
-            return new JsonResponse($participation);
+            return $this->handleView($view);
         }
+
+        throw new BadRequestHttpException();
     }
 
     /**
@@ -140,7 +141,7 @@ class ParticipationController extends FOSRestController
         
         $participation->setUser($user);
         $form = $this->createForm(new ParticipationType(), $participation);
-        $contentType = $request->headers->get('content_type');
+        $contentType = $request->headers->get('Content-Type');
         $data = json_decode($request->getContent());
 
         $form->submit((array) $data);
@@ -149,15 +150,14 @@ class ParticipationController extends FOSRestController
             $em = $this->getDoctrine()->getManager();
             $em->persist($participation);
             $em->flush();
+            $view = $this->view($participation, 200)->setTemplate('EventBundle:participation:put.html.twig');
 
-            //$view = $this->routeRedirectView('get_event', array('event' => $participation->getEvent()->getId()), 301);
-
-            //return $this->handleView($view);
+            return $this->handleView($view);
             
             
         }
         
-        return new Response("Test", 200);
+        throw new BadRequestHttpException();
     }
     
     

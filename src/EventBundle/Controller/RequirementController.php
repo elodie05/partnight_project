@@ -12,6 +12,7 @@ use FOS\RestBundle\Request\ParamFetcher;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class RequirementController extends FOSRestController
 {
@@ -81,15 +82,28 @@ class RequirementController extends FOSRestController
         $requirement = new Requirement();
       
         $form = $this->createForm($this->get('event.form.requirement_type'), $requirement);
+        $contentType = $request->headers->get('Content-Type');
+        $data = json_decode($request->getContent());
 
-        if ($form->handleRequest($request)->isValid()) {
+        if ($contentType == 'application/json') {
+        	$form->submit((array) $data);
+        } else {
+        	$form->handleRequest($request);
+        }
+        
+
+        if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($requirement);
             $em->flush();
-            $view = $this->routeRedirectView('get_event', array('event' => $requirement->getEvent()->getId()), 301);
+
+            
+            $view = $this->routeRedirectView('edit_event', array('event' => $requirement->getEvent()->getId()), 301);
 
             return $this->handleView($view);
         }
+
+        throw new BadRequestHttpException();
     }
 
     /**
