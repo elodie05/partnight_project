@@ -86,7 +86,9 @@ color:orange;
               <div class="tab-pane" id="tab_2">
 			    <div class="box box-default box-solid">
 			   <div class="box-body">
-				{{ event.location }}
+				{{ 'address'|trans}} {{ event.location }}</br>
+				{{ 'latitude'|trans}} {{ event.lat }}</br>
+				{{ 'longitude'|trans}} {{ event.lng }}
 				<div id="map-canvas"></div>
 			   </div>
 			            <!-- /.box-body -->
@@ -118,6 +120,7 @@ color:orange;
 					                >{{ "provision"|trans }}</button>
 				   </div>
 				            <!-- /.box-body -->
+
 				</div>
               </div>
               <!-- /.tab-pane -->
@@ -131,9 +134,9 @@ color:orange;
 					<li>
 						<img src="dist/img/user1-128x128.jpg" alt="User Image">
 						<a class="users-list-name" href="{{ path('user_profile', {'user_id' : participation.user.id}) }}">{{ participation.user.firstName }} {{ participation.user.lastName }}</a>
-						{% if participation.response == 'yes' %}
+						{% if participation.response == true and participation.answeredAt is not null %}
 						<span class="green">Yes</span>
-						{% elseif participation == 'no'%}
+						{% elseif participation == false and participation.answeredAt is not null %}
 						<span class="red">No</span>
 						{% else %}
 						<span class="orange">Pas rep</span>
@@ -166,6 +169,7 @@ color:orange;
             <!-- /.tab-content -->
           </div>
 {% if participation is not null %}
+
 <div class="info-box bg-grey">
   <span class="info-box-icon"><i class="fa fa-comments-o"></i></span>
   <div class="info-box-content">
@@ -177,6 +181,7 @@ color:orange;
        {%if booking == 'no'%}{{ "add_sleep"|trans }}{% else %}{{ "remove_sleep"|trans }}{% endif %}</button>
   </div><!-- /.info-box-content -->
 </div><!-- /.info-box -->
+
 {% endif %}
 {#}{{ event.lat }}, {{ event.lng }}{#}
 {% endblock page_content %}
@@ -236,20 +241,20 @@ $(document).ready(function () {
 		 if(response == true) {
 			var t = true;
 			 }else{ var t = false}
-
-
 		 
-			 if(sleep == "true"){
+			if(sleep == "true"){
 				var s = true;
 		     }else{
 				var s = false;
 			 }
-		
-			 var date = new Date();
-			 
-		 var objpart = {event: {{ event.id }}, sleep : s, response: t, answeredAt:date};
-		  
-		console.log(objpart);
+
+			 {% if participation is not null %}
+			 var objpart = {event: {{ event.id }}, sleep : s, response: t,user: {{ participation.user.id}}};
+			 {% else %}
+
+			var objpart = {};
+			{% endif %}
+
 	      $.ajax({
 	          type : 'PUT',
 	          url : url+'.json',
@@ -280,8 +285,13 @@ $(document).ready(function () {
 	 }else{
 		var s = null;
 		 }
-	 var objpart = {event: {{ event.id }}, sleep : s, response: t};
-	  
+	 
+	 {% if participation is not null %}
+	 var objpart = {event: {{ event.id }}, sleep : s, response: t,user: {{ participation.user.id}}};
+	 {% else %}
+
+	var objpart = {};
+	{% endif %}
 	console.log(objpart);
       $.ajax({
           type : 'PUT',

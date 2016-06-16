@@ -17,28 +17,9 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class ParticipationController extends FOSRestController
 {
     /**
-     * @param Request $request
-     * @param $notifyid
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * TODO: Supprimer
-     */
-    public function notificationAction(Request $request, $notifyid)
-    {
-    	$em = $this->getDoctrine()->getManager();
-    	$participation = $em->getRepository('EventBundle:Participation')->find($notifyid);
-    	$event = $participation->getEvent();
-    	
-        return $this->render('EventBundle:event:view.html.twig',array(
-        		'event' => $event,
-        		'participation' => $participation
-        ));
-    }
-
-    /**
      * Get participations
      *
-     * @QueryParam(name="event", requirements="\d+", nullable=true)
+     * @QueryParam(name="event", requirements="\d+", description="Filter by event id", nullable=true)
      *
      * @param ParamFetcher $paramFetcher
      *
@@ -46,7 +27,13 @@ class ParticipationController extends FOSRestController
      *
      * @throws AccessDeniedException
      *
-     * @ApiDoc(description="Get participations")
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Get events",
+     *  filters={
+     *    {"name"="event", "dataType"="integer"}
+     *  }
+     * )
      */
     public function getParticipationsAction(ParamFetcher $paramFetcher)
     {
@@ -79,6 +66,19 @@ class ParticipationController extends FOSRestController
     /**
      * @param Participation $participation
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Get participation",
+     *  requirements={
+     *    {
+     *      "name"="participation",
+     *      "dataType"="integer",
+     *      "requirement"="\d+",
+     *      "description"="Participation id"
+     *    }
+     *  }
+     * )
      */
     public function getParticipationAction(Participation $participation)
     {
@@ -135,19 +135,18 @@ class ParticipationController extends FOSRestController
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws BadRequestHttpException
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Post participation",
+     *  input="EventBundle\Form\ParticipationType",
+     *  output="EventBundle\Entity\Participation"
+     * )
      */
     public function postParticipationAction(Request $request)
     {
-        $token = $this->get('security.token_storage')->getToken();
-
-        if (null === $token) {
-            throw new AccessDeniedException();
-        }
-
-        $user = $token->getUser();
-
         $participation = new Participation();
-      
 
         $form = $this->createForm(new ParticipationType(), $participation);
         $contentTypeJson = $this->get('event.utils.json_content_type')->isJsonContentType($request);
@@ -180,17 +179,26 @@ class ParticipationController extends FOSRestController
      * @param Request $request
      * @param Participation $participation
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws BadRequestHttpException
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Put participation",
+     *  input="EventBundle\Form\ParticipationType",
+     *  output="EventBundle\Entity\Participation",
+     *  requirements={
+     *    {
+     *      "name"="participation",
+     *      "dataType"="integer",
+     *      "requirement"="\d+",
+     *      "description"="Participation id"
+     *    }
+     *  }
+     * )
      */
     public function putParticipationAction(Request $request, Participation $participation)
     {
-        $token = $this->get('security.token_storage')->getToken();
 
-        if (null === $token) {
-            throw new AccessDeniedException();
-        }
-        $user = $token->getUser();
-        
-       
         $form = $this->createForm(new ParticipationType(), $participation);
         $contentTypeJson = $this->get('event.utils.json_content_type')->isJsonContentType($request);
         $data = json_decode($request->getContent());

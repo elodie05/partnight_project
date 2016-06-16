@@ -518,6 +518,7 @@ class Event
     
     /**
      * @ORM\PrePersist
+     * @ORM\PreUpdate()
      */
     public function setGeoLoc(){
     	$geocoder = "http://maps.googleapis.com/maps/api/geocode/json?address=%s&sensor=false";

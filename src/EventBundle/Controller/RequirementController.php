@@ -49,7 +49,18 @@ class RequirementController extends FOSRestController
      * @param Requirement $requirement
      * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @ApiDoc(description="Get requirement")
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Get requirement",
+     *  requirements={
+     *    {
+     *      "name"="requirement",
+     *      "dataType"="integer",
+     *      "requirement"="\d+",
+     *      "description"="Requirement id"
+     *    }
+     *  }
+     * )
      */
     public function getRequirementAction(Requirement $requirement) {
         $view = $this->view($requirement, 200);
@@ -74,8 +85,14 @@ class RequirementController extends FOSRestController
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws BadRequestHttpException
      *
-     * @ApiDoc(description="Post requirement")
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Post requirement",
+     *  input="EventBundle\Form\RequirementType",
+     *  output="EventBundle\Entity\Requirement"
+     * )
      */
     public function postRequirementAction(Request $request) {
     	
@@ -112,7 +129,18 @@ class RequirementController extends FOSRestController
      * @param Requirement $requirement
      * @return Response
      *
-     * @ApiDoc(description="Delete requirement")
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Delete requirement",
+     *  requirements={
+     *    {
+     *      "name"="requirement",
+     *      "dataType"="integer",
+     *      "requirement"="\d+",
+     *      "description"="Requirement id"
+     *    }
+     *  }
+     * )
      */
     public function deleteRequirementAction(Requirement $requirement) {
         $em = $this->getDoctrine()->getManager();

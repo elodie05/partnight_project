@@ -58,8 +58,6 @@ class EventController extends FOSRestController
         return $this->handleView($view);
     }
 
-
-
     /**
      * Get event
      *
@@ -150,8 +148,10 @@ class EventController extends FOSRestController
 
     /**
      * Post event
+     *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws BadRequestHttpException
      *
      * @ApiDoc(
      *  resource=true,
@@ -224,12 +224,21 @@ class EventController extends FOSRestController
      * @param Request $request
      * @param Event $event
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws BadRequestHttpException
      *
      * @ApiDoc(
      *  resource=true,
      *  description="Put event",
      *  input="EventBundle\Form\EventType",
-     *  output="EventBundle\Entity\Event"
+     *  output="EventBundle\Entity\Event",
+     *  requirements={
+     *    {
+     *      "name"="event",
+     *      "dataType"="integer",
+     *      "requirement"="\d+",
+     *      "description"="Event id"
+     *    }
+     *  }
      * )
      */
 	public function putEventAction(Request $request, Event $event)
@@ -253,6 +262,8 @@ class EventController extends FOSRestController
   
             //TODO FAIRE REDIRECTION EN JS 
         }
+        
+        throw new BadRequestHttpException();
 	}
 
     /**
