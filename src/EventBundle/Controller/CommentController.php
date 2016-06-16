@@ -76,7 +76,12 @@ class CommentController extends FOSRestController
             $em = $this->getDoctrine()->getManager();
             $em->persist($comment);
             $em->flush();
-            $view = $this->view($comment, 200)->setTemplate('EventBundle:comment:post.html.twig');
+
+            if ($request->getRequestFormat() === 'html') {
+                $view = $this->routeRedirectView('get_event', array('event' => $comment->getEvent()->getId()));
+            } else {
+                $view = $this->view($comment, 200)->setTemplate('EventBundle:comment:post.html.twig');
+            }
 
             return $this->handleView($view);
         }

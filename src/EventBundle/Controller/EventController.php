@@ -178,11 +178,14 @@ class EventController extends FOSRestController
 
         if ($contentType == 'application/json' && $form->isValid() || $form->handleRequest($request)) {
             $em = $this->getDoctrine()->getManager();
-           
-            
             $em->persist($event);
             $em->flush();
-            $view = $this->view($event, 200)->setTemplate('EventBundle:event:post.html.twig');
+
+            if ($request->getRequestFormat() === 'html') {
+                $view = $this->routeRedirectView('get_event', array('event' => $event->getId()));
+            } else {
+                $view = $this->view($event, 200)->setTemplate('EventBundle:event:post.html.twig');
+            }
 
             return $this->handleView($view);
 

@@ -1,9 +1,9 @@
 services:
-    common_bundle.notification_listener:
-        class: CommonBundle\EventListener\MyNotificationListListener
-        arguments: ["@security.context","@doctrine.orm.entity_manager"]
-        tags:
-            - { name: kernel.event_listener, event: theme.notifications, method: onListNotifications }
+#    common_bundle.notification_listener:
+#        class: CommonBundle\EventListener\MyNotificationListListener
+#        arguments: ["@security.context","@doctrine.orm.entity_manager"]
+#        tags:
+#            - { name: kernel.event_listener, event: theme.notifications, method: onListNotifications }
             
     common_bundle.message_list_listener:
         class: CommonBundle\EventListener\MyMessageListListener

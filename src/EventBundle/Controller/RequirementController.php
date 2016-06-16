@@ -85,7 +85,7 @@ class RequirementController extends FOSRestController
         $contentType = $request->headers->get('Content-Type');
         $data = json_decode($request->getContent());
 
-        if ($contentType == 'application/json') {
+        if ($contentType === 'application/json') {
             $form->submit((array) $data);
         } else {
             $form->handleRequest($request);
@@ -95,7 +95,12 @@ class RequirementController extends FOSRestController
             $em = $this->getDoctrine()->getManager();
             $em->persist($requirement);
             $em->flush();
-            $view = $this->view($requirement, 200)->setTemplate('EventBundle:requirement:post.html.twig');
+
+            if ($request->getRequestFormat() === 'html') {
+                $view = $this->routeRedirectView('edit_event', array('event' => $requirement->getEvent()->getId()));
+            } else {
+                $view = $this->view($requirement, 200)->setTemplate('EventBundle:requirement:post.html.twig');
+            }
 
             return $this->handleView($view);
         }

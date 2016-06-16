@@ -138,7 +138,12 @@ class ParticipationController extends FOSRestController
             $em = $this->getDoctrine()->getManager();
             $em->persist($participation);
             $em->flush();
-            $view = $this->view($participation, 200)->setTemplate('EventBundle:participation:post.html.twig');
+
+            if ($request->getRequestFormat() === 'html') {
+                $view = $this->routeRedirectView('get_event', array('event' => $participation->getEvent()->getId()));
+            } else {
+                $view = $this->view($participation, 200)->setTemplate('EventBundle:participation:post.html.twig');
+            }
 
             return $this->handleView($view);
         }

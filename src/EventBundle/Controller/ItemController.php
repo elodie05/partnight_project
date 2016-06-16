@@ -80,7 +80,11 @@ class ItemController extends FOSRestController
             $em->persist($item);
             $em->flush();
 
-            $view = $this->view($item, 200)->setTemplate('EventBundle:item:post.html.twig');
+            if ($request->getRequestFormat() === 'html') {
+                $view = $this->routeRedirectView('get_events');
+            } else {
+                $view = $this->view($item, 200)->setTemplate('EventBundle:item:post.html.twig');
+            }
 
             return $this->handleView($view);
         }
