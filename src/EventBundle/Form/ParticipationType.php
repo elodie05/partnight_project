@@ -19,7 +19,7 @@ class ParticipationType extends AbstractType
             ->add('response')
             ->add('sleep')
             ->add('event')
-            
+            ->add('user')
         ;
     }
     

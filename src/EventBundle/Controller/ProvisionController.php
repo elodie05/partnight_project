@@ -17,6 +17,14 @@ class ProvisionController extends FOSRestController
      * @QueryParam(name="event", requirements="\d+", nullable=true)
      * @param ParamFetcher $paramFetcher
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Get provisions",
+     *  filters={
+     *    {"name"="event", "dataType"="integer"}
+     *  }
+     * )
      */
     public function getProvisionsAction(ParamFetcher $paramFetcher)
     {
@@ -63,6 +71,14 @@ class ProvisionController extends FOSRestController
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws BadRequestHttpException
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Post provision",
+     *  input="EventBundle\Form\ProvisionType",
+     *  output="EventBundle\Entity\Provision"
+     * )
      */
     public function postProvisionAction(Request $request)
     {
@@ -107,7 +123,18 @@ class ProvisionController extends FOSRestController
      *
      * @param Provision $provision
      *
-     * @ApiDoc(description="Delete provision")
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Delete provision",
+     *  requirements={
+     *    {
+     *      "name"="provision",
+     *      "dataType"="integer",
+     *      "requirement"="\d+",
+     *      "description"="Provision id"
+     *    }
+     *  }
+     * )
      */
     public function deleteProvisionAction(Provision $provision)
     {

@@ -10,6 +10,7 @@ use UserBundle\Entity\User;
  *
  * @ORM\Table(name="participation")
  * @ORM\Entity(repositoryClass="EventBundle\Repository\ParticipationRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Participation
 {
@@ -43,6 +44,21 @@ class Participation
      * @ORM\Column(name="sleep", type="boolean", nullable=true)
      */
     private $sleep;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="answered_at", type="datetime", nullable=true)
+     */
+    private $answeredAt;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->answeredAt = null;
+    }
 
     /**
      * Get id
@@ -139,5 +155,21 @@ class Participation
     public function getSleep()
     {
         return $this->sleep;
+    }
+
+    /**
+     * @return \DateTime|null
+     */
+    public function getAnsweredAt()
+    {
+        return $this->answeredAt;
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function setAnsweredAtValue()
+    {
+        $this->answeredAt = new \DateTime();
     }
 }

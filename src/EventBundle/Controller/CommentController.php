@@ -7,9 +7,9 @@ use EventBundle\Form\CommentType;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcher;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class CommentController extends FOSRestController
 {
@@ -18,6 +18,14 @@ class CommentController extends FOSRestController
      *
      * @param ParamFetcher $paramFetcher
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Get comments",
+     *  filters={
+     *    {"name"="event", "dataType"="integer"}
+     *  }
+     * )
      */
     public function getCommentsAction(ParamFetcher $paramFetcher)
     {
@@ -58,6 +66,14 @@ class CommentController extends FOSRestController
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws BadRequestHttpException
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Post comment",
+     *  input="EventBundle\Form\CommentType",
+     *  output="EventBundle\Entity\Comment"
+     * )
      */
     public function postCommentAction(Request $request)
     {

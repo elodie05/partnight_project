@@ -16,7 +16,7 @@ class ItemController extends FOSRestController
     /**
      * Get items
      *
-     * @QueryParam(name="name", requirements="\w+", nullable=true)
+     * @QueryParam(name="name", requirements="\w+", description="Not strict filter by name", nullable=true)
      *
      * @param ParamFetcher $paramFetcher
      *
@@ -25,9 +25,9 @@ class ItemController extends FOSRestController
      * @ApiDoc(
      *  resource=true,
      *  description="Get items",
-     *    filters={
-     *      {"name"="name", "dataType"="string"}
-     *    }
+     *  filters={
+     *    {"name"="name", "dataType"="string"}
+     *  }
      * )
      */
     public function getItemsAction(ParamFetcher $paramFetcher)
@@ -77,6 +77,7 @@ class ItemController extends FOSRestController
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws BadRequestHttpException
      *
      * @ApiDoc(
      *  resource=true,
