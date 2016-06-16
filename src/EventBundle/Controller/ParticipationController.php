@@ -157,9 +157,13 @@ class ParticipationController extends FOSRestController
         $contentType = $request->headers->get('Content-Type');
         $data = json_decode($request->getContent());
 
-        $form->submit((array) $data);
+        if ($contentType == 'application/json') {
+            $form->submit((array) $data);
+        } else {
+            $form->handleRequest($request);
+        }
 
-        if ($contentType == 'application/json' && $form->isValid() || $form->handleRequest($request)) {
+        if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($participation);
             $em->flush();
