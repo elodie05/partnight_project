@@ -18,7 +18,6 @@ class ParticipationType extends AbstractType
         $builder
             ->add('response')
             ->add('sleep')
-            //->add('user')
             ->add('event')
             
         ;

@@ -28,7 +28,10 @@ class EventController extends FOSRestController
      *
      * @throws AccessDeniedException
      *
-     * @ApiDoc(description="Get events")
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Get events"
+     * )
      */
     public function getEventsAction()
     {
@@ -57,10 +60,25 @@ class EventController extends FOSRestController
 
 
     /**
+     * Get event
+     *
      * @param Event $event
      * @return Response
      *
      * TODO: Correction
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Get event",
+     *  requirements={
+     *    {
+     *      "name"="event",
+     *      "dataType"="integer",
+     *      "requirement"="\d+",
+     *      "description"="Event id"
+     *    }
+     *  }
+     * )
      */
     public function getEventAction(Event $event)
     {
@@ -162,7 +180,12 @@ class EventController extends FOSRestController
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @ApiDoc(description="Post event")
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Post event",
+     *  input="EventBundle\Form\EventType",
+     *  output="EventBundle\Entity\Event"
+     * )
      */
     public function postEventAction(Request $request)
     {
@@ -171,12 +194,16 @@ class EventController extends FOSRestController
         $event->setUser($user);
 
         $form = $this->createForm(new EventType(), $event);
-        $contentType = $request->headers->get('Content-Type');
+        $contentTypeJson = $this->get('event.utils.json_content_type')->isJsonContentType($request);
         $data = json_decode($request->getContent());
 
-        $form->submit((array) $data);
+        if ($contentTypeJson) {
+            $form->submit((array) $data);
+        } else {
+            $form->handleRequest($request);
+        }
 
-        if ($contentType == 'application/json' && $form->isValid() || $form->handleRequest($request)) {
+        if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($event);
             $em->flush();
@@ -190,8 +217,6 @@ class EventController extends FOSRestController
             return $this->handleView($view);
 
         }
-        
-
 
         throw new BadRequestHttpException();
     }
@@ -221,21 +246,26 @@ class EventController extends FOSRestController
     }
 
     /**
-     * Update event
+     * Put event
      *
      * @param Request $request
      * @param Event $event
      * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @ApiDoc(description="Put event")
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Put event",
+     *  input="EventBundle\Form\EventType",
+     *  output="EventBundle\Entity\Event"
+     * )
      */
     public function putEventAction(Request $request, Event $event)
     {
         $form = $this->createForm(new EventType(), $event);
-        $contentType = $request->headers->get('Content-Type');
+        $contentTypeJson = $this->get('event.utils.json_content_type')->isJsonContentType($request);
         $data = json_decode($request->getContent());
 
-        if ($contentType == 'application/json') {
+        if ($contentTypeJson) {
             $form->submit((array) $data);
         } else {
             $form->handleRequest($request);
@@ -255,9 +285,22 @@ class EventController extends FOSRestController
     }
 
     /**
+     * Delete event
+     *
      * @param Event $event
      *
-     * @ApiDoc(description="Delete event")
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Delete event",
+     *  requirements={
+     *    {
+     *      "name"="event",
+     *      "dataType"="integer",
+     *      "requirement"="\d+",
+     *      "description"="Event id"
+     *    }
+     *  }
+     * )
      */
     public function deleteEventAction(Event $event)
     {

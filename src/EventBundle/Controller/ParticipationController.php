@@ -129,12 +129,16 @@ class ParticipationController extends FOSRestController
         $participation->setUser($user);
 
         $form = $this->createForm(new ParticipationType(), $participation);
-        $contentType = $request->headers->get('Content-Type');
+        $contentTypeJson = $this->get('event.utils.json_content_type')->isJsonContentType($request);
         $data = json_decode($request->getContent());
 
-        $form->submit((array) $data);
+        if ($contentTypeJson) {
+            $form->submit((array) $data);
+        } else {
+            $form->handleRequest($request);
+        }
 
-        if ($contentType == 'application/json' && $form->isValid() || $form->handleRequest($request)) {
+        if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($participation);
             $em->flush();
@@ -167,10 +171,10 @@ class ParticipationController extends FOSRestController
         
         $participation->setUser($user);
         $form = $this->createForm(new ParticipationType(), $participation);
-        $contentType = $request->headers->get('Content-Type');
+        $contentTypeJson = $this->get('event.utils.json_content_type')->isJsonContentType($request);
         $data = json_decode($request->getContent());
 
-        if ($contentType == 'application/json') {
+        if ($contentTypeJson) {
             $form->submit((array) $data);
         } else {
             $form->handleRequest($request);

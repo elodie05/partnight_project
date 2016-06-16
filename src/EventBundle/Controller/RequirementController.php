@@ -82,10 +82,10 @@ class RequirementController extends FOSRestController
         $requirement = new Requirement();
       
         $form = $this->createForm($this->get('event.form.requirement_type'), $requirement);
-        $contentType = $request->headers->get('Content-Type');
+        $contentTypeJson = $this->get('event.utils.json_content_type')->isJsonContentType($request);
         $data = json_decode($request->getContent());
 
-        if ($contentType === 'application/json') {
+        if ($contentTypeJson) {
             $form->submit((array) $data);
         } else {
             $form->handleRequest($request);

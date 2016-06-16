@@ -63,10 +63,10 @@ class CommentController extends FOSRestController
     {
         $comment = new Comment();
         $form = $this->createForm(new CommentType(), $comment);
-        $contentType = $request->headers->get('Content-Type');
+        $contentTypeJson = $contentTypeJson = $this->get('event.utils.json_content_type')->isJsonContentType($request);
         $data = json_decode($request->getContent());
 
-        if ($contentType == 'application/json') {
+        if ($contentTypeJson) {
             $form->submit((array) $data);
         } else {
             $form->handleRequest($request);
