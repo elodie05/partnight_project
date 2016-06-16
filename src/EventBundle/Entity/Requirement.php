@@ -39,7 +39,25 @@ class Requirement
      * @ORM\JoinColumn
      */
     private $event;
+    
+    private $need;
 
+    
+    
+    public function setNeed($need)
+    {
+    	$this->need = $need;
+    
+    	return $this;
+    }
+    
+
+    public function getNeed()
+    {
+    	return $this->need;
+    }
+    
+    
 
     /**
      * Get id

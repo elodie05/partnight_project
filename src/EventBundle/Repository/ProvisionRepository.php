@@ -5,7 +5,7 @@ namespace EventBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 use EventBundle\Entity\Event;
 
-class ProvisionsRepository extends EntityRepository
+class ProvisionRepository extends EntityRepository
 {
     /**
      * @param Event $event

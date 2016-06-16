@@ -36,7 +36,7 @@ class RequirementController extends FOSRestController
 
         $event = $eventRepository->find($eventId);
         $requirements = $requirementRepository->findBy(array('event' => $event));
-
+        
         $view = $this->view($requirements, 200);
 
         return $this->handleView($view);

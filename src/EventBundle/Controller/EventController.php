@@ -18,6 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter;
 use EventBundle\Entity\Requirement;
 use EventBundle\Form\CommentType;
 use UserBundle\Entity\User;
+use EventBundle\Entity\Provision;
 
 class EventController extends FOSRestController
 {
@@ -106,11 +107,22 @@ class EventController extends FOSRestController
     		$sleepBooking ='';
     	}
 
+    	foreach ($event->getRequirements() as $requirement){
+    		$item = $requirement->getItem();
+    		$provision = $em->getRepository('EventBundle:Provision')->findOneBy(array('event'=> $event,'item'=>$item));
+    		if($provision != null){
+    			$need = $requirement->getQuantity() - $provision->getQuantity();
+    		}else{
+    			$need = $requirement->getQuantity();
+    		}
+    		$requirement->setNeed($need);
+    	}
     	
         $view = $this->view($event, 200)
+
             ->setTemplate('EventBundle:event:view.html.twig')
             ->setTemplateVar('event')
-        	->setTemplateData(array('participations' => $participations,
+        	->setData(array('participations' => $participations,
     			'booking' => $sleepBooking,
     			'sleepAvailable' => $sleepAvailable,
     			'comments' => $comments,
@@ -130,25 +142,6 @@ class EventController extends FOSRestController
     	$em = $this->getDoctrine()->getManager();
         $event = new Event();
         $form = $this->createForm(new EventType(), $event);
-        
-      /*  $geocoder = "http://maps.googleapis.com/maps/api/geocode/json?address=%s&sensor=false";
-        $adress = $event->getLocation();
-        $url_adress = utf8_encode($adress);
-        $url_adress = urlencode($adress);
-        $query = sprintf($geocoder, $url_adress);
-        
-        $result = json_decode(file_get_contents($query));
-        $json = $result->results[0];
-        
-        $lat = (string) $json->geometry->location->lat;
-        $long = (string) $json->geometry->location->lng;
-         
-        $event->setLat($lat);
-        $event->setLng($long);
-        
-        A METTRE A LA CREATION
-        
-        */
 
         return $this->render('EventBundle:event:create.html.twig', array(
             'form' => $form->createView(),
@@ -163,39 +156,54 @@ class EventController extends FOSRestController
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @ApiDoc(description="Post event")
-     */
+     */   
     public function postEventAction(Request $request)
     {
-        $user = $this->get('security.context')->getToken()->getUser();
-        $event = new Event();
-        $event->setUser($user);
-
-        $form = $this->createForm(new EventType(), $event);
-        $contentType = $request->headers->get('Content-Type');
-        $data = json_decode($request->getContent());
-
-        $form->submit((array) $data);
-
-        if ($contentType == 'application/json' && $form->isValid() || $form->handleRequest($request)) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($event);
-            $em->flush();
-
-            if ($request->getRequestFormat() === 'html') {
-                $view = $this->routeRedirectView('get_event', array('event' => $event->getId()));
-            } else {
-                $view = $this->view($event, 200)->setTemplate('EventBundle:event:post.html.twig');
-            }
-
-            return $this->handleView($view);
-
-        }
-        
-
-
-        throw new BadRequestHttpException();
+    	/* $geocoder = "http://maps.googleapis.com/maps/api/geocode/json?address=%s&sensor=false";
+    	 $adress = $event->getLocation();
+    	 $url_adress = utf8_encode($adress);
+    	 $url_adress = urlencode($adress);
+    	 $query = sprintf($geocoder, $url_adress);
+    	
+    	 $result = json_decode(file_get_contents($query));
+    	 $json = $result->results[0];
+    	
+    	 $lat = (string) $json->geometry->location->lat;
+    	 $long = (string) $json->geometry->location->lng;
+    	  
+    	 $event->setLat($lat);
+    	 $event->setLng($long);*/
+    	$user = $this->get('security.context')->getToken()->getUser();
+    	$event = new Event();
+    	$event->setUser($user);
+    
+    	$form = $this->createForm(new EventType(), $event);
+    	$contentTypeJson = $this->get('event.utils.json_content_type')->isJsonContentType($request);
+    	$data = json_decode($request->getContent());
+    
+    	if ($contentTypeJson) {
+    		$form->submit((array) $data);
+    	} else {
+    		$form->handleRequest($request);
+    	}
+    
+    	if ($form->isValid()) {
+    		$em = $this->getDoctrine()->getManager();
+    		$em->persist($event);
+    		$em->flush();
+    
+    		if ($request->getRequestFormat() === 'html') {
+    			$view = $this->routeRedirectView('get_event', array('event' => $event->getId()));
+    		} else {
+    			$view = $this->view($event, 200)->setTemplate('EventBundle:event:post.html.twig');
+    		}
+    
+    		return $this->handleView($view);
+    
+    	}
+    
+    	throw new BadRequestHttpException();
     }
-
     /**
      * @param Event $event
      * @return Response
@@ -207,6 +215,7 @@ class EventController extends FOSRestController
     	
         $em = $this->getDoctrine()->getEntityManager();
         $form = $this->createForm(new form\EventType(),$event);
+        
         
  		$usersToInvite = $em->getRepository('UserBundle:User')->findFriendNotInvited($user, $event);
         
@@ -229,13 +238,13 @@ class EventController extends FOSRestController
      *
      * @ApiDoc(description="Put event")
      */
-    public function putEventAction(Request $request, Event $event)
+	public function putEventAction(Request $request, Event $event)
     {
         $form = $this->createForm(new EventType(), $event);
-        $contentType = $request->headers->get('Content-Type');
+        $contentTypeJson = $this->get('event.utils.json_content_type')->isJsonContentType($request);
         $data = json_decode($request->getContent());
 
-        if ($contentType == 'application/json') {
+        if ($contentTypeJson) {
             $form->submit((array) $data);
         } else {
             $form->handleRequest($request);
@@ -250,9 +259,7 @@ class EventController extends FOSRestController
   
             //TODO FAIRE REDIRECTION EN JS 
         }
-
-        throw new BadRequestHttpException();
-    }
+	}
 
     /**
      * @param Event $event

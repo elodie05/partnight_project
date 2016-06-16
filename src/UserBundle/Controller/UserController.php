@@ -24,7 +24,11 @@ class UserController extends Controller
     	if ($form->handleRequest ( $request )->isValid ()) {
 			$user = $form->getData ();
 			$user->setPlainPassword ( $user->getPassword () );
+			$apiKey = $user->getUsername().'apikey';
+			$user->setEnabled(true);
+			$user->setApiKey($apiKey);
 			$userManager->updateUser ( $user );
+
 			
 			// Redirection sur la gestion de l'utilisateur
 			/*return $this->redirect ( $this->generateUrl ( 'avanzu_admin_profile', array (

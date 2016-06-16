@@ -33,8 +33,8 @@ color:orange;
     {{ 'question_participation'|trans }}
   </div><!-- /.box-body -->
   <div class="box-footer">
-    <button type="button" class="btn btn-default btn_participation" data-url ="{{ path('put_participation',{'participation' : participation.id})}}" data-response="true">{{ "yes"|trans }}</button>
-    <button type="button" class="btn btn-default btn_participation" data-url ="{{ path('put_participation',{'participation' : participation.id})}}" data-response="false">{{ "no"|trans }}</button>
+    <button type="button" class="btn btn-default btn_participation" data-url ="{{ path('put_participation',{'participation' : participation.id})}}" data-response="true" data-sleep="{{ participation.sleep }}">{{ "yes"|trans }}</button>
+    <button type="button" class="btn btn-default btn_participation" data-url ="{{ path('put_participation',{'participation' : participation.id})}}" data-response="false" data-sleep="{{ participation.sleep }}">{{ "no"|trans }}</button>
   </div><!-- box-footer -->
 </div><!-- /.box -->
 {% else %}
@@ -44,7 +44,7 @@ color:orange;
   <div class="info-box-content">
     <span class="info-box-text">GROSSE SOIREE</span>
     <span class="info-box-number">J'espère que t'es deter' !</span>
-        <button type="button" class="btn btn-default btn_participation" data-url ="{{ path('put_participation',{'participation' : participation.id})}}" data-response="false">{{ "no"|trans }}</button>
+        <button type="button" class="btn btn-default btn_participation" data-url ="{{ path('put_participation',{'participation' : participation.id})}}" data-response="false" data-sleep="{{ participation.sleep }}">{{ "no"|trans }}</button>
     
   </div><!-- /.info-box-content -->
 </div><!-- /.info-box -->
@@ -101,22 +101,21 @@ color:orange;
 				                  <th style="width: 10px">#</th>
 				                  <th>{{ "item"|trans }}</th>
 				                  <th>{{ "quantity"|trans }}</th>
-				                  <th>{{ "provisions"|trans }}</th>
 				                </tr>
 				                {% for requirement in event.requirements %}
 				                <tr>
 				                	<td></td>
 					                <td>{{ requirement.item.name }}</td>
-					                <td>{{ requirement.quantity }}</td>
-					                <td><button type="button" class="btn btn-default btn_add_provision"
-					                data-url ="{{ path('new_provision',{'event' : event.id, 'requirement' :requirement.id})}}"
-					                data-toggle="modal" data-target="#myModal" data-backdrop="false"
-					                >{{ "provision"|trans }}</button>
-					                </td>
+					                <td>{{ requirement.need }}</td>
+					                
 				                </tr>
 				                {% endfor %}
 				              </tbody>
 				    </table>
+				    <button type="button" class="btn btn-default btn_add_provision"
+					                data-url ="{{ path('new_provision',{'event' : event.id})}}"
+					                data-toggle="modal" data-target="#myModal" data-backdrop="false"
+					                >{{ "provision"|trans }}</button>
 				   </div>
 				            <!-- /.box-body -->
 				</div>
@@ -166,15 +165,16 @@ color:orange;
             </div>
             <!-- /.tab-content -->
           </div>
-{% if participation is defined %}
+{% if participation is not null %}
 <div class="info-box bg-grey">
   <span class="info-box-icon"><i class="fa fa-comments-o"></i></span>
   <div class="info-box-content">
     <span class="info-box-text">{{ "sleep_available"|trans }}</span>
-   {#} <span class="info-box-number">{{ sleepAvailable }}</span>
-       <button type="button" class="btn btn-default" id="btn_book_sleep" data-url ="{{ path('book_sleep',{'participation_id' : participation.id})}}"
-       {% if booking == 'no' and sleepAvailable > 0 and sleepAvailable < event.sleepAvailable %} data-sleep="add" {% else %} data-sleep="remove"{% endif %}>
-       {%if booking == 'no'%}{{ "add_sleep"|trans }}{% else %}{{ "remove_sleep"|trans }}{% endif %}</button>{#}
+    <span class="info-box-number">{{ sleepAvailable }}</span>
+    {#}and sleepAvailable > 0 and sleepAvailable < event.sleepAvailable{#}
+       <button data-response="{{ participation.response }}"  type="button" class="btn btn-default" id="btn_book_sleep" data-url ="{{ path('put_participation',{'participation' : participation.id})}}"
+       {% if booking == 'no' %} data-sleep="true" {% else %} data-sleep="false"{% endif %}>
+       {%if booking == 'no'%}{{ "add_sleep"|trans }}{% else %}{{ "remove_sleep"|trans }}{% endif %}</button>
   </div><!-- /.info-box-content -->
 </div><!-- /.info-box -->
 {% endif %}
@@ -215,37 +215,94 @@ $(document).ready(function () {
 
       var url=$(this).attr("data-url");
       var response = $(this).attr("data-response");
-      add_response(url,response);
+      var sleep = $(this).attr("data-sleep");
+      add_response(url,response,sleep);
       return false;
   });
 
-  function add_response(url,response){
+  $(document).on('click', '#btn_book_sleep', function(){
+
+      var url=$(this).attr("data-url");
+      var response = $(this).attr("data-response");
+      var sleep = $(this).attr("data-sleep");
+      add_booking(url,response,sleep);
+      return false;
+  });
+
+
+
+  function add_booking(url,response,sleep){
+
+		 if(response == true) {
+			var t = true;
+			 }else{ var t = false}
+
+
+		 
+			 if(sleep == "true"){
+				var s = true;
+		     }else{
+				var s = false;
+			 }
+		
+			 
+		 var objpart = {event: {{ event.id }}, sleep : s, response: t};
+		  
+		console.log(objpart);
+	      $.ajax({
+	          type : 'PUT',
+	          url : url+'.json',
+	          dataType : 'json',
+	          data: JSON.stringify(objpart),
+	          contentType : "application/json",
+	          success : function(data){
+	              console.log('ok');
+	              location.reload();
+	          }
+	     
+	      });
+	  }
+  
+  function add_response(url,response,sleep){
 
 	 if(response == "true") {
-var t = true;
+		var t = true;
 		 }else{ var t = false}
+
+
+	 if(sleep != null) {
+		 if(sleep == true){
+			var s = true;
+	     }else{
+			var s = false;
+		 }
+	 }else{
+		var s = null;
+		 }
+	 var objpart = {event: {{ event.id }}, sleep : s, response: t};
 	  
-	
+	console.log(objpart);
       $.ajax({
           type : 'PUT',
-          url : url,
+          url : url+'.json',
           dataType : 'json',
           data: JSON.stringify(objpart),
           contentType : "application/json",
           success : function(data){
               console.log('ok');
+              location.reload();
           }
      
       });
   }
 
-  $(document).on('click', '#btn_book_sleep', function(){
+ /* $(document).on('click', '#btn_book_sleep', function(){
 	 // alert('ok');
       var url=$(this).attr("data-url");
       var sleep = $(this).attr("data-sleep");
       book_sleep(url,sleep);
       return false;
-  });
+  });*/
 
   function book_sleep(url,sleep){
       $.ajax({

@@ -13,6 +13,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  * @ORM\Table(name="event")
  * @ORM\Entity(repositoryClass="EventBundle\Repository\EventRepository")
  * @Assert\Callback(methods={"validateDate"})
+ * @ORM\HasLifecycleCallbacks()
  */
 class Event
 {
@@ -297,7 +298,6 @@ class Event
 
     /**
      * Get endDate
-     *
      * @return \DateTime 
      */
     public function getEndDate()
@@ -515,4 +515,26 @@ class Event
     {
         return $this->comments;
     }
+    
+    /**
+     * @ORM\PrePersist
+     */
+    public function setGeoLoc(){
+    	$geocoder = "http://maps.googleapis.com/maps/api/geocode/json?address=%s&sensor=false";
+    	$adress = $this->getLocation();
+    	$url_adress = utf8_encode($adress);
+    	$url_adress = urlencode($adress);
+    	$query = sprintf($geocoder, $url_adress);
+    	 
+    	$result = json_decode(file_get_contents($query));
+    	$json = $result->results[0];
+    	 
+    	$lat = (string) $json->geometry->location->lat;
+    	$long = (string) $json->geometry->location->lng;
+    	 
+    	$this->setLat($lat);
+    	$this->setLng($long);
+    }
+    
+    
 }

@@ -13,6 +13,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 
+
 class ParticipationController extends FOSRestController
 {
     /**
@@ -170,7 +171,7 @@ class ParticipationController extends FOSRestController
         $contentType = $request->headers->get('Content-Type');
         $data = json_decode($request->getContent());
 
-        if ($contentType == 'application/json') {
+        if ($contentType == 'application/json; charset=UTF-8') {
             $form->submit((array) $data);
         } else {
             $form->handleRequest($request);
@@ -187,4 +188,6 @@ class ParticipationController extends FOSRestController
         
         throw new BadRequestHttpException();
     }
+    
+   
 }
