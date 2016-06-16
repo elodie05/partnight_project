@@ -29,7 +29,10 @@ class EventController extends FOSRestController
      *
      * @throws AccessDeniedException
      *
-     * @ApiDoc(description="Get events")
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Get events"
+     * )
      */
     public function getEventsAction()
     {
@@ -58,34 +61,29 @@ class EventController extends FOSRestController
 
 
     /**
+     * Get event
+     *
      * @param Event $event
      * @return Response
      *
      * TODO: Correction
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Get event",
+     *  requirements={
+     *    {
+     *      "name"="event",
+     *      "dataType"="integer",
+     *      "requirement"="\d+",
+     *      "description"="Event id"
+     *    }
+     *  }
+     * )
      */
     public function getEventAction(Event $event)
     {
     	$em = $this->getDoctrine()->getManager();
-    	
-    	/*$geocoder = "http://maps.googleapis.com/maps/api/geocode/json?address=%s&sensor=false";
-    	$adress = $event->getLocation();
-    	
-    	// Requête envoyée à l'API Geocoding
-    	$url_adress = utf8_encode($adress);
-    	$url_adress = urlencode($adress);
-    	$query = sprintf($geocoder, $url_adress);
-    	 
-    	$result = json_decode(file_get_contents($query));
-    	$json = $result->results[0];
-    	 
-    	$lat = (string) $json->geometry->location->lat;
-    	$long = (string) $json->geometry->location->lng;    	 
-    	
-    	$event->setLat($lat);
-    	$event->setLng($long);
-    	$em->persist($event);
-    	$em->flush();  	
-    	*/
     	$user = $this->get('security.context')->getToken()->getUser();
     	 
     	$participations = $em->getRepository('EventBundle:Participation')->findBy(array('event'=>$event));
@@ -128,7 +126,7 @@ class EventController extends FOSRestController
     			'comments' => $comments,
     			'formComment' => $formComment->createView(),
         	    'participation' => $participation,
-        			'event' => $event
+        		'event' => $event
         	));
 
         return $this->handleView($view);
@@ -155,54 +153,45 @@ class EventController extends FOSRestController
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @ApiDoc(description="Post event")
-     */   
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Post event",
+     *  input="EventBundle\Form\EventType",
+     *  output="EventBundle\Entity\Event"
+     * )
+     */
     public function postEventAction(Request $request)
     {
-    	/* $geocoder = "http://maps.googleapis.com/maps/api/geocode/json?address=%s&sensor=false";
-    	 $adress = $event->getLocation();
-    	 $url_adress = utf8_encode($adress);
-    	 $url_adress = urlencode($adress);
-    	 $query = sprintf($geocoder, $url_adress);
-    	
-    	 $result = json_decode(file_get_contents($query));
-    	 $json = $result->results[0];
-    	
-    	 $lat = (string) $json->geometry->location->lat;
-    	 $long = (string) $json->geometry->location->lng;
-    	  
-    	 $event->setLat($lat);
-    	 $event->setLng($long);*/
-    	$user = $this->get('security.context')->getToken()->getUser();
-    	$event = new Event();
-    	$event->setUser($user);
-    
-    	$form = $this->createForm(new EventType(), $event);
-    	$contentTypeJson = $this->get('event.utils.json_content_type')->isJsonContentType($request);
-    	$data = json_decode($request->getContent());
-    
-    	if ($contentTypeJson) {
-    		$form->submit((array) $data);
-    	} else {
-    		$form->handleRequest($request);
-    	}
-    
-    	if ($form->isValid()) {
-    		$em = $this->getDoctrine()->getManager();
-    		$em->persist($event);
-    		$em->flush();
-    
-    		if ($request->getRequestFormat() === 'html') {
-    			$view = $this->routeRedirectView('get_event', array('event' => $event->getId()));
-    		} else {
-    			$view = $this->view($event, 200)->setTemplate('EventBundle:event:post.html.twig');
-    		}
-    
-    		return $this->handleView($view);
-    
-    	}
-    
-    	throw new BadRequestHttpException();
+        $user = $this->get('security.context')->getToken()->getUser();
+        $event = new Event();
+        $event->setUser($user);
+
+        $form = $this->createForm(new EventType(), $event);
+        $contentTypeJson = $this->get('event.utils.json_content_type')->isJsonContentType($request);
+        $data = json_decode($request->getContent());
+
+        if ($contentTypeJson) {
+            $form->submit((array) $data);
+        } else {
+            $form->handleRequest($request);
+        }
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($event);
+            $em->flush();
+
+            if ($request->getRequestFormat() === 'html') {
+                $view = $this->routeRedirectView('get_event', array('event' => $event->getId()));
+            } else {
+                $view = $this->view($event, 200)->setTemplate('EventBundle:event:post.html.twig');
+            }
+
+            return $this->handleView($view);
+
+        }
+
+        throw new BadRequestHttpException();
     }
     /**
      * @param Event $event
@@ -230,13 +219,18 @@ class EventController extends FOSRestController
     }
 
     /**
-     * Update event
+     * Put event
      *
      * @param Request $request
      * @param Event $event
      * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @ApiDoc(description="Put event")
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Put event",
+     *  input="EventBundle\Form\EventType",
+     *  output="EventBundle\Entity\Event"
+     * )
      */
 	public function putEventAction(Request $request, Event $event)
     {
@@ -262,9 +256,22 @@ class EventController extends FOSRestController
 	}
 
     /**
+     * Delete event
+     *
      * @param Event $event
      *
-     * @ApiDoc(description="Delete event")
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Delete event",
+     *  requirements={
+     *    {
+     *      "name"="event",
+     *      "dataType"="integer",
+     *      "requirement"="\d+",
+     *      "description"="Event id"
+     *    }
+     *  }
+     * )
      */
     public function deleteEventAction(Event $event)
     {

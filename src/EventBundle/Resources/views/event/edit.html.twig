@@ -101,24 +101,17 @@
     	<ul class="users-list clearfix">
 	{% for participation in participations %}
 		<li>
-			<img src="dist/img/user1-128x128.jpg" alt="User Image">
-			<a class="users-list-name" href="{{ path('user_profile', {'user_id' : participation.user.id}) }}">{{ participation.user.firstName }} {{ participation.user.lastName }}</a>
-			<span 
-				{% if participation.response == null %}
-					class="response-orange"
-				{% else %}
-				{% if participation.response == 'true' %}
-					class="response-green"
-				{% else %}
-				{% if participation.response == 'false' %}
-					class="response-red"
-				{% endif %}
-				{% endif %}
-				{% endif %}
-			>Réponse : {{ participation.response }}</span>
-
-			
-		</li>        
+						<img src="dist/img/user1-128x128.jpg" alt="User Image">
+						<a class="users-list-name" href="{{ path('user_profile', {'user_id' : participation.user.id}) }}">{{ participation.user.firstName }} {{ participation.user.lastName }}</a>
+						{% if participation.response == 'yes' %}
+						<span class="green">Yes</span>
+						{% elseif participation == 'no'%}
+						<span class="red">No</span>
+						{% else %}
+						<span class="orange">Pas rep</span>
+						{% endif %}
+						
+					</li>   
 	{% endfor %}
     	</ul>
     </div>

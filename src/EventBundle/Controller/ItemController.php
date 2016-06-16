@@ -22,7 +22,13 @@ class ItemController extends FOSRestController
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @ApiDoc(description="Get items")
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Get items",
+     *    filters={
+     *      {"name"="name", "dataType"="string"}
+     *    }
+     * )
      */
     public function getItemsAction(ParamFetcher $paramFetcher)
     {
@@ -48,7 +54,18 @@ class ItemController extends FOSRestController
      * @param Item $item
      * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @ApiDoc(description="Get item")
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Get item",
+     *  requirements={
+     *    {
+     *      "name"="item",
+     *      "dataType"="integer",
+     *      "requirement"="\d+",
+     *      "description"="Item id"
+     *    }
+     *  }
+     * )
      */
     public function getItemAction(Item $item)
     {
@@ -60,16 +77,23 @@ class ItemController extends FOSRestController
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @ApiDoc(
+     *  resource=true,
+     *  description="Post item",
+     *  input="EventBundle\Form\ItemType",
+     *  output="EventBundle\Entity\Item"
+     * )
      */
     public function postItemAction(Request $request)
     {
         $item = new Item();
 
         $form = $this->createForm(new ItemType(), $item);
-        $contentType = $request->headers->get('Content-Type');
+        $contentTypeJson = $this->get('event.utils.json_content_type')->isJsonContentType($request);
         $data = json_decode($request->getContent());
 
-        if ($contentType == 'application/json') {
+        if ($contentTypeJson) {
             $form->submit((array) $data);
         } else {
             $form->handleRequest($request);

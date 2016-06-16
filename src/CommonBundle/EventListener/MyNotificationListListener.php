@@ -31,7 +31,7 @@ class MyNotificationListListener {
     	$user = $this->context->getToken()->getUser();
     	$notif = array();
     	if($user != null){
-    		$participations = $this->em->getRepository('EventBundle:Participation')->findBy(array('user'=>$user,'response'=>null));
+    		$participations = $this->em->getRepository('EventBundle:Participation')->findBy(array('user'=>$user,'answeredAt'=>null));
     		 
     		foreach ($participations as $participation){
     			$notif[] = new NotificationModel('Nouvelle invitation de '.$participation->getEvent()->getUser(),

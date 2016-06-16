@@ -98,9 +98,29 @@ class ParticipationController extends FOSRestController
         $event = $this->getDoctrine()->getRepository('EventBundle:Event')->findOneBy(array('id' => $eventId));
 
         $em = $this->getDoctrine()->getManager();
-        $user = $this->get('security.context')->getToken()->getUser();
+       
 
-        $usersToInvite = $em->getRepository('UserBundle:User')->findFriendNotInvited($user, $event);
+        //$usersToInvite = $em->getRepository('UserBundle:User')->findFriendNotInvited($user, $event);
+        
+        $user = $this->get('security.context')->getToken()->getUser();
+        $em = $this->getDoctrine()->getEntityManager();
+        $friends = $user->getFriends();
+        $users = array();
+        $participations = $em->getRepository('EventBundle:Participation')->findBy(array('event' => $event));
+        
+        /*if($participations != null){
+        	foreach ($participations as $p){
+        		if($friends->contains($p->getUser())){
+        			//echo 'ok';
+        		}else{
+        			array_push($users, $p->getUser());
+        		}
+        	}
+        	 
+        }else{*/
+        	$users = $friends;
+      /*  }*/
+        
 
         $participation = new Participation();
         $participation->setEvent($event);
@@ -108,7 +128,7 @@ class ParticipationController extends FOSRestController
         $form = $this->createForm(new ParticipationType(), $participation);
 
         return $this->render('EventBundle:participation:new.html.twig', array(
-            'form' => $form->createView(),'usersToInvite' => $usersToInvite
+            'form' => $form->createView(),'usersToInvite' => $users,'event' => $event
         ));
     }
 
@@ -127,15 +147,19 @@ class ParticipationController extends FOSRestController
         $user = $token->getUser();
 
         $participation = new Participation();
-        $participation->setUser($user);
+      
 
         $form = $this->createForm(new ParticipationType(), $participation);
-        $contentType = $request->headers->get('Content-Type');
+        $contentTypeJson = $this->get('event.utils.json_content_type')->isJsonContentType($request);
         $data = json_decode($request->getContent());
 
-        $form->submit((array) $data);
+        if ($contentTypeJson) {
+            $form->submit((array) $data);
+        } else {
+            $form->handleRequest($request);
+        }
 
-        if ($contentType == 'application/json' && $form->isValid() || $form->handleRequest($request)) {
+        if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($participation);
             $em->flush();
@@ -166,12 +190,12 @@ class ParticipationController extends FOSRestController
         }
         $user = $token->getUser();
         
-        $participation->setUser($user);
+       
         $form = $this->createForm(new ParticipationType(), $participation);
-        $contentType = $request->headers->get('Content-Type');
+        $contentTypeJson = $this->get('event.utils.json_content_type')->isJsonContentType($request);
         $data = json_decode($request->getContent());
 
-        if ($contentType == 'application/json; charset=UTF-8') {
+        if ($contentTypeJson) {
             $form->submit((array) $data);
         } else {
             $form->handleRequest($request);

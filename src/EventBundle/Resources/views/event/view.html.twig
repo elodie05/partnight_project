@@ -245,8 +245,9 @@ $(document).ready(function () {
 				var s = false;
 			 }
 		
+			 var date = new Date();
 			 
-		 var objpart = {event: {{ event.id }}, sleep : s, response: t};
+		 var objpart = {event: {{ event.id }}, sleep : s, response: t, answeredAt:date};
 		  
 		console.log(objpart);
 	      $.ajax({

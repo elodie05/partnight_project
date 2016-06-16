@@ -26,6 +26,9 @@ services:
             - { name: doctrine.event_listener, event: prePersist }
             - { name: doctrine.event_listener, event: preUpdate }
 
+    event.utils.json_content_type:
+        class: EventBundle\Utils\JsonContentType
+
     user.security.token_authenticator:
         class: UserBundle\Security\TokenAuthenticator
         arguments: ['@doctrine.orm.entity_manager']
