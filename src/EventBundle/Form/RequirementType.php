@@ -36,6 +36,9 @@ class RequirementType extends AbstractType
     {
         $builder
         	->add('item')
+        	->add('item',EntityType::class, array(
+                'class' => 'EventBundle:Item',
+                'choice_label' => 'name'))
             ->add('quantity','integer')
             ->add('event', EntityType::class, array(
                 'class' => 'EventBundle:Event',

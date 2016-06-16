@@ -11,6 +11,7 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\Response;
 
 class ParticipationController extends FOSRestController
 {
@@ -95,13 +96,18 @@ class ParticipationController extends FOSRestController
         $eventId = $paramFetcher->get('event');
         $event = $this->getDoctrine()->getRepository('EventBundle:Event')->findOneBy(array('id' => $eventId));
 
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $usersToInvite = $em->getRepository('UserBundle:User')->findFriendNotInvited($user, $event);
+
         $participation = new Participation();
         $participation->setEvent($event);
 
         $form = $this->createForm(new ParticipationType(), $participation);
 
         return $this->render('EventBundle:participation:new.html.twig', array(
-            'form' => $form->createView()
+            'form' => $form->createView(),'usersToInvite' => $usersToInvite
         ));
     }
 
@@ -147,12 +153,16 @@ class ParticipationController extends FOSRestController
      */
     public function putParticipationAction(Request $request, Participation $participation)
     {
+    	return new Response(json_encode($participation));
+    	
         $token = $this->get('security.token_storage')->getToken();
 
         if (null === $token) {
             throw new AccessDeniedException();
         }
-
+        $user = $token->getUser();
+        
+        $participation->setUser($user);
         $form = $this->createForm(new ParticipationType(), $participation);
         $contentType = $request->headers->get('Content-Type');
         $data = json_decode($request->getContent());

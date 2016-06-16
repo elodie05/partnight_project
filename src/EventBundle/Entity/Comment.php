@@ -6,8 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use UserBundle\Entity\User;
 
 /**
- * Comment
- *
  * @ORM\Table(name="comment")
  * @ORM\Entity(repositoryClass="EventBundle\Repository\CommentRepository")
  * @ORM\HasLifecycleCallbacks()

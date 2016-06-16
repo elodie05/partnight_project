@@ -17,6 +17,7 @@ class CommentType extends AbstractType
         $builder
             ->add('text')
             ->add('event')
+        	->add('save','submit')
         ;
     }
     

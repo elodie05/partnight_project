@@ -3,6 +3,9 @@
 namespace UserBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 
+use UserBundle\Entity\User;
+use EventBundle\Entity\Event;
+
 /**
  * UserRepository
  *
@@ -11,6 +14,21 @@ use Doctrine\ORM\EntityRepository;
  */
 class UserRepository extends EntityRepository
 {
+
+	public function findFriendNotInvited(User $user, Event $event)
+	{
+		$queryBuilder = $this->createQueryBuilder('u');
+		$queryBuilder->innerJoin('u.friends', 'f');
+		$queryBuilder->leftJoin('u.participations', 'p');
+		$queryBuilder->innerJoin('p.event', 'e');
+		$queryBuilder->andWhere('f.id = :userId');
+		$queryBuilder->andWhere('e.id != :eventId');
+		$queryBuilder->setParameter('userId', $user->getId());
+		$queryBuilder->setParameter('eventId', $event->getId());
+		
+		return $queryBuilder->getQuery()->getResult();
+	}
+
     /**
      * @param $apiKey
      * @return array
@@ -23,4 +41,5 @@ class UserRepository extends EntityRepository
 
         return $queryBuilder->getQuery()->getResult();
     }
+
 }

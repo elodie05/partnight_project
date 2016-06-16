@@ -29,7 +29,7 @@ class Participation
     private $event;
 
     /**
-     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User", inversedBy="participations")
      * @ORM\JoinColumn
      */
     private $user;
@@ -87,6 +87,7 @@ class Participation
     public function setUser(User $user = null)
     {
         $this->user = $user;
+        $this->user->addParticipation($this);
 
         return $this;
     }

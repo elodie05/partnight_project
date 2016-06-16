@@ -1,5 +1,68 @@
-{% extends 'CommonBundle:layout:base-layout.html.twig' %}
+<form action="{{ path('post_participation') }}" method="POST">
+<select multiple id="select_users">
+{% for user in usersToInvite %}
+  <option value="{{ user.id }}"> {{ user.firstName }} {{ user.lastName }}</option>
+ {% endfor %}
+ </select>
+ <input type="submit" value="Submit" id="event_add_participation_save">
+</form>
+<script>
 
-{% block page_content %}
-{{ form(form, {method: 'POST', action: path('post_participation')}) }}
-{% endblock page_content %}
+
+$(document).on('click', '#event_add_participation_save', function (e) {
+    e.preventDefault();
+    var url = $(this).parent().parent().attr('action');
+    console.log(url);
+
+    var formElement = document.querySelector("form");
+
+    var data = {
+        name: $('input#eventbundle_event_name').val(),
+        street: $('input#eventbundle_event_street').val(),
+        zipcode: $('input#eventbundle_event_zipcode').val(),
+        city: $('input#eventbundle_event_city').val(),
+        description: $('textarea#eventbundle_event_description').val(),
+        sleepAvailable: $('input#eventbundle_event_sleepAvailable').val(),
+        startdate: $('input#eventbundle_event_startdate').val(),
+        endDate: $('input#eventbundle_event_endDate').val()
+    };
+
+    
+
+	var users = [/*recuperer les user select*/];
+
+	
+    selectBox = document.getElementById("select_users"),
+    i;
+ 
+	for (i=0; i < selectBox.length; i++) 
+	{
+		if (selectBox[i].selected) 
+		{
+			users.push(selectBox[i]);
+		}
+	}
+	var otherData = {
+		event: {{ event.id }},/*Event ici*/
+		sleep: null,
+		response: null
+	};
+
+	for (index in users) {
+		var user = users[index];
+
+        var data = otherData;
+        sentData.user = user.id;
+		
+		$.ajax({
+			type: 'POST',
+			url: url,
+			contentType: "application/json",
+	        dataType: 'json',
+	        data: JSON.stringify(data)
+		});
+	}
+
+});
+</script>
+

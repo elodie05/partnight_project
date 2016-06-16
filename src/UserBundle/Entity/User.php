@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use EventBundle\Entity\Comment;
 use EventBundle\Entity\Event;
 use FOS\UserBundle\Model\User as BaseUser;
+use EventBundle\Entity\Participation;
 
 /**
  * User
@@ -63,6 +64,13 @@ class User extends BaseUser
      * @ORM\ManyToMany(targetEntity="User")
      */
     private $friends;
+    
+    /**
+     * @var ArrayCollection
+     * 
+     * @ORM\OneToMany(targetEntity="EventBundle\Entity\Participation", mappedBy="user")
+     */
+    private $participations;
 
     public function __construct()
     {
@@ -71,6 +79,7 @@ class User extends BaseUser
         $this->events = new \Doctrine\Common\Collections\ArrayCollection();
         $this->friends = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->participations = new ArrayCollection();
     }
 
     /**
@@ -242,5 +251,32 @@ class User extends BaseUser
     public function getFriends()
     {
         return $this->friends;
+    }
+    
+    /**
+     * 
+     * @param Participation $participation
+     */
+    public function addParticipation(Participation $participation)
+    {
+    	$this->participations->add($participation);
+    }
+    
+    /**
+     * 
+     * @param Participation $participation
+     */
+    public function removeParticipation(Participation $participation)
+    {
+    	$this->participations->removeElement($participation);
+    }
+    
+    /**
+     * 
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getParticipations()
+    {
+    	return $this->participations;
     }
 }

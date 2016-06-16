@@ -63,10 +63,11 @@ class RequirementController extends FOSRestController
     public function newRequirementAction(Event $event)
     {
         $requirement = new Requirement();
+        $requirement->setEvent($event);
         $form = $this->createForm($this->get('event.form.requirement_type'), $requirement);
 
         return $this->render('EventBundle:requirement:new.html.twig', array(
-            'form' => $form->createView(),
+            'form' => $form->createView()
         ));
     }
 
@@ -77,7 +78,9 @@ class RequirementController extends FOSRestController
      * @ApiDoc(description="Post requirement")
      */
     public function postRequirementAction(Request $request) {
+    	
         $requirement = new Requirement();
+      
         $form = $this->createForm($this->get('event.form.requirement_type'), $requirement);
         $contentType = $request->headers->get('Content-Type');
         $data = json_decode($request->getContent());

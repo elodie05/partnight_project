@@ -29,12 +29,16 @@
 	<buildpathentry kind="src" path="vendor/jms/parser-lib/src"/>
 	<buildpathentry kind="src" path="vendor/sensio/distribution-bundle"/>
 	<buildpathentry kind="src" path="vendor/symfony/monolog-bundle"/>
+	<buildpathentry kind="src" path="vendor/zendframework/zend-code/src"/>
 	<buildpathentry kind="src" path="vendor/jdorn/sql-formatter/lib"/>
 	<buildpathentry kind="src" path="vendor/symfony/symfony/src/Symfony/Bridge/ProxyManager"/>
 	<buildpathentry kind="src" path="vendor/avanzu/admin-theme-bundle"/>
 	<buildpathentry kind="src" path="vendor/symfony/polyfill-apcu"/>
+	<buildpathentry kind="src" path="vendor/ocramius/proxy-manager/src"/>
+	<buildpathentry kind="src" path="vendor/zendframework/zend-eventmanager/src"/>
 	<buildpathentry kind="src" path="vendor/symfony/polyfill-php56"/>
 	<buildpathentry kind="src" path="vendor/doctrine/instantiator/src/Doctrine/Instantiator"/>
+	<buildpathentry kind="src" path="vendor/michelf/php-markdown"/>
 	<buildpathentry kind="src" path="vendor/willdurand/jsonp-callback-validator/src"/>
 	<buildpathentry kind="src" path="vendor/doctrine/common/lib/Doctrine/Common"/>
 	<buildpathentry kind="src" path="vendor/symfony/polyfill-mbstring"/>
@@ -44,7 +48,9 @@
 	<buildpathentry kind="src" path="vendor/friendsofsymfony/jsrouting-bundle"/>
 	<buildpathentry kind="src" path="vendor/symfony/polyfill-util"/>
 	<buildpathentry kind="src" path="vendor/doctrine/lexer/lib"/>
+	<buildpathentry kind="src" path="vendor/vich/uploader-bundle"/>
 	<buildpathentry kind="src" path="vendor/symfony/swiftmailer-bundle"/>
+	<buildpathentry kind="src" path="vendor/nelmio/api-doc-bundle"/>
 	<buildpathentry kind="src" path="vendor/symfony/symfony/src/Symfony/Bundle"/>
 	<buildpathentry kind="src" path="vendor/symfony/security-acl"/>
 	<buildpathentry kind="src" path="vendor/incenteev/composer-parameter-handler"/>

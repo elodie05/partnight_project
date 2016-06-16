@@ -5,6 +5,7 @@ namespace EventBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class ProvisionType extends AbstractType
 {
@@ -17,7 +18,15 @@ class ProvisionType extends AbstractType
         $builder
             ->add('quantity')
             ->add('item')
-            ->add('event')
+            ->add('event', EntityType::class, array(
+                'class' => 'EventBundle:Event',
+                'choice_label' => 'name'
+            ))
+            ->add('save','submit',array(
+            		'attr' => array(
+            				'class' => 'btn btn-default'
+            		)
+            ))
         ;
     }
     

@@ -1,100 +1,161 @@
-{% extends 'CommonBundle:layout:base-layout.html.twig' %}
+{% extends 'CommonBundle:layout:base-layout.html.twig'  %}
 
-{% block title %}{{ "update_event"|trans }}{% endblock title %}
+{% block title %}{{"update_event"|trans }}{% endblock title %}
 
-{% block page_title %}{{ event.name }}{% endblock %}
+{% block page_title %}{{"update_event"|trans }} {{ event.name }}{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+.response-red{
+	color: red;
+}
+.response-orange{
+	color:orange:
+}
+.response-green{
+	color: green;
+}
+</style>
+{% endblock stylesheets %}
 
 {% block page_content %}
 
-    <div class="box box-default collapsed-box box-solid">
-        <div class="box-header with-border">
-            <h4 class="box-title">{{ "informations"|trans }}</h4>
-
-            <div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
-                </button>
+<div class="box box-default collapsed-box box-solid">
+	<div class="box-header with-border">
+    	<h4 class="box-title">{{ "informations"|trans }}</h4>
+       		<div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
             </div>
-            <!-- /.box-tools -->
-        </div>
-        <!-- /.box-header -->
-        <div class="box-body">
-            {{ form_start(form, {'id': 'form_event', 'action': path('put_event', {'event': event.id})}) }}
-            {{ form_end(form) }}
-            {{ form_errors(form) }}
-        </div>
-        <!-- /.box-body -->
-    </div>
+              <!-- /.box-tools -->
+   </div>
+            <!-- /.box-header -->
+   <div class="box-body">
+	   {{ form_start(form) }}
+	   {{ form_end(form) }}
+	   {{ form_errors(form) }}
+   </div>
+            <!-- /.box-body -->
+</div>
 
-    <div class="box box-default collapsed-box box-solid">
-    <div class="box-header with-border">
-        <h4 class="box-title">{{ "requirements"|trans }}</h4>
 
-        <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
-            </button>
-        </div>
-        <!-- /.box-tools -->
-    </div>
-    <!-- /.box-header -->
-    <div class="box-body">
-    {% if event.requirements is not empty %}
-        <table role="grid" id="table_requirements" class="table table-bordered table-striped">
-            <thead>
-            <tr>
-                <th>{{ "item"|trans }}</th>
-                <th>{{ "quantity"|trans }}</th>
-                <th style="width:10%;"></th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for requirement in event.requirements %}
+<div class="box box-default collapsed-box box-solid">
+	<div class="box-header with-border">
+    	<h4 class="box-title">{{ "requirements"|trans }}</h4>
+       		<div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+            </div>
+              <!-- /.box-tools -->
+   </div>
+            <!-- /.box-header -->
+   <div class="box-body">
+	{% if event.requirements is not empty %}
+				<table role="grid" id="table_requirements" class="table table-bordered table-striped">
+                <thead>
                 <tr>
-                    <td>{{ requirement.item.name }}</td>
-                    <td>{{ requirement.quantity }} </td>
-                    <td>
-                        <button type="button" class="btn btn-default removeEventRequirement btn-xs"
-                                data-url="{{ path('delete_requirement', {'requirement' : requirement.id}) }}"
-                                data-toggle="modal"
-                                data-target="#confirmDeleteEventRequirement" data-backdrop="false"><span
-                                    class="glyphicon glyphicon-remove"></span></button>
-                    </td>
+                	<th>{{ "item"|trans }}</th>
+                	<th>{{ "quantity"|trans }}</th>
+                	<th style="width:10%;"></th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        {{ "no_element"|trans }}
-    {% endif %}
-    <button type="button" id="btn_add_event_requirement" class="btn btn-default"
+                </thead>
+                <tbody>
+                	{% for requirement in event.requirements %}
+				<tr>
+					<td>{{ requirement.item.name }}</td>
+					<td>{{ requirement.quantity }} </td>
+					<td><button type="button" class="btn btn-default removeEventRequirement btn-xs"
+			            data-url="{{ path('delete_requirement',{'requirement' : requirement.id}) }}" data-toggle="modal"
+			            data-target="#confirmDeleteEventRequirement" data-backdrop="false"><span class="glyphicon glyphicon-remove"></span></button>
+			        </td>
+				</tr>
+					{% endfor %}
+					</tbody>
+					</table>
+	{% else %}
+	<p>{{ "no_element"|trans }}</p>
+	{%  endif %}
+	{% if event.id %}
+	<button type="button" id="btn_add_event_requirement" class="btn btn-default"
             data-url="{{ path('new_requirement',{'event' : event.id}) }}" data-toggle="modal"
             data-target="#myModal" data-backdrop="false">{{ 'add'|trans }}</button>
+   {% endif %}
 
-    </div>
-    <!-- /.box-body -->
-    </div>
 
-    <div class="modal fade" id="confirmDeleteEventRequirement" tabindex="-1" role="dialog"
-         aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">{{ 'confirm_delete'|trans }}</h4>
-                </div>
-                <div class="modal-body">
-                    {{ 'msg_confirm_delete'|trans }}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ "close"|trans }}</button>
-                    <button type="button" class="btn btn-primary"
-                            id="btn_confirm_delete_event_requirement">{{ "confirm"|trans }}</button>
-                </div>
+   </div>
+            <!-- /.box-body -->
+</div>
+
+<div class="box box-default collapsed-box box-solid">
+	<div class="box-header with-border">
+    	<h4 class="box-title">{{ "participations"|trans }}</h4>
+       		<div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
             </div>
-        </div>
-    </div>
-{% endblock page_content %}
+              <!-- /.box-tools -->
+   </div>
+            <!-- /.box-header -->
+   <div class="box-body">
+	{% if participations is not empty %}
+	
+	<div class="box-body no-padding">
+    	<ul class="users-list clearfix">
+	{% for participation in participations %}
+		<li>
+			<img src="dist/img/user1-128x128.jpg" alt="User Image">
+			<a class="users-list-name" href="{{ path('user_profile', {'user_id' : participation.user.id}) }}">{{ participation.user.firstName }} {{ participation.user.lastName }}</a>
+			<span 
+				{% if participation.response == null %}
+					class="response-orange"
+				{% else %}
+				{% if participation.response == 'true' %}
+					class="response-green"
+				{% else %}
+				{% if participation.response == 'false' %}
+					class="response-red"
+				{% endif %}
+				{% endif %}
+				{% endif %}
+			>Réponse : {{ participation.response }}</span>
 
+			
+		</li>        
+	{% endfor %}
+    	</ul>
+    </div>
+		
+	
+	{% else %}
+	<p>{{ "no_element"|trans }}</p>
+	{%  endif %}
+	{% if event.id %}
+	<button type="button" id="btn_add_event_participations" class="btn btn-default"
+            data-url="{{ path('new_participation',{'event' : event.id}) }}" data-toggle="modal"
+            data-target="#myModal" data-backdrop="false">{{ 'add'|trans }}</button>
+   {% endif %}
+
+
+   </div>
+            <!-- /.box-body -->
+</div>
+
+<div class="modal fade" id="confirmDeleteEventRequirement" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">{{ 'confirm_delete'|trans }}</h4>
+      </div>
+      <div class="modal-body">
+       {{ 'msg_confirm_delete'|trans }}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">{{ "close"|trans }}</button>
+        <button type="button" class="btn btn-primary" id="btn_confirm_delete_event_requirement">{{ "confirm"|trans }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock page_content %}
 {% block javascripts %}
     {{ parent() }}
     <script>
@@ -107,6 +168,11 @@
             $(document).on('click', '#btn_add_event_requirement', function () {
                 var url = $(this).attr("data-url");
                 create_update_event_requirement(url, {});
+                return false;
+            });
+            $(document).on('click', '#btn_add_event_participations', function () {
+                var url = $(this).attr("data-url");
+                create_update_event_participations(url, {});
                 return false;
             });
             $(document).on('click', '.removeEventRequirement', function () {
@@ -172,6 +238,18 @@
                     }
                 });
             }
+
+            function create_update_event_participations(url, data) {
+                $.ajax({
+                    type: 'GET',
+                    url: url,
+                    data: data,
+                    success: function (data) {
+                        $('#myModal .modal-body').empty().append(data);
+                        console.log(data);
+                    }
+                });
+    	    }
 
 
         });

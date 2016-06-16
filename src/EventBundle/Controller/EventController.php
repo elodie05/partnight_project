@@ -16,6 +16,8 @@ use EventBundle\Form\RequirementType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter;
 use EventBundle\Entity\Requirement;
+use EventBundle\Form\CommentType;
+use UserBundle\Entity\User;
 
 class EventController extends FOSRestController
 {
@@ -52,20 +54,7 @@ class EventController extends FOSRestController
         return $this->handleView($view);
     }
 
-    /**
-     * Get event
-     * @param Event $event
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @ApiDoc(description="Get event")
-     */
-    public function viewAction(Event $event){
 
-    		
-        return $this->render('EventBundle:event:view.html.twig',array(
-        		'participation'=>'',
-                'event' => $event));
-    }
 
     /**
      * @param Event $event
@@ -77,7 +66,7 @@ class EventController extends FOSRestController
     {
     	$em = $this->getDoctrine()->getManager();
     	
-    	$geocoder = "http://maps.googleapis.com/maps/api/geocode/json?address=%s&sensor=false";
+    	/*$geocoder = "http://maps.googleapis.com/maps/api/geocode/json?address=%s&sensor=false";
     	$adress = $event->getLocation();
     	
     	// Requête envoyée à l'API Geocoding
@@ -95,11 +84,40 @@ class EventController extends FOSRestController
     	$event->setLng($long);
     	$em->persist($event);
     	$em->flush();  	
-    	
+    	*/
+    	$user = $this->get('security.context')->getToken()->getUser();
+    	 
+    	$participations = $em->getRepository('EventBundle:Participation')->findBy(array('event'=>$event));
+    	$participation = $em->getRepository('EventBundle:Participation')->findOneBy(array('user' => $user,'event'=>$event));
+
+    	$nbSleepBooking = count($em->getRepository('EventBundle:Participation')->findBy(array('sleep' => true,'event'=>$event)));
+    	$comments = $em->getRepository('EventBundle:Comment')->findBy(array('event'=>$event));
+    	 
+    	$formComment = $this->createForm(new CommentType());
+    	$sleepAvailable = $event->getSleepAvailable() - $nbSleepBooking;
+    	 
+    	if(!empty($participation)){
+    		if($participation->getSleep() == 1){
+    			$sleepBooking = 'yes';
+    		}else{
+    			$sleepBooking = 'no';
+    		}
+    	}else{
+    		$sleepBooking ='';
+    	}
+
     	
         $view = $this->view($event, 200)
             ->setTemplate('EventBundle:event:view.html.twig')
-            ->setTemplateVar('event');
+            ->setTemplateVar('event')
+        	->setTemplateData(array('participations' => $participations,
+    			'booking' => $sleepBooking,
+    			'sleepAvailable' => $sleepAvailable,
+    			'comments' => $comments,
+    			'formComment' => $formComment->createView(),
+        	    'participation' => $participation,
+        			'event' => $event
+        	));
 
         return $this->handleView($view);
     }
@@ -109,8 +127,28 @@ class EventController extends FOSRestController
      */
     public function newEventAction()
     {
+    	$em = $this->getDoctrine()->getManager();
         $event = new Event();
         $form = $this->createForm(new EventType(), $event);
+        
+        $geocoder = "http://maps.googleapis.com/maps/api/geocode/json?address=%s&sensor=false";
+        $adress = $event->getLocation();
+         
+        // Requête envoyée à l'API Geocoding
+        $url_adress = utf8_encode($adress);
+        $url_adress = urlencode($adress);
+        $query = sprintf($geocoder, $url_adress);
+        
+        $result = json_decode(file_get_contents($query));
+        $json = $result->results[0];
+        
+        $lat = (string) $json->geometry->location->lat;
+        $long = (string) $json->geometry->location->lng;
+         
+        $event->setLat($lat);
+        $event->setLng($long);
+        $em->persist($event);
+        $em->flush();
 
         return $this->render('EventBundle:event:create.html.twig', array(
             'form' => $form->createView(),
@@ -156,11 +194,21 @@ class EventController extends FOSRestController
      */
     public function editEventAction(Event $event)
     {
-        $form = $this->createForm(new EventType(), $event);
+        $user = $this->get('security.context')->getToken()->getUser();
+        
+    	
+        $em = $this->getDoctrine()->getEntityManager();
+        $form = $this->createForm(new form\EventType(),$event);
+        
+ 		$usersToInvite = $em->getRepository('UserBundle:User')->findFriendNotInvited($user, $event);
+        
+        $participations = $em->getRepository('EventBundle:Participation')->findBy(array('event'=>$event));
 
         return $this->render('EventBundle:event:edit.html.twig', array(
             'form' => $form->createView(),
-            'event' => $event
+            'event' => $event,
+        	'participations' => $participations,
+        	'usersToInvite' => $usersToInvite
         ));
     }
 

@@ -18,6 +18,7 @@ services:
         class: EventBundle\Utils\FileUploader
         arguments: ['%documents_directory%']
 
+
     event.listener.document_upload_listener:
         class: EventBundle\Listener\DocumentUploadListener
         arguments: ['@event.file_uploader']

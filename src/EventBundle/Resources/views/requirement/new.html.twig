@@ -39,12 +39,16 @@
 </style>
 
 
-{{ form(form, {action: path('post_requirement')}) }}
+{{ form_start(form, {action: path('post_requirement')}) }}
+<div hidden>{{ form_widget(form.event, { 'attr': {'hidden': 'true'} }) }}</div>
+
+{{ form_rest(form) }}
+{{ form_end(form) }}
 
 <script>
     $("#requirement_item").autocomplete({
         minLength: 2,
-        source:Routing.generate('autocomplete_item')
+        source:Routing.generate('get_items',{name: $("#requirement_item").val() })
         /*  function (request, response) {
          var item = $("#requirement_item").val();
          var objData = 'term=' + item;
