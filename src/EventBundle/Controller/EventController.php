@@ -313,9 +313,10 @@ class EventController extends FOSRestController
      */
     public function deleteEventAction(Event $event)
     {
-
         $em = $this->getDoctrine()->getManager();
         $em->remove($event);
         $em->flush();
+
+        return new Response(null, 204);
     }
 }

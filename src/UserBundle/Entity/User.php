@@ -25,22 +25,22 @@ class User extends BaseUser
     protected $id;
     
     /**
-     * @ORM\Column(name="signInDate", type="datetime")
+     * @ORM\Column(name="signInDate", type="datetime", nullable=true)
      */
     private $signInDate;
     
     /**
-     * @ORM\Column(name="lastName", type="string")
+     * @ORM\Column(name="lastName", type="string", nullable=true)
      */
     private $lastName;
     
     /**
-     * @ORM\Column(name="firstName", type="string")
+     * @ORM\Column(name="firstName", type="string", nullable=true)
      */
     private $firstName;
 
     /**
-     * @ORM\Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true, nullable=true)
      */
     private $apiKey;
     
@@ -235,12 +235,34 @@ class User extends BaseUser
     public function addFriend(User $user)
     {
         $this->friends->add($user);
+        $user->reverseAddFriend($this);
+    }
+
+    /**
+     * When B is added to A's friends, A is added to B's friends
+     *
+     * @param User $user
+     */
+    public function reverseAddFriend(User $user)
+    {
+        $this->friends->add($user);
     }
 
     /**
      * @param User $user
      */
     public function removeFriend(User $user)
+    {
+        $this->friends->removeElement($user);
+        $user->reverseRemoveFriend($this);
+    }
+
+    /**
+     * When B is removed from A's friends, A is removed from B's friends
+     *
+     * @param User $user
+     */
+    public function reverseRemoveFriend(User $user)
     {
         $this->friends->removeElement($user);
     }

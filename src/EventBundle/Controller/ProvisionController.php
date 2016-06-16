@@ -141,5 +141,7 @@ class ProvisionController extends FOSRestController
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->remove($provision);
         $entityManager->flush();
+
+        return new Response(null, 204);
     }
 }
