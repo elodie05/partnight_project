@@ -131,10 +131,8 @@ class EventController extends FOSRestController
         $event = new Event();
         $form = $this->createForm(new EventType(), $event);
         
-        $geocoder = "http://maps.googleapis.com/maps/api/geocode/json?address=%s&sensor=false";
+      /*  $geocoder = "http://maps.googleapis.com/maps/api/geocode/json?address=%s&sensor=false";
         $adress = $event->getLocation();
-         
-        // Requête envoyée à l'API Geocoding
         $url_adress = utf8_encode($adress);
         $url_adress = urlencode($adress);
         $query = sprintf($geocoder, $url_adress);
@@ -147,8 +145,10 @@ class EventController extends FOSRestController
          
         $event->setLat($lat);
         $event->setLng($long);
-        $em->persist($event);
-        $em->flush();
+        
+        A METTRE A LA CREATION
+        
+        */
 
         return $this->render('EventBundle:event:create.html.twig', array(
             'form' => $form->createView(),
@@ -178,12 +178,17 @@ class EventController extends FOSRestController
 
         if ($contentType == 'application/json' && $form->isValid() || $form->handleRequest($request)) {
             $em = $this->getDoctrine()->getManager();
+           
+            
             $em->persist($event);
             $em->flush();
             $view = $this->view($event, 200)->setTemplate('EventBundle:event:post.html.twig');
 
             return $this->handleView($view);
+
         }
+        
+
 
         throw new BadRequestHttpException();
     }
@@ -237,9 +242,10 @@ class EventController extends FOSRestController
             $em = $this->getDoctrine()->getManager();
             $em->persist($event);
             $em->flush();
-            $view = $this->view($event, 200)->setTemplate('EventBundle:event:put.html.twig');
-
+            $view = $this->view($event, 200)->setTemplate('EventBundle:event:edit.html.twig');
             return $this->handleView($view);
+  
+            //TODO FAIRE REDIRECTION EN JS 
         }
 
         throw new BadRequestHttpException();

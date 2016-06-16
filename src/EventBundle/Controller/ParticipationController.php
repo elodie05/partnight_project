@@ -11,7 +11,7 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\Response;
+
 
 class ParticipationController extends FOSRestController
 {
@@ -22,9 +22,9 @@ class ParticipationController extends FOSRestController
      *
      * TODO: Supprimer
      */
-    public function notificationAction(Request $request,$notifyid)
+    public function notificationAction(Request $request, $notifyid)
     {
-    	$em = $this->getDoctrine()->getEntityManager();
+    	$em = $this->getDoctrine()->getManager();
     	$participation = $em->getRepository('EventBundle:Participation')->find($notifyid);
     	$event = $participation->getEvent();
     	
@@ -153,8 +153,6 @@ class ParticipationController extends FOSRestController
      */
     public function putParticipationAction(Request $request, Participation $participation)
     {
-    	return new Response(json_encode($participation));
-    	
         $token = $this->get('security.token_storage')->getToken();
 
         if (null === $token) {
@@ -181,7 +179,7 @@ class ParticipationController extends FOSRestController
 
             return $this->handleView($view);
         }
-
+        
         throw new BadRequestHttpException();
     }
 }
